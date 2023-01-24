@@ -6,9 +6,16 @@ import io.luckypray.dexkit.descriptor.member.DexClassDescriptor
 
 class PConfig {
     companion object {
-        private val mmkv = MMKV.defaultMMKV()
+        private var mmkv: MMKV? = null
+
+        init {
+            mmkv = MMKV.defaultMMKV()
+        }
+
+
         fun boolean(label: String, def: Boolean): Boolean {
-            return mmkv.decodeBool(label, def)
+            if (mmkv == null) return def
+            return mmkv?.decodeBool(label, def)!!
         }
 
         fun boolean(label: String): Boolean {
@@ -16,11 +23,13 @@ class PConfig {
         }
 
         fun number(label: String, def: Int): Int {
-            return mmkv.decodeInt(label, def)
+            if (mmkv == null) return def
+            return mmkv?.decodeInt(label, def)!!
         }
 
         fun number(label: String, def: Long): Long {
-            return mmkv.decodeLong(label, def)
+            if (mmkv == null) return def
+            return mmkv?.decodeLong(label, def)!!
         }
 
         fun number(label: String): Int {
@@ -28,19 +37,20 @@ class PConfig {
         }
 
         fun set(label: String, enable: Boolean) {
-            mmkv.encode(label, enable)
+            if (mmkv == null) return
+            mmkv?.encode(label, enable)!!
         }
 
         fun set(label: String, number: Int) {
-            mmkv.encode(label, number)
+            if (mmkv == null) return
+            mmkv?.encode(label, number)!!
         }
 
         fun isUpdateHost(): Boolean {
             val app = PPBuff.getApplication()
             if (app != null) {
                 val last = number(
-                    app.packageName,
-                    0
+                    app.packageName
                 )
                 return last == 0 || last != PPBuff.getHostVersionCode()
             }
@@ -53,13 +63,14 @@ class PConfig {
         }
 
         fun init(init: Boolean) {
+
             set("ppbuff_inited", init)
         }
 
         fun cache(result: Map<String, List<DexClassDescriptor>>?) {
             result?.forEach { (k, v) ->
-                "缓存反混淆信息: $k".debug()
-                mmkv.encode(k, hashSetOf<String?>().apply {
+                "缓存反混淆信息: $k@$v".debug()
+                mmkv?.encode("debof_$k", hashSetOf<String?>().apply {
                     v.forEach {
                         val name = PPBuff.doReplace(it.name)
                         add(name)
@@ -77,6 +88,17 @@ class PConfig {
                     PPBuff.getHostVersionCode()
                 )
             }
+        }
+
+        fun hasCache(k: String): Boolean {
+            if (mmkv == null) return false
+            return mmkv?.decodeStringSet("debof_$k", null) != null
+        }
+
+        fun getCache(k: String): MutableSet<String>? {
+            if (mmkv == null) return hashSetOf()
+            return mmkv?.decodeStringSet("debof_$k", hashSetOf())
+
         }
     }
 }

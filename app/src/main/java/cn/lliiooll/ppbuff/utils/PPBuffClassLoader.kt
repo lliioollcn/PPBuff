@@ -4,7 +4,7 @@ import com.github.kyuubiran.ezxhelper.utils.findField
 
 object PPBuffClassLoader : ClassLoader() {
 
-    override fun loadClass(name: String?, resolve: Boolean): Class<*> {
+    override fun loadClass(name: String?, resolve: Boolean): Class<*>? {
         if (contextClassloader != null) {
             try {
                 return contextClassloader!!.loadClass(name)
@@ -34,6 +34,14 @@ object PPBuffClassLoader : ClassLoader() {
             }
         }
         return super.loadClass(name, resolve)
+    }
+
+    fun loadClassOrNull(name: String?): Class<*>? {
+        try {
+            return loadClass(name)
+        } catch (_: ClassNotFoundException) {
+            return null
+        }
     }
 
     private var xposedClassloader: ClassLoader? = null
@@ -71,5 +79,9 @@ object PPBuffClassLoader : ClassLoader() {
 
 fun String.findClass(): Class<*> {
     return PPBuffClassLoader.loadClass(this)
+}
+
+fun String.findClassOrNull(): Class<*>? {
+    return PPBuffClassLoader.loadClassOrNull(this)
 }
 

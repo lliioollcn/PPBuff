@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.Toast
 import cn.lliiooll.ppbuff.tracker.PLog
 import com.github.kyuubiran.ezxhelper.utils.findMethod
+import com.github.kyuubiran.ezxhelper.utils.invokeMethod
+import com.github.kyuubiran.ezxhelper.utils.invokeMethodAuto
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import java.io.File
 import java.lang.reflect.Field
@@ -96,17 +98,16 @@ fun List<Class<*>>.allEquals(any: List<*>): Boolean {
     return b
 }
 
-fun Field.invokeMethod(ins: Any, name: String, vararg a: Any) {
+fun Field.invokeMethod(ins: Any, name: String, vararg a: Any?) {
     this.isAccessible = true
     val obj = this.get(ins)
     val clazz = this.type
-    clazz.findMethod {
+    clazz.findMethod(true) {
         this.name == name &&
-                this.paramCount == a.size &&
-                this.parameterTypes.toList().allEquals(a.toList())
-
-    }
-
+                this.paramCount == a.size
+    }.apply {
+        "尝试调用方法: ${this.name}".debug()
+    }.invoke(obj, *a)
 }
 
 

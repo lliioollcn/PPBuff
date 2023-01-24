@@ -12,6 +12,7 @@ import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.tencent.mmkv.MMKV
+import com.tencent.mmkv.MMKV.LibLoader
 
 
 object BuffEntrance : PXposedEntrance() {
@@ -26,15 +27,14 @@ object BuffEntrance : PXposedEntrance() {
                 "宿主应用Application加载完毕，开始加载模块......".debug()
                 val app = it.thisObject as Application
                 PPBuff.init(app)
-                val mmkvDir = app.getExternalFilesDir("buffMMKV")?.checkDir()
                 "尝试注入classLoader".debug()
                 PPBuffClassLoader
                     .withXposed(param.classLoader)
                     .withApplition(app.classLoader)
                     .withContext(Context::class.java.classLoader)
                     .inject()
-                "尝试初始化mmkv".debug()
-                MMKV.initialize(app, mmkvDir?.absolutePath)
+                "尝试初始化Native".debug()
+                PNative.init(app)
                 "尝试注入界面代理".debug()
                 EzXHelperInit.initActivityProxyManager(
                     PPBuff.getModulePackName(),

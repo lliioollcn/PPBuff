@@ -12,15 +12,7 @@ import cn.lliiooll.ppbuff.utils.error
  */
 object ZuiyouLoader : BaseLoader() {
     override fun load() {
-        hooks().forEach { hook ->
-            hook.deobfMap().empty {
-                // 先加载不用反混淆的hook
-                "Hook ${hook.name} 是否启用: ${hook.isEnable()}".debug()
-                if (hook.isEnable() && !hook.init()) {
-                    "Hook ${hook.name} 加载失败!".error()
-                }
-            }
-        }
+
         // 然后在加载界面处加载需要反混淆的hook
     }
 

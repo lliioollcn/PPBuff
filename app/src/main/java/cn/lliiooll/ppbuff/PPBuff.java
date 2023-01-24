@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Process;
 import cn.lliiooll.ppbuff.tracker.PLog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PPBuff {
@@ -102,6 +105,24 @@ public class PPBuff {
             cl = cl.replace("/", ".");
         }
         return cl;
+    }
+
+    public static String getAbiForLibrary() {
+        String[] supported = Process.is64Bit() ? Build.SUPPORTED_64_BIT_ABIS : Build.SUPPORTED_32_BIT_ABIS;
+        if (supported == null || supported.length == 0) {
+            throw new IllegalStateException("No supported ABI in this device");
+        }
+        List<String> abis = Arrays.asList("armeabi-v7a", "arm64-v8a");
+        for (String abi : supported) {
+            if (abis.contains(abi)) {
+                return abi;
+            }
+        }
+        throw new IllegalStateException("No supported ABI in " + Arrays.toString(supported));
+    }
+
+    public static boolean isInHostApp() {
+        return app != null;
     }
 
     public static class HostInfo {

@@ -10,14 +10,27 @@ android {
     defaultConfig {
         applicationId "cn.lliiooll.ppbuff"
         minSdk 24
-        targetSdk 33
-        versionCode 8
+        targetSdk 34
+        versionCode 26
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
+    }
+
+    packagingOptions {
+        jniLibs.excludes.add("lib/**/liblog.so")
+        jniLibs.excludes.add("lib/**/libz.so")
+        jniLibs.excludes.add("lib/x86/**")
+        jniLibs.excludes.add("lib/x86_64/**")
+        resources.excludes.addAll(
+                "META-INF/**",
+                "kotlin/**",
+                "**.bin",
+                "kotlin-tooling-metadata.json"
+        )
     }
 
     buildTypes {
