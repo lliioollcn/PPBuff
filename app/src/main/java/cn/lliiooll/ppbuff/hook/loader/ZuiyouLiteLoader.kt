@@ -85,11 +85,8 @@ object ZuiyouLiteLoader : BaseLoader() {
                         }
                         dexkit?.close()
                     }
-
                 }
         }
-
-
     }
 
     override fun hooks(): List<BaseHook> {
