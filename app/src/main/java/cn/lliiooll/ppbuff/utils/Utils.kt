@@ -3,16 +3,16 @@ package cn.lliiooll.ppbuff.utils
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import cn.lliiooll.ppbuff.tracker.PLog
 import com.github.kyuubiran.ezxhelper.utils.findMethod
-import com.github.kyuubiran.ezxhelper.utils.invokeMethod
-import com.github.kyuubiran.ezxhelper.utils.invokeMethodAuto
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import java.io.File
 import java.lang.reflect.Field
+
 
 class Utils {
 }
@@ -108,6 +108,11 @@ fun Field.invokeMethod(ins: Any, name: String, vararg a: Any?) {
     }.apply {
         "尝试调用方法: ${this.name}".debug()
     }.invoke(obj, *a)
+}
+
+fun Int.toDp(ctx: Context): Float {
+    return this.toFloat() / (ctx.getResources()
+        .getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT)
 }
 
 

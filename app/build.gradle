@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId "cn.lliiooll.ppbuff"
         minSdk 24
-        targetSdk 34
-        versionCode 26
+        targetSdk 35
+        versionCode 9
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -84,5 +84,6 @@ dependencies {
     implementation 'com.github.kyuubiran:EzXHelper:1.0.3'
     implementation 'org.luckypray:DexKit:1.1.0'
     implementation 'com.tencent:mmkv:1.2.15'
+    //implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
 
 }

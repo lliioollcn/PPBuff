@@ -1,4 +1,4 @@
-package cn.lliiooll.ppbuff.ui.theme
+package cn.lliiooll.ppbuff.activity.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

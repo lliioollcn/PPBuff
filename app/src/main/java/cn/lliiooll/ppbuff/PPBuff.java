@@ -6,9 +6,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Process;
+import androidx.compose.ui.graphics.Color;
 import cn.lliiooll.ppbuff.tracker.PLog;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -119,6 +119,19 @@ public class PPBuff {
             }
         }
         throw new IllegalStateException("No supported ABI in " + Arrays.toString(supported));
+    }
+
+    public static int getStatusBarHeight(Context ctx) {
+        int result = 0;
+        //获取状态栏高度的资源id
+        if (ctx == null) {
+            return result;
+        }
+        int resourceId = ctx.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = ctx.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     public static boolean isInHostApp() {
