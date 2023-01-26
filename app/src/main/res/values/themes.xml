@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.PPBuff" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#00000000</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">#00FFFFFF</item>
     </style>
 </resources>

@@ -25,10 +25,13 @@ import cn.lliiooll.ppbuff.utils.PColor
 @Composable
 fun PMainContent() {
     Surface(
-        modifier = Modifier.fillMaxWidth().padding(0.dp, 10.dp, 0.dp, 0.dp),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
+        modifier = Modifier.fillMaxHeight().fillMaxWidth()
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(0.dp, 10.dp, 0.dp, 0.dp)
+
+        ) {
             // 主体
             val color = if (HookStatus.isEnable()) PColor.SUCCESS else PColor.ERROR
             Surface {

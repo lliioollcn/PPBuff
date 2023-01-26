@@ -3,6 +3,9 @@ package cn.lliiooll.ppbuff.activity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.Modifier
 import cn.lliiooll.ppbuff.activity.ui.theme.PPBuffTheme
 import cn.lliiooll.ppbuff.ui.components.PMainContent
 import cn.lliiooll.ppbuff.ui.components.PTitleBar

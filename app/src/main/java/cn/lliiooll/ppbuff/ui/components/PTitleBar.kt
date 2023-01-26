@@ -1,8 +1,6 @@
 package cn.lliiooll.ppbuff.ui.components
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,7 +13,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -31,10 +28,10 @@ import cn.lliiooll.ppbuff.R
 @Preview(showBackground = true)
 @Composable
 fun PTitleBar() {
-    Surface(
-        modifier = Modifier.fillMaxWidth().padding(10.dp, 20.dp, 10.dp, 10.dp),
-    ) {
-        Row {
+    Surface {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(10.dp, 20.dp, 10.dp, 10.dp),
+        ) {
             if (PPBuff.isInHostApp())
                 Surface(shape = CircleShape) {
                     Image(
