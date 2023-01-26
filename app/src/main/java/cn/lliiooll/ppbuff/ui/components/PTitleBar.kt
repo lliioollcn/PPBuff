@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,7 +42,6 @@ fun PTitleBar() {
 
                         }
                     )
-
                 }
             Text(
                 text = "PPHelper",
@@ -62,7 +62,7 @@ fun PTitleBar() {
                         )
                     )
                     Image(
-                        painter = painterResource(R.drawable.ic_more),
+                        painter = painterResource(if (isSystemInDarkTheme()) R.drawable.ic_more_dark else R.drawable.ic_more_light),
                         contentDescription = "icon_more",
                         modifier = Modifier.size(25.dp).clickable {
                             status = !status
