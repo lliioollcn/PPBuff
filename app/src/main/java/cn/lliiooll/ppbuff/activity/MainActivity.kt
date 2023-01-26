@@ -17,7 +17,7 @@ class MainActivity : PActivity() {
         setContent {
             PPBuffTheme {
                 Column {
-                    StatusBar(ctx)// 沉浸式状态栏
+                    StatusBar()// 沉浸式状态栏
                     PTitleBar()// 标题栏
                     PMainContent()// 主界面内容
                 }

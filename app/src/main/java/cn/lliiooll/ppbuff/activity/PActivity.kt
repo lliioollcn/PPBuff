@@ -1,5 +1,6 @@
 package cn.lliiooll.ppbuff.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.utils.toDp
@@ -39,7 +41,8 @@ abstract class PActivity : ComponentActivity() {
      * 沉浸式状态栏
      */
     @Composable
-    fun StatusBar(ctx: Context) {
+    fun StatusBar() {
+        val ctx = LocalView.current.context as Activity
         Surface(
             modifier = Modifier.height(Dp(PPBuff.getStatusBarHeight(ctx).toDp(ctx))).fillMaxWidth(),
             color = MaterialTheme.colorScheme.background

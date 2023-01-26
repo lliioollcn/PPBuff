@@ -1,5 +1,7 @@
 package cn.lliiooll.ppbuff.ui.components
 
+import android.view.View
+import android.widget.PopupMenu
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -10,12 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +30,8 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.R
+import cn.lliiooll.ppbuff.utils.toastShort
+
 
 @Preview(showBackground = true)
 @Composable
@@ -38,9 +45,7 @@ fun PTitleBar() {
                     Image(
                         painter = painterResource(R.mipmap.icon_arrow_left),
                         contentDescription = "icon_more",
-                        modifier = Modifier.size(25.dp).clickable {
-
-                        }
+                        modifier = Modifier.size(25.dp)
                     )
                 }
             Text(
@@ -50,6 +55,7 @@ fun PTitleBar() {
                 fontStyle = FontStyle.Normal,
                 fontWeight = FontWeight.SemiBold
             )
+            val ctx = LocalContext.current
             if (!PPBuff.isInHostApp()) {
                 var status by remember {
                     mutableStateOf(true)
@@ -59,7 +65,10 @@ fun PTitleBar() {
                         targetValue = if (status) 0f else 90f,
                         animationSpec = tween(
                             durationMillis = 300
-                        )
+                        ),
+                        finishedListener = {
+
+                        }
                     )
                     Image(
                         painter = painterResource(if (isSystemInDarkTheme()) R.drawable.ic_more_dark else R.drawable.ic_more_light),
@@ -72,8 +81,37 @@ fun PTitleBar() {
                             rotationZ = f
                         }
                     )
+
+                    DropdownMenu(
+                        expanded = !status,
+                        onDismissRequest = {
+                            status = true
+                        }
+                    ) {
+
+                        DropdownMenuItem(
+                            text = {
+                                   Text(text = "awawa")
+                            },
+                            onClick = {
+                                "qwq".toastShort(ctx)
+                                status = true
+                            }
+                        )
+                    }
+
                 }
             }
         }
     }
+}
+
+
+fun POpenMenu(view: View, onDismiss: () -> Unit = {}): PopupMenu {
+    val menu = PopupMenu(view.context, view)
+    menu.setOnDismissListener {
+        onDismiss.invoke()
+    }
+    menu.menuInflater.inflate(R.menu.main_menu, menu.menu)
+    return menu
 }

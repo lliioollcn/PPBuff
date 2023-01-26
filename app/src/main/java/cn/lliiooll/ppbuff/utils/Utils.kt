@@ -74,6 +74,7 @@ fun String.toastShort(ctx: Context) {
     Toast.makeText(ctx, this, Toast.LENGTH_SHORT).show()
 }
 
+
 fun String.toastLong(ctx: Context) {
     Toast.makeText(ctx, this, Toast.LENGTH_LONG).show()
 }
