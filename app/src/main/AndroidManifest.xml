@@ -10,6 +10,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            android:name=".app.PPBuffApp"
             android:theme="@style/Theme.PPBuff"
             tools:targetApi="31">
         <activity
@@ -19,14 +20,27 @@
                 android:theme="@style/Theme.PPBuff">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
             </intent-filter>
-
             <meta-data
                     android:name="android.app.lib_name"
                     android:value=""/>
         </activity>
+
+        <activity-alias
+                android:name=".activity.AliasMainActivity"
+                android:exported="true"
+                android:label="@string/app_name"
+                android:targetActivity="cn.lliiooll.ppbuff.activity.MainActivity"
+                android:theme="@style/Theme.PPBuff">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.app.lib_name"
+                    android:value=""/>
+        </activity-alias>
 
         <meta-data
                 android:name="xposedmodule"

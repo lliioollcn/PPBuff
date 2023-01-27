@@ -6,6 +6,7 @@ import io.luckypray.dexkit.descriptor.member.DexClassDescriptor
 
 class PConfig {
     companion object {
+
         private var mmkv: MMKV? = null
 
         init {
@@ -16,6 +17,10 @@ class PConfig {
         fun boolean(label: String, def: Boolean): Boolean {
             if (mmkv == null) return def
             return mmkv?.decodeBool(label, def)!!
+        }
+
+        fun isHideConfig(): Boolean {
+            return boolean("hide_icon", false)
         }
 
         fun boolean(label: String): Boolean {
@@ -99,6 +104,10 @@ class PConfig {
             if (mmkv == null) return hashSetOf()
             return mmkv?.decodeStringSet("debof_$k", hashSetOf())
 
+        }
+
+        fun setHideConfig() {
+            set("hide_icon", !isHideConfig())
         }
     }
 }

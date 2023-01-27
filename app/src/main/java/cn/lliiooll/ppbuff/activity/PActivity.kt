@@ -1,7 +1,9 @@
 package cn.lliiooll.ppbuff.activity
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
@@ -17,12 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
+import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.utils.toDp
 import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 
 abstract class PActivity : ComponentActivity() {
+
 
     init {
         if (PPBuff.isInHostApp())
@@ -51,5 +55,22 @@ abstract class PActivity : ComponentActivity() {
         }
     }
 
+
+
+
+}
+
+fun hideIcon(ctx: Context) {
+    val pm = ctx.packageManager
+    PConfig.setHideConfig()
+    pm.setComponentEnabledSetting(
+        ComponentName(ctx, "cn.lliiooll.ppbuff.activity.AliasMainActivity"),
+        if (PConfig.isHideConfig()) {
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+        } else {
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        },
+        PackageManager.DONT_KILL_APP
+    )
 
 }
