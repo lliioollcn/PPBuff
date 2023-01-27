@@ -1,8 +1,5 @@
 package cn.lliiooll.ppbuff.ui.components
 
-import android.view.View
-import android.widget.PopupMenu
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -24,16 +21,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.R
-import cn.lliiooll.ppbuff.activity.PActivity
 import cn.lliiooll.ppbuff.activity.hideIcon
-import cn.lliiooll.ppbuff.utils.toastShort
 
 
 @Preview(showBackground = true)
@@ -119,14 +113,4 @@ fun PTitleBar() {
             }
         }
     }
-}
-
-
-fun POpenMenu(view: View, onDismiss: () -> Unit = {}): PopupMenu {
-    val menu = PopupMenu(view.context, view)
-    menu.setOnDismissListener {
-        onDismiss.invoke()
-    }
-    menu.menuInflater.inflate(R.menu.main_menu, menu.menu)
-    return menu
 }

@@ -11,15 +11,16 @@ import cn.lliiooll.ppbuff.xposed.PXposedParam
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
-import com.tencent.mmkv.MMKV
-import com.tencent.mmkv.MMKV.LibLoader
 
 
 object BuffEntrance : PXposedEntrance() {
 
     override fun init(param: PXposedParam) {
-        if (PPBuff.isSupportApp(param.packageName) && PPBuff.isSupportApp(param.processName)) {
+        if (param.packageName == "cn.lliiooll.ppbuff") {
+            // 激活状态检测
+        } else if (PPBuff.isSupportApp(param.packageName) && PPBuff.isSupportApp(param.processName)) {
             "PPBuff 正在加载...".info()
+
             val appClazz = param.classLoader.loadClass(PPBuff.getHostApplicationClassName(param.packageName))
             appClazz.findMethod(true) {
                 name == "onCreate"

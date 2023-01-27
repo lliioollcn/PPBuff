@@ -8,6 +8,5 @@ object HookStatus {
 
     fun getProvider(): String {
         return "未知"
-
     }
 }
