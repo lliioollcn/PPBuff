@@ -2,13 +2,14 @@ package cn.lliiooll.ppbuff.hook.common
 
 import android.view.View
 import cn.lliiooll.ppbuff.hook.BaseHook
+import cn.lliiooll.ppbuff.hook.PHookType
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookReplace
 
 object XiaoChuanEvilInstrumentationHook : BaseHook(
-    "去除EvilInstrumentation", "anti_evilinstrumentation"
+    "去除EvilInstrumentation", "anti_evilinstrumentation", PHookType.HIDE
 ) {
     override fun init(): Boolean {
 

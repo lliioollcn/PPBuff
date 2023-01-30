@@ -2,6 +2,8 @@ package cn.lliiooll.ppbuff.hook.loader
 
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiADHook
+import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiZyBuffHook
+import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
 import cn.lliiooll.ppbuff.hook.zuiyou.ZuiYouTestHook
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.empty
@@ -20,6 +22,8 @@ object ZuiyouLoader : BaseLoader() {
         return arrayListOf<BaseHook>().apply {
             add(ZuiYouTestHook)
             add(XiaoChuanAntiADHook)
+            add(XiaoChuanEvilInstrumentationHook)
+            add(XiaoChuanAntiZyBuffHook)
         }
     }
 

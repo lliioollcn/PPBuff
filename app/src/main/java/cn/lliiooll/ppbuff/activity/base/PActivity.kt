@@ -1,4 +1,4 @@
-package cn.lliiooll.ppbuff.activity
+package cn.lliiooll.ppbuff.activity.base
 
 import android.app.Activity
 import android.content.ComponentName
@@ -22,14 +22,10 @@ import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 abstract class PActivity : ComponentActivity() {
 
 
-    init {
-        if (PPBuff.isInHostApp())
-            EzXHelperInit.addModuleAssetPath(this)
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (PPBuff.isInHostApp())
+            EzXHelperInit.addModuleAssetPath(this)
     }
 
 
@@ -39,6 +35,7 @@ abstract class PActivity : ComponentActivity() {
     @Composable
     fun StatusBar() {
         val ctx = LocalView.current.context as Activity
+
         Surface(
             modifier = Modifier.height(Dp(PPBuff.getStatusBarHeight(ctx).toDp(ctx))).fillMaxWidth(),
             color = MaterialTheme.colorScheme.background
@@ -62,5 +59,6 @@ fun hideIcon(ctx: Context) {
         },
         PackageManager.DONT_KILL_APP
     )
-
 }
+
+

@@ -1,0 +1,70 @@
+package cn.lliiooll.ppbuff.hook.zuiyouLite
+
+import android.app.Activity
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import cn.lliiooll.ppbuff.BuildConfig
+import cn.lliiooll.ppbuff.R
+import cn.lliiooll.ppbuff.activity.ConfigActivity
+import cn.lliiooll.ppbuff.hook.BaseHook
+import cn.lliiooll.ppbuff.hook.PHookType
+import cn.lliiooll.ppbuff.utils.findClass
+import cn.lliiooll.ppbuff.utils.findId
+import cn.lliiooll.ppbuff.utils.jumpTo
+import cn.lliiooll.ppbuff.utils.toastShort
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
+import com.github.kyuubiran.ezxhelper.utils.findMethod
+import com.github.kyuubiran.ezxhelper.utils.hookAfter
+import com.github.kyuubiran.ezxhelper.utils.paramCount
+import com.github.kyuubiran.ezxhelper.utils.parasitics.ActivityHelper
+import com.github.kyuubiran.ezxhelper.utils.parasitics.ActivityProxyManager
+import com.github.kyuubiran.ezxhelper.utils.parasitics.MyInstrumentation
+
+object ZuiYouLiteSettingHook : BaseHook(
+    "设置", "setting", PHookType.HIDE
+) {
+    override fun init(): Boolean {
+
+        "cn.xiaochuankeji.zuiyouLite.ui.setting.SettingActivity"
+            .findClass()
+            .findMethod {
+                this.name == "onCreate" && this.paramCount == 1 && this.parameterTypes[0] == Bundle::class.java
+            }
+            .hookAfter {
+                val activity = it.thisObject as Activity
+                val root = activity.findViewById<RelativeLayout>("rootView".findId())
+                val scroll = root.getChildAt(1) as ScrollView
+                val content = scroll.getChildAt(0) as LinearLayout
+                EzXHelperInit.addModuleAssetPath(activity)
+                EzXHelperInit.addModuleAssetPath(activity)
+                EzXHelperInit.addModuleAssetPath(activity)
+                EzXHelperInit.addModuleAssetPath(activity)
+                EzXHelperInit.addModuleAssetPath(activity)
+                EzXHelperInit.addModuleAssetPath(activity)
+                EzXHelperInit.addModuleAssetPath(activity)
+                // 初始化界面
+                val view = LayoutInflater.from(activity).inflate(R.layout.pp_setting, null, false)
+                val version = view.findViewById<TextView>(R.id.pp_setting_version)
+                version.text = BuildConfig.VERSION_NAME
+                content.addView(view, 0)
+                val host = view.findViewById<LinearLayout>(R.id.pp_setting_root)
+                host.setOnClickListener {
+                    activity.jumpTo(ConfigActivity::class.java)
+                }
+            }
+        return true
+    }
+
+    override fun isEnable(): Boolean {
+        return true
+    }
+
+    override fun view(): View? {
+        return null
+    }
+}

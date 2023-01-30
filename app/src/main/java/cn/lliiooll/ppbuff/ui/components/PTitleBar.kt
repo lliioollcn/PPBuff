@@ -3,6 +3,7 @@ package cn.lliiooll.ppbuff.ui.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.R
-import cn.lliiooll.ppbuff.activity.hideIcon
+import cn.lliiooll.ppbuff.activity.base.hideIcon
 
 
 @Preview(showBackground = true)
@@ -35,22 +38,24 @@ import cn.lliiooll.ppbuff.activity.hideIcon
 fun PTitleBar() {
     Surface {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(10.dp, 20.dp, 10.dp, 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp, 20.dp, 10.dp, 10.dp),
         ) {
-            if (PPBuff.isInHostApp())
-                Surface(shape = CircleShape) {
-                    Image(
-                        painter = painterResource(R.mipmap.icon_arrow_left),
-                        contentDescription = "icon_more",
-                        modifier = Modifier.size(25.dp)
-                    )
-                }
             Text(
                 text = "PPHelper",
-                modifier = Modifier.weight(1f, true),
+                modifier = Modifier
+                    .weight(1f, true),
                 fontSize = TextUnit(20f, TextUnitType.Sp),
                 fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                /*
+                Brush.horizontalGradient(colors = arrayListOf<Color>().apply {
+                        add(Color(0xff12c2e9))
+                        add(Color(0xffc471ed))
+                        add(Color(0xfff64f59))
+                    })
+                 */
             )
             val ctx = LocalContext.current
             if (!PPBuff.isInHostApp()) {
@@ -70,13 +75,16 @@ fun PTitleBar() {
                     Image(
                         painter = painterResource(if (isSystemInDarkTheme()) R.drawable.ic_more_dark else R.drawable.ic_more_light),
                         contentDescription = "icon_more",
-                        modifier = Modifier.size(25.dp).clickable {
-                            status = !status
-                            // 弹出dialog
-                        }.graphicsLayer {
-                            transformOrigin = TransformOrigin.Center
-                            rotationZ = f
-                        }
+                        modifier = Modifier
+                            .size(25.dp)
+                            .clickable {
+                                status = !status
+                                // 弹出dialog
+                            }
+                            .graphicsLayer {
+                                transformOrigin = TransformOrigin.Center
+                                rotationZ = f
+                            }
                     )
 
                     val m_h: Float by animateFloatAsState(
@@ -88,7 +96,9 @@ fun PTitleBar() {
                         onDismissRequest = {
                             status = true
                         },
-                        modifier = Modifier.width(100.dp).height(m_h.dp)
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(m_h.dp)
                     ) {
 
                         DropdownMenuItem(

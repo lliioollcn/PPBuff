@@ -100,9 +100,9 @@ class PConfig {
             return mmkv?.decodeStringSet("debof_$k", null) != null
         }
 
-        fun getCache(k: String): MutableSet<String>? {
+        fun getCache(k: String): MutableSet<String> {
             if (mmkv == null) return hashSetOf()
-            return mmkv?.decodeStringSet("debof_$k", hashSetOf())
+            return mmkv?.decodeStringSet("debof_$k", hashSetOf())!!
 
         }
 

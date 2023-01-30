@@ -1,4 +1,4 @@
-package cn.lliiooll.ppbuff.activity.ui.theme
+package cn.lliiooll.ppbuff.activity.base.theme
 
 import android.app.Activity
 import android.os.Build
@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import cn.lliiooll.ppbuff.utils.toastShort
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

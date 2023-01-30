@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Process;
 import androidx.compose.ui.graphics.Color;
+
+import cn.lliiooll.ppbuff.app.PPBuffApp;
 import cn.lliiooll.ppbuff.tracker.PLog;
 import org.jetbrains.annotations.NotNull;
 
@@ -137,7 +139,7 @@ public class PPBuff {
     }
 
     public static boolean isInHostApp() {
-        return app != null;
+        return app!=null && app.getClass() != PPBuffApp.class;
     }
 
     public static class HostInfo {

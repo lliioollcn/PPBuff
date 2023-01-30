@@ -15,6 +15,9 @@ import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteQuickStartHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimplePostHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteTestHook
 import cn.lliiooll.ppbuff.utils.*
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
@@ -23,14 +26,16 @@ import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import io.luckypray.dexkit.DexKitBridge
 import io.luckypray.dexkit.builder.BatchFindArgs
-import io.luckypray.dexkit.enums.MatchType
 import kotlin.concurrent.thread
 
 /**
  * 皮皮搞笑Hook加载器，提供启动界面加载动画
  */
 object ZuiyouLiteLoader : BaseLoader() {
+
+    var inited = false
     override fun load() {
+        if (inited) return
 
         val deobfs = hooks().size - hooks().notNeedDeobfs { hook ->
             // 先加载 不用/已经缓存 反混淆的hook
@@ -59,13 +64,17 @@ object ZuiyouLiteLoader : BaseLoader() {
                             var deobf = 0
                             hooks().needDeobfs {
                                 "开始为 ${it.name} 进行反混淆操作...".debug()
-                                val result = dexkit?.batchFindClassesUsingStrings(BatchFindArgs.build {
-                                    sync {
-                                        bar.progress = deobf
-                                        text.text = "正在为 ${it.name} 寻找被混淆的类"
-                                    }
-                                    queryMap(it.deobfMap())
-                                })
+                                val result = if (it.needCustomDeobf()) {
+                                    it.customDebof(dexkit)
+                                } else {
+                                    dexkit?.batchFindClassesUsingStrings(BatchFindArgs.build {
+                                        sync {
+                                            bar.progress = deobf
+                                            text.text = "正在为 ${it.name} 寻找被混淆的类"
+                                        }
+                                        queryMap(it.deobfMap())
+                                    })
+                                }
                                 "开始为 ${it.name} 缓存反混淆...".debug()
                                 PConfig.cache(result)
                                 deobf++
@@ -80,6 +89,7 @@ object ZuiyouLiteLoader : BaseLoader() {
                                 bar.progress = 1
                                 text.text = "加载成功~"
                                 PConfig.init(true)
+                                inited = true
                                 if (PConfig.isUpdateHost()) PConfig.updateHost()
                                 activity.javaClass
                                     .findField {
@@ -106,6 +116,9 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteAntiVoiceRoomHook)// 去语音房
             add(XiaoChuanAntiZyBuffHook)// 去ZyBuff
             add(XiaoChuanEvilInstrumentationHook)// 去EvilInstrumentatio
+            add(ZuiYouLiteSimpleMeHook)// 精简"我的"
+            add(ZuiYouLiteSimplePostHook)// 精简帖子列表
+            add(ZuiYouLiteSettingHook)// 设置界面
         }
     }
 
