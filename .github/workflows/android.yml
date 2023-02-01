@@ -12,7 +12,6 @@ on:
 
 jobs:
   build:
-    environment: secrets
     name: BuildCI
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.event.head_commit.message, '[skip ci]') }} && success() && github.ref == 'refs/heads/master' }}
@@ -30,8 +29,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: |
-        echo ${{ secrets.KEYSTORE_BASE64 }} > key.txt
-        base64 -d key.txt > keystore.jks
+        echo ${{ secrets.KEYSTORE_BASE64 }} | base64 -d > keystore.jks
+        
         ./gradlew assembleRelease
       env: 
         KEYSTORE_PATH: "../keystore.jks"
@@ -43,4 +42,4 @@ jobs:
       with:
         path: |
           ${{github.workspace}}/app/build/outputs/apk/release/*.apk
-        name: upload-apk
+        name: apk-release-singed
