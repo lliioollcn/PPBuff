@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    environment: secrets
     name: BuildCI
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.event.head_commit.message, '[skip ci]') }} && success() && github.ref == 'refs/heads/master' }}
