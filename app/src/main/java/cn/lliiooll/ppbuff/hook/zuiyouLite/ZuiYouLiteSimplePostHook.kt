@@ -64,9 +64,9 @@ object ZuiYouLiteSimplePostHook : BaseHook(
                                 "被屏蔽的帖子: ${it.args[1]}".debug()
                                 it.args[1] = 111222333
                             } else {
-                                if (it.args[1] == 111222333){
+                                if (it.args[1] == 111222333) {
                                     "异常的帖子: ${it.args[1]}".debug()
-                                }else{
+                                } else {
                                     "未被屏蔽的帖子: ${it.args[1]}".debug()
                                 }
 
@@ -175,7 +175,7 @@ fun Any.hideHolder() {
         "itemView"
     ) as View?
     if (view != null) {
-        val params: ViewGroup.LayoutParams = view.layoutParams
+        val params: ViewGroup.LayoutParams = view.layoutParams ?: ViewGroup.LayoutParams(0, 0)
         params.width = 0
         params.height = 0
         view.layoutParams = params

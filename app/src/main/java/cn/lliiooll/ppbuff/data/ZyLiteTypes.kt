@@ -7,6 +7,8 @@ object ZyLiteTypes {
 
     val postList = sortedMapOf<String, Int>().apply {
         put("HolderStoryTips", -100);
+        put("直播 -> 颜值直播", 0);
+        put("直播 -> 交友直播", 4);
         put("话题推荐帖子", 16);
         put("直播推荐帖子", 211);
         put("直播卡片", 213);
