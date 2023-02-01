@@ -6,7 +6,7 @@
 ![2](https://img.shields.io/github/downloads/Xposed-Modules-Repo/cn.lliiooll.pphelper/total)
 ![3](https://img.shields.io/github/v/release/Xposed-Modules-Repo/cn.lliiooll.pphelper)
 ![https://github.com/lliioollcn](https://img.shields.io/badge/author-lliioollcn-6cf.svg?style=flat)
-
+[![4](https://github.com/lliiooll/PPBuff/actions/workflows/android.yml/badge.svg)](https://github.com/lliiooll/PPBuff/actions/workflows/android.yml)
 # 已完成功能/开发计划 (皮皮搞笑)
 
 - [x] 去广告
