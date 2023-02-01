@@ -4,10 +4,8 @@ pluginManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io/' }
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-        maven { url 'https://maven.aliyun.com/repository/google/' }
-        maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' }
-        maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap/") }
+        maven { url 'https://api.xposed.info/' }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap/' }
     }
 }
 dependencyResolutionManagement {
@@ -16,9 +14,8 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io/' }
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-        maven { url 'https://maven.aliyun.com/repository/google/' }
-        maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap/") }
+        maven { url 'https://api.xposed.info/' }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap/' }
     }
 }
 rootProject.name = "PPBuff"
