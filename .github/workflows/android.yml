@@ -29,7 +29,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: |
-        echo ${{ secrets.KEYSTORE_BASE64 }} | base64 -d > keystore.jks
+        echo ${{ secrets.KEYSTORE_BASE64 }} > key.txt
+        base64 -d key.txt > keystore.jks
         ./gradlew assembleRelease
       env: 
         KEYSTORE_PATH: "../keystore.jks"
