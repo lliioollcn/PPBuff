@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import cn.lliiooll.ppbuff.data.types.PViewType
 import cn.lliiooll.ppbuff.hook.isValid
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
+import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
@@ -48,27 +50,32 @@ object ZuiYouLiteSimplePostHook : BaseHook(
     override fun init(): Boolean {
 
         PConfig.getCache(DEOBFKEY_ALL_ADAPTER).forEach {
-            if (it.startsWith("cn.xiaochuankeji")) {
+            if (it.startsWith("cn.xiaochuankeji") && !it.contains("SlideDetailAdapter")) {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {
                     if (m.name == "onCreateViewHolder"
                         && !java.lang.reflect.Modifier.isAbstract(m.modifiers)
-                        && m.paramCount == 2
+                        && m.parameterTypes.size == 2
                         && m.parameterTypes[1] == Int::class.java
                     ) {
                         "Hook 在 $it 的方法".debug()
                         m.hookBefore {
                             if ((it.args[1] as Int).isHidePost()) {
                                 "被屏蔽的帖子: ${it.args[1]}".debug()
-                                it.args[1] = 666999
+                                it.args[1] = 111222333
                             } else {
-                                "未被屏蔽的帖子: ${it.args[1]}".debug()
+                                if (it.args[1] == 111222333){
+                                    "异常的帖子: ${it.args[1]}".debug()
+                                }else{
+                                    "未被屏蔽的帖子: ${it.args[1]}".debug()
+                                }
+
                             }
                         }
                         m.hookAfter {
                             "当前Adapter: ${it.thisObject.javaClass.name}".debug()
                             "当前Holder: ${it.result.javaClass.name}".debug()
-                            if (it.args[1] == 666999) {
+                            if (it.args[1] == 111222333) {
                                 it.result.hideHolder()
                             }
                         }
@@ -79,14 +86,16 @@ object ZuiYouLiteSimplePostHook : BaseHook(
 
         "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostViewHolderSingleVideo"
             .findClass()
-            .findMethod {
+            .findAllMethods {
                 paramCount > 0 && parameterTypes[0].name.contains("PostDataBean")
+
             }
             .hookAfter {
                 if (0x3c.isHidePost()) {
                     val postData = it.args[0]
                     val activity = XposedHelpers.getObjectField(postData, "activityBean")
                     if (activity != null) {
+                        "存在游戏宣传的帖子".debug()
                         it.thisObject.hideHolder()
                     }
                 }
@@ -129,21 +138,22 @@ object ZuiYouLiteSimplePostHook : BaseHook(
                 .fillMaxHeight()
                 .padding(10.dp, 5.dp, 10.dp, 0.dp)
         ) {
-            Column {
+            LazyColumn {
                 ZyLiteTypes.postList.forEach { (t, u) ->
-                    Row(modifier = Modifier.clickable {
-                        u.hidePost()
-                    }) {
-                        var hide by remember {
-                            mutableStateOf(u.isHidePost())
-                        }
-                        Text(text = t, modifier = Modifier.weight(1f, true))
-                        Checkbox(checked = hide, onCheckedChange = {
+                    item {
+                        Row(modifier = Modifier.clickable {
                             u.hidePost()
-                            hide = u.isHidePost()
-                        })
+                        }) {
+                            var hide by remember {
+                                mutableStateOf(u.isHidePost())
+                            }
+                            Text(text = t, modifier = Modifier.weight(1f, true))
+                            Checkbox(checked = hide, onCheckedChange = {
+                                u.hidePost()
+                                hide = u.isHidePost()
+                            })
+                        }
                     }
-
                 }
             }
         }

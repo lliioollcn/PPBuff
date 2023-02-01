@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -86,22 +87,23 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
                 .fillMaxHeight()
                 .padding(10.dp, 5.dp, 10.dp, 0.dp)
         ) {
-            Column {
+
+            LazyColumn {
                 ZyLiteTypes.mineList.forEach { (t, u) ->
-
-                    Row(modifier = Modifier.clickable {
-                        u.hideMine()
-                    }) {
-                        var hide by remember {
-                            mutableStateOf(u.isHideMine())
-                        }
-                        Text(text = t, modifier = Modifier.weight(1f, true))
-                        Checkbox(checked = hide, onCheckedChange = {
+                    item {
+                        Row(modifier = Modifier.clickable {
                             u.hideMine()
-                            hide = u.isHideMine()
-                        })
+                        }) {
+                            var hide by remember {
+                                mutableStateOf(u.isHideMine())
+                            }
+                            Text(text = t, modifier = Modifier.weight(1f, true))
+                            Checkbox(checked = hide, onCheckedChange = {
+                                u.hideMine()
+                                hide = u.isHideMine()
+                            })
+                        }
                     }
-
                 }
             }
         }

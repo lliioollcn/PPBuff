@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -111,60 +112,62 @@ fun ConfigMainComposable(navController: NavHostController) {
             Color.White
         }
     ) {
-        Column {
+        LazyColumn {
             PHookType.values().forEach {
                 if (it != PHookType.HIDE) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp, 5.dp, 10.dp, 5.dp),
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Column(
+                    item {
+                        Surface(
                             modifier = Modifier
-                                .padding(15.dp, 5.dp, 15.dp, 5.dp),
+                                .fillMaxWidth()
+                                .padding(10.dp, 5.dp, 10.dp, 5.dp),
+                            shape = MaterialTheme.shapes.medium
                         ) {
-                            Text(
-                                text = it.getLabel(),
-                                fontSize = TextUnit(17f, TextUnitType.Sp),
-                                color = if (isSystemInDarkTheme()) {
-                                    Color(0xff1CB5E0)
-                                } else {
-                                    Color(0xFF0000C8)
-                                }
-                            )
-
-                            Spacer(
+                            Column(
                                 modifier = Modifier
-                                    .padding(3.dp, 3.dp, 3.dp, 3.dp)
-                                    .background(
-                                        if (isSystemInDarkTheme()) {
-                                            Color.LightGray
-                                        } else {
-                                            Color.DarkGray
-                                        }
-                                    )
-                                    .height(1.dp)
-                            )
+                                    .padding(15.dp, 5.dp, 15.dp, 5.dp),
+                            ) {
+                                Text(
+                                    text = it.getLabel(),
+                                    fontSize = TextUnit(17f, TextUnitType.Sp),
+                                    color = if (isSystemInDarkTheme()) {
+                                        Color(0xff1CB5E0)
+                                    } else {
+                                        Color(0xFF0000C8)
+                                    }
+                                )
 
-                            when (it) {
-                                PHookType.COMMON -> {
-                                    CommonHookList(navController)
+                                Spacer(
+                                    modifier = Modifier
+                                        .padding(3.dp, 3.dp, 3.dp, 3.dp)
+                                        .background(
+                                            if (isSystemInDarkTheme()) {
+                                                Color.LightGray
+                                            } else {
+                                                Color.DarkGray
+                                            }
+                                        )
+                                        .height(1.dp)
+                                )
+
+                                when (it) {
+                                    PHookType.COMMON -> {
+                                        CommonHookList(navController)
+                                    }
+
+                                    PHookType.SIMPLE -> {
+                                        SimpleHookList(navController)
+                                    }
+
+                                    PHookType.DEBUG -> {
+                                        DebugHookList(navController)
+                                    }
+
+                                    PHookType.PLAY -> {
+                                        PlayHookList(navController)
+                                    }
+
+                                    else -> {}
                                 }
-
-                                PHookType.SIMPLE -> {
-                                    SimpleHookList(navController)
-                                }
-
-                                PHookType.DEBUG -> {
-                                    DebugHookList(navController)
-                                }
-
-                                PHookType.PLAY -> {
-                                    PlayHookList(navController)
-                                }
-
-                                else -> {}
                             }
                         }
                     }

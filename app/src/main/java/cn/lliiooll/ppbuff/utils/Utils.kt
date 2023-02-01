@@ -156,6 +156,7 @@ fun Context.jumpTo(clazz: Class<*>) {
 
 fun Any.downloadVideo() {
     if (this.javaClass.name.contains("ServerImageBean")) {
+        "无水印视频开始下载".toastShort()
         val videoBean = XposedHelpers.getObjectField(this, "videoBean")
         if (videoBean != null) {
             var url = ""
@@ -169,7 +170,7 @@ fun Any.downloadVideo() {
                         if (videoUrls != null) {
                             val videoUrlsData = videoUrls as List<*>
                             videoUrlsData.forEach { u ->
-                                urls.add(XposedHelpers.getObjectField(u, "urls") as String)
+                                urls.add(XposedHelpers.getObjectField(u, "url") as String)
                             }
                         }
                     }
@@ -183,7 +184,7 @@ fun Any.downloadVideo() {
                         if (videoUrls != null) {
                             val videoUrlsData = videoUrls as List<*>
                             videoUrlsData.forEach { u ->
-                                urls.add(XposedHelpers.getObjectField(u, "urls") as String)
+                                urls.add(XposedHelpers.getObjectField(u, "url") as String)
                             }
                         }
                     }
@@ -193,6 +194,7 @@ fun Any.downloadVideo() {
                 if (!PJavaUtils.isConnected(url)) {
                     url = "http://127.0.0.1:2018/$u"
                 }
+                "下载url: $url".debug()
             } else {
                 url = XposedHelpers.getObjectField(videoBean, "urlsrc") as String
             }

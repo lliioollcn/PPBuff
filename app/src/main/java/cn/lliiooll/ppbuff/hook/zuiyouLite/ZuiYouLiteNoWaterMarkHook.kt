@@ -2,8 +2,6 @@ package cn.lliiooll.ppbuff.hook.zuiyouLite
 
 import android.app.Activity
 import android.content.Intent
-import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -26,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -44,9 +41,9 @@ import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.downloadVideo
 import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.toastShort
-import com.github.kyuubiran.ezxhelper.utils.findMethod
+import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
-import com.github.kyuubiran.ezxhelper.utils.paramCount
+import com.github.kyuubiran.ezxhelper.utils.hookReplace
 import de.robv.android.xposed.XposedHelpers
 
 object ZuiYouLiteNoWaterMarkHook : BaseHook(
@@ -55,13 +52,12 @@ object ZuiYouLiteNoWaterMarkHook : BaseHook(
 
     val DEOBFKEY_COMMENT_HOLDER = "cn.xiaochuankeji.zuiyouLite.common.CommentVideo"
     override fun init(): Boolean {
-
         "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostOperator"
             .findClass()
-            .findMethod {
-                this.paramCount == 5 && this.parameterTypes[0] == Activity::class.java && this.parameterTypes[1] == String::class.java
+            .findAllMethods {
+                this.parameterTypes.size == 5 && this.parameterTypes[0] == Activity::class.java && this.parameterTypes[1] == String::class.java
             }
-            .hookAfter {
+            .hookReplace {
                 val imageData = it.args[2]
                 // 下载
                 imageData?.downloadVideo()
@@ -70,8 +66,8 @@ object ZuiYouLiteNoWaterMarkHook : BaseHook(
             .forEach {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {
-                    if (m.paramCount == 1 && m.parameterTypes[0].name.contains("CommentBean")) {
-                        m.hookAfter {
+                    if (m.parameterTypes.size == 1 && m.parameterTypes[0].name.contains("CommentBean") && m.name == "u0") {
+                        m.hookReplace {
                             val commentData = it.args[0]
                             // 下载
                             val serverImageBean =
@@ -166,6 +162,19 @@ object ZuiYouLiteNoWaterMarkHook : BaseHook(
                         lastSwitch = System.currentTimeMillis()
                     })
                 }
+
+                Text(
+                    text = "如果你想自定义视频下载路径，就选择以下选项",
+                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                )
+                Text(
+                    text = "SAF:  高版本安卓的自定义下载路径",
+                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                )
+                Text(
+                    text = "传统方式:  适用于低版本安卓，在高版本使用会闪退",
+                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                )
 
                 Row(modifier = Modifier
                     .clickable {
