@@ -41,4 +41,4 @@ jobs:
       with:
         path: |
           ${{github.workspace}}/app/build/outputs/*.apk
-        name: QAuxiliary-release-${{ github.event.head_commit.id }}-arm32
+        name: PPBuff-${{ github.event.head_commit.id }}
