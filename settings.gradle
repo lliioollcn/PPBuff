@@ -1,24 +1,24 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
         maven { url 'https://jitpack.io/' }
         maven { url 'https://maven.aliyun.com/repository/public/' }
         maven { url 'https://maven.aliyun.com/repository/google/' }
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' }
         maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap/") }
-        gradlePluginPortal()
-        google()
-        mavenCentral()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        google()
+        mavenCentral()
         maven { url 'https://jitpack.io/' }
         maven { url 'https://maven.aliyun.com/repository/public/' }
         maven { url 'https://maven.aliyun.com/repository/google/' }
         maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap/") }
-        mavenCentral()
-        google()
     }
 }
 rootProject.name = "PPBuff"
