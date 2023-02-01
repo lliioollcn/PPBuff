@@ -1,9 +1,8 @@
 package cn.lliiooll.ppbuff.hook.common
 
-import android.view.View
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.hook.BaseHook
-import cn.lliiooll.ppbuff.hook.PHookType
+import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.hook.isValid
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
@@ -12,7 +11,7 @@ import com.github.kyuubiran.ezxhelper.utils.hookReplace
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 
 object XiaoChuanAntiZyBuffHook : BaseHook(
-    "去除ZyBuff", "anti_zybuff", PHookType.HIDE
+    "去除ZyBuff", "anti_zybuff", PHookType.DEBUG
 ) {
 
     val DEOBFKEY_ZUBUFF = "cn.xiaochuankeji.zuiyouLite.control.crashcatch.ZyBuff"
@@ -45,14 +44,6 @@ object XiaoChuanAntiZyBuffHook : BaseHook(
 
     override fun needDeobf(): Boolean {
         return !PConfig.hasCache(DEOBFKEY_ZUBUFF) || !PConfig.getCache(DEOBFKEY_ZUBUFF)?.isValid()!!
-    }
-
-    override fun view(): View? {
-        return null
-    }
-
-    override fun isEnable(): Boolean {
-        return true
     }
 
 

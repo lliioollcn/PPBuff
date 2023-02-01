@@ -43,7 +43,7 @@ fun PTitleBar() {
                 .padding(10.dp, 20.dp, 10.dp, 10.dp),
         ) {
             Text(
-                text = "PPHelper",
+                text = "PPBuff",
                 modifier = Modifier
                     .weight(1f, true),
                 fontSize = TextUnit(20f, TextUnitType.Sp),

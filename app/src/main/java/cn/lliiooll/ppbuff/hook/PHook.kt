@@ -10,6 +10,7 @@ class PHook {
     companion object {
 
         private val hookLoaders = hashMapOf<String, BaseLoader>()
+        var thisLoader: BaseLoader? = null
 
         init {
             hookLoaders[PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME] = ZuiyouLiteLoader
@@ -18,10 +19,13 @@ class PHook {
 
         fun init(packageName: String) {
             if (hookLoaders.containsKey(packageName)) {
-                hookLoaders[packageName]?.load()
+                thisLoader = hookLoaders[packageName]
+                thisLoader?.load()
             } else {
                 "没有找到合适的Hook加载器，不进行加载".error()
             }
         }
+
+
     }
 }

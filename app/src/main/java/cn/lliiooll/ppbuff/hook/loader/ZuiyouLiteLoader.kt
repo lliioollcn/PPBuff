@@ -14,6 +14,9 @@ import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
 import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoWaterMarkHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteQuickStartHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
@@ -119,6 +122,9 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteSimpleMeHook)// 精简"我的"
             add(ZuiYouLiteSimplePostHook)// 精简帖子列表
             add(ZuiYouLiteSettingHook)// 设置界面
+            add(ZuiYouLiteDetailLocationHook)// IP精准到市
+            add(ZuiYouLiteDetailCommentTimeHook)// 评论详细时间
+            add(ZuiYouLiteNoWaterMarkHook)// 去水印
         }
     }
 

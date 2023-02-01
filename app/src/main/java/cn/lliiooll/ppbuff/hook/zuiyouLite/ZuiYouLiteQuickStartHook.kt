@@ -3,14 +3,14 @@ package cn.lliiooll.ppbuff.hook.zuiyouLite
 import android.os.Handler
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.hook.BaseHook
-import cn.lliiooll.ppbuff.hook.PHookType
+import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.utils.debug
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 
 object ZuiYouLiteQuickStartHook : BaseHook(
-    "快速启动", "quickStart", PHookType.HIDE
+    "快速启动", "quickStart", PHookType.DEBUG
 ) {
     override fun init(): Boolean {
 

@@ -31,8 +31,10 @@ public class PPBuff {
 
 
     public static boolean isDebug() {
+
         return BuildConfig.DEBUG;
     }
+
 
     public static void initModulePath(String modulePath) {
         PPBuff.modulePath = modulePath;

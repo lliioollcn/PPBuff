@@ -51,6 +51,11 @@ class PConfig {
             mmkv?.encode(label, number)!!
         }
 
+        fun set(label: String, str: String) {
+            if (mmkv == null) return
+            mmkv?.encode(label, str)!!
+        }
+
         fun isUpdateHost(): Boolean {
             val app = PPBuff.getApplication()
             if (app != null) {
@@ -108,6 +113,47 @@ class PConfig {
 
         fun setHideConfig() {
             set("hide_icon", !isHideConfig())
+        }
+
+        fun isHidePost(i: Int): Boolean {
+            return mmkv?.decodeStringSet("hide_post", hashSetOf())?.contains("$i")!!
+        }
+
+        fun addHidePost(i: Int) {
+            mmkv?.encode("hide_post", mmkv?.decodeStringSet("hide_post", hashSetOf())?.apply {
+                add("$i")
+            })
+        }
+
+        fun delHidePost(i: Int) {
+            mmkv?.encode("hide_post", mmkv?.decodeStringSet("hide_post", hashSetOf())?.apply {
+                remove("$i")
+            })
+        }
+
+
+        fun isHideMine(i: String): Boolean {
+            return mmkv?.decodeStringSet("hide_mine", hashSetOf())?.contains(i)!!
+        }
+
+        fun addHideMine(i: String) {
+            mmkv?.encode("hide_mine", mmkv?.decodeStringSet("hide_mine", hashSetOf())?.apply {
+                add(i)
+            })
+        }
+
+        fun delHideMine(i: String) {
+            mmkv?.encode("hide_mine", mmkv?.decodeStringSet("hide_mine", hashSetOf())?.apply {
+                remove(i)
+            })
+        }
+
+        fun string(str: String): String {
+            return string(str,"")
+        }
+
+        fun string(str: String,def:String): String {
+            return mmkv?.decodeString(str, def)!!
         }
     }
 }

@@ -1,12 +1,17 @@
 package cn.lliiooll.ppbuff.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,12 +26,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.activity.base.PActivity
 import cn.lliiooll.ppbuff.activity.base.theme.PPBuffTheme
-import cn.lliiooll.ppbuff.hook.PHookType
+import cn.lliiooll.ppbuff.data.types.PHookType
+import cn.lliiooll.ppbuff.data.types.PRecordType
+import cn.lliiooll.ppbuff.hook.PHook
 import cn.lliiooll.ppbuff.ui.components.PTitleBar
+import cn.lliiooll.ppbuff.utils.toastShort
 
 class ConfigActivity : PActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,12 +54,48 @@ class ConfigActivity : PActivity() {
                         composable("main") {// 主界面
                             ConfigMainComposable(navController)
                         }
+                        PHook.thisLoader?.hooks()?.forEach {
+                            if (it.router()) {
+                                val hook = it
+                                composable(it.label) {
+                                    hook.compose(navController = navController)
+                                }
+                            }
+                        }
                     }
                 }
 
             }
         }
 
+        requestVideoRecord =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val data = result.data
+                if (data != null) {
+                    val uri = data.data
+                    if (uri != null) {
+                        val takeFlags =
+                            (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                    or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        this.contentResolver.takePersistableUriPermission(
+                            uri,
+                            takeFlags
+                        )
+                        PConfig.set("video_record_uri", uri.toString())
+                        PConfig.set("video_record", PRecordType.SAF.getLabel())
+                        "保存成功".toastShort(this)
+                    } else {
+                        "错误: 选择的路径不存在".toastShort(this)
+                    }
+                } else {
+                    "错误: 数据为空".toastShort(this)
+                }
+            }
+
+    }
+
+    companion object {
+        var requestVideoRecord: ActivityResultLauncher<Intent>? = null
     }
 }
 
@@ -66,21 +114,19 @@ fun ConfigMainComposable(navController: NavHostController) {
         Column {
             PHookType.values().forEach {
                 if (it != PHookType.HIDE) {
-
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(10.dp, 5.dp, 10.dp, 5.dp),
                         shape = MaterialTheme.shapes.medium
                     ) {
-                        Row(
+                        Column(
                             modifier = Modifier
                                 .padding(15.dp, 5.dp, 15.dp, 5.dp),
                         ) {
                             Text(
                                 text = it.getLabel(),
-                                modifier = Modifier.weight(1f, true),
-                                fontSize = TextUnit(15f, TextUnitType.Sp),
+                                fontSize = TextUnit(17f, TextUnitType.Sp),
                                 color = if (isSystemInDarkTheme()) {
                                     Color(0xff1CB5E0)
                                 } else {
@@ -88,14 +134,37 @@ fun ConfigMainComposable(navController: NavHostController) {
                                 }
                             )
 
-                            if (it == PHookType.COMMON) {
-                                CommonHookList()
-                            } else if (it == PHookType.SIMPLE) {
-                                SimpleHookList()
-                            } else if (it == PHookType.DEBUG) {
-                                DebugHookList()
-                            } else if (it == PHookType.PLAY) {
-                                PlayHookList()
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(3.dp, 3.dp, 3.dp, 3.dp)
+                                    .background(
+                                        if (isSystemInDarkTheme()) {
+                                            Color.LightGray
+                                        } else {
+                                            Color.DarkGray
+                                        }
+                                    )
+                                    .height(1.dp)
+                            )
+
+                            when (it) {
+                                PHookType.COMMON -> {
+                                    CommonHookList(navController)
+                                }
+
+                                PHookType.SIMPLE -> {
+                                    SimpleHookList(navController)
+                                }
+
+                                PHookType.DEBUG -> {
+                                    DebugHookList(navController)
+                                }
+
+                                PHookType.PLAY -> {
+                                    PlayHookList(navController)
+                                }
+
+                                else -> {}
                             }
                         }
                     }
