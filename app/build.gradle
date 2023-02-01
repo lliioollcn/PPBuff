@@ -41,7 +41,6 @@ android {
                 storeFile file(System.getenv("KEYSTORE_PATH"))
                 storePassword System.getenv("KEYSTORE_PASSWORD")
                 enableV2Signing = true
-                enableV3Signing = true
             }
         }
         buildTypes {
