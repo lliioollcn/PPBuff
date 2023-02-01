@@ -1,0 +1,44 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+      - '.github/**'
+      - '.idea/**'
+      - '!.github/workflows/**'
+
+jobs:
+  build:
+    name: BuildCI
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, '[skip ci]') }} && success() && github.ref == 'refs/heads/master' }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: |
+        echo ${{ secrets.KEYSTORE_BASE64 }} | base64 -d > keystore.jks
+        ./gradlew assembleRelease
+      env: 
+        KEYSTORE_PATH: "../keystore.jks"
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+    - name: Upload Artifacts(arm32)
+      uses: actions/upload-artifact@v3
+      with:
+        path: |
+          ${{github.workspace}}/app/build/outputs/*.apk
+        name: QAuxiliary-release-${{ github.event.head_commit.id }}-arm32
