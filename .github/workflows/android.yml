@@ -36,7 +36,7 @@ jobs:
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-    - name: Upload Artifacts(arm32)
+    - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
         path: |
