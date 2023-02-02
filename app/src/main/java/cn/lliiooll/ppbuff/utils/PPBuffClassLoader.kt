@@ -5,28 +5,39 @@ import com.github.kyuubiran.ezxhelper.utils.findField
 object PPBuffClassLoader : ClassLoader() {
 
     override fun loadClass(name: String?, resolve: Boolean): Class<*>? {
-        if (contextClassloader != null) {
+        if (contextClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
                 return contextClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
 
             }
         }
-        if (appClassloader != null) {
+        if (name != null && (
+                    name.contains("androidx") ||
+                            name.contains("com.tencent.mmkv") ||
+                            name.contains("org.jetbrains") ||
+                            name.contains("org.google") ||
+                            name.contains("javax") ||
+                            name.contains("com.squareup")
+                    )
+        ) {
+            throw ClassNotFoundException(name)
+        }
+        if (appClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
                 return appClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
 
             }
         }
-        if (xposedClassloader != null) {
+        if (xposedClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
                 return xposedClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
 
             }
         }
-        if (moduleClassloader != null) {
+        if (moduleClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
                 return moduleClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
