@@ -64,9 +64,11 @@ object ZuiYouLiteNoWaterMarkHook : BaseHook(
             }
         PConfig.getCache(DEOBFKEY_COMMENT_HOLDER)
             .forEach {
+                "在类 $it 中寻找方法".debug()
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {
                     if (m.parameterTypes.size == 1 && m.parameterTypes[0].name.contains("CommentBean") && m.name == "u0") {
+                        "在类 $it 中找到方法".debug()
                         m.hookReplace {
                             val commentData = it.args[0]
                             // 下载

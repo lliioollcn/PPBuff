@@ -18,10 +18,10 @@ object BuffEntrance : PXposedEntrance() {
     override fun init(param: PXposedParam) {
         if (param.packageName == "cn.lliiooll.ppbuff") {
             // 激活状态检测
-        } else if (PPBuff.isSupportApp(param.packageName) && PPBuff.isSupportApp(param.processName)) {
+        } else if (PPBuff.isSupportApp(param.packageName) && !param.processName.contains(":")) {
             "PPBuff 正在加载...".info()
-
-            val appClazz = param.classLoader.loadClass(PPBuff.getHostApplicationClassName(param.packageName))
+            val appClazz =
+                param.classLoader.loadClass(PPBuff.getHostApplicationClassName(param.packageName))
             appClazz.findMethod(true) {
                 name == "onCreate"
             }.hookAfter {

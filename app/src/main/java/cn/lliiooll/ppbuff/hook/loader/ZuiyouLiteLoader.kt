@@ -2,6 +2,7 @@ package cn.lliiooll.ppbuff.hook.loader
 
 import android.app.Activity
 import android.os.Handler
+import android.os.Looper
 import android.widget.ProgressBar
 import android.widget.TextView
 import cn.lliiooll.ppbuff.PConfig
@@ -39,30 +40,30 @@ object ZuiyouLiteLoader : BaseLoader() {
     var inited = false
     override fun load() {
         if (inited) return
-
         val deobfs = hooks().size - hooks().notNeedDeobfs { hook ->
             // 先加载 不用/已经缓存 反混淆的hook
             if (hook.isEnable() && !hook.init()) {
                 "Hook ${hook.name} 加载失败!".error()
             }
             "Hook ${hook.name} 是否启用: ${hook.isEnable()}".debug()
-        }.size
+        }
         // 然后在加载界面处加载需要反混淆的hook
-        if (PConfig.isUpdateHost() || deobfs > 0) {
-            "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
-                .findClass()
-                .findMethod { name == "onCreate" }
-                .hookAfter {
+
+        "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
+            .findClass()
+            .findMethod { name == "onCreate" }
+            .hookAfter {
+                val activity = it.thisObject as Activity
+                EzXHelperInit.addModuleAssetPath(activity)
+                if (PConfig.isUpdateHost() || deobfs > 0) {
                     try {
-                        val activity = it.thisObject as Activity
-                        EzXHelperInit.addModuleAssetPath(activity)
                         val splash = activity.inflate(R.layout.pp_spalsh)
                         activity.setContentView(splash)
                         val text = splash.findViewById<TextView>(R.id.spalsh_text)
                         val bar = splash.findViewById<ProgressBar>(R.id.spalsh_bar)
                         bar.max = deobfs
                         "开始进行反混淆操作".debug()
-                        thread {
+                        async {
                             val dexkit = DexKitBridge.create(PPBuff.getHostPath())
                             var deobf = 0
                             hooks().needDeobfs {
@@ -98,7 +99,7 @@ object ZuiyouLiteLoader : BaseLoader() {
                                     .findField {
                                         this.type == Handler::class.java
                                     }
-                                    .invokeMethod(activity, "sendEmptyMessage", 29)
+                                    .invokeMethod(activity, "sendEmptyMessageDelayed", 29, 2000L)
 
                             }
                             dexkit?.close()
@@ -106,9 +107,16 @@ object ZuiyouLiteLoader : BaseLoader() {
                     } catch (e: Throwable) {
                         e.catch()
                     }
-
+                } else {
+                    activity.javaClass
+                        .findField {
+                            this.type == Handler::class.java
+                        }
+                        .invokeMethod(activity, "sendEmptyMessage", 29)
                 }
-        }
+
+            }
+
     }
 
     override fun hooks(): List<BaseHook> {
@@ -116,9 +124,9 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteTestHook)// 测试Hook
             add(ZuiYouLiteQuickStartHook)// 快速启动
             add(XiaoChuanAntiADHook)// 去广告
-            add(ZuiYouLiteAntiVoiceRoomHook)// 去语音房
             add(XiaoChuanAntiZyBuffHook)// 去ZyBuff
             add(XiaoChuanEvilInstrumentationHook)// 去EvilInstrumentatio
+            add(ZuiYouLiteAntiVoiceRoomHook)// 去语音房
             add(ZuiYouLiteSimpleMeHook)// 精简"我的"
             add(ZuiYouLiteSimplePostHook)// 精简帖子列表
             add(ZuiYouLiteSettingHook)// 设置界面

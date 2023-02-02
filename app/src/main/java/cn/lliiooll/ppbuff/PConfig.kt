@@ -78,6 +78,9 @@ class PConfig {
         }
 
         fun cache(result: Map<String, List<DexClassDescriptor>>?) {
+            if (result?.isEmpty()!!) {
+                "没有找到任何类".debug()
+            }
             result?.forEach { (k, v) ->
                 "缓存反混淆信息: $k@$v".debug()
                 mmkv?.encode("debof_$k", hashSetOf<String?>().apply {
@@ -149,10 +152,10 @@ class PConfig {
         }
 
         fun string(str: String): String {
-            return string(str,"")
+            return string(str, "")
         }
 
-        fun string(str: String,def:String): String {
+        fun string(str: String, def: String): String {
             return mmkv?.decodeString(str, def)!!
         }
     }

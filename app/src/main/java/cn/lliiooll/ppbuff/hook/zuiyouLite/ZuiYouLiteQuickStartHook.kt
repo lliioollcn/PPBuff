@@ -22,7 +22,7 @@ object ZuiYouLiteQuickStartHook : BaseHook(
                     if (PConfig.isUpdateHost() || !PConfig.isInited()) {
                         // 等待反混淆完毕后再跳转
                         "应用更新，阻塞直到反混淆加载完毕.".debug()
-                        //it.args[0] = 666
+                        it.args[0] = 666
                     }
                     it.args[1] = 1L
                 }

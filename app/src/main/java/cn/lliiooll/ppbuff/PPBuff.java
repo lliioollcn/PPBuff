@@ -6,10 +6,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Process;
+
 import androidx.compose.ui.graphics.Color;
 
 import cn.lliiooll.ppbuff.app.PPBuffApp;
 import cn.lliiooll.ppbuff.tracker.PLog;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -141,7 +143,7 @@ public class PPBuff {
     }
 
     public static boolean isInHostApp() {
-        return app!=null && app.getClass() != PPBuffApp.class;
+        return app != null && app.getClass() != PPBuffApp.class;
     }
 
     public static class HostInfo {
@@ -151,6 +153,7 @@ public class PPBuff {
             private static final int PP_2_46_0 = 2460000;
             private static final int PP_2_46_1 = 2460100;
             private static final int PP_2_47_1 = 2470100;
+            private static final int PP_2_47_10 = 2471000;
         }
 
         public static class TieBa {

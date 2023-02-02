@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.data.types.PViewType
+import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClassOrNull
 import io.luckypray.dexkit.DexKitBridge
 import io.luckypray.dexkit.descriptor.member.DexClassDescriptor
@@ -70,13 +71,15 @@ abstract class BaseHook(
 
 }
 
-fun List<BaseHook>.notNeedDeobfs(function: (BaseHook) -> Unit): List<BaseHook> {
+fun List<BaseHook>.notNeedDeobfs(function: (BaseHook) -> Unit): Int {
+    var c = 0
     this.forEach {
         if (!it.needDeobf()) {
+            c++
             function.invoke(it)
         }
     }
-    return this
+    return c
 }
 
 fun List<BaseHook>.needDeobfs(function: (BaseHook) -> Unit) {
@@ -91,8 +94,10 @@ fun MutableSet<String>.isValid(): Boolean {
     if (this.isEmpty()) return false
     var b = true
     for (c in this) {
+        "检查类 $c 是否有效".debug()
         if (c.findClassOrNull() == null) {
             b = false
+            "检查类 $c 失效，需要重新反混淆".debug()
             break
         }
     }
