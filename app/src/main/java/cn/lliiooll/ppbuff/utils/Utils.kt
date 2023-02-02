@@ -266,7 +266,7 @@ fun File.saveVideo(type: PRecordType) {
 }
 
 
-fun getModuleDebugInfo():MutableMap<String,String>{
+fun getModuleDebugInfo(): MutableMap<String, String> {
     return hashMapOf<String, String>().apply {
         put("module_version_name", BuildConfig.VERSION_NAME)
         put("module_version_code", "${BuildConfig.VERSION_CODE}")
@@ -275,7 +275,10 @@ fun getModuleDebugInfo():MutableMap<String,String>{
         put("module_build_debug", "${BuildConfig.DEBUG}")
         put(
             "module_build_time",
-            PJavaUtils.commentDetailTime("yyyy年MM月dd日HH:mm:ss", BuildConfig.BUILD_TIMESTAMP)
+            PJavaUtils.commentDetailTime(
+                "yyyy年MM月dd日HH:mm:ss",
+                BuildConfig.BUILD_TIMESTAMP / 1000
+            )
         )
         put("sys_brand", Build.BRAND)
         put("sys_display", Build.DISPLAY)
@@ -287,4 +290,9 @@ fun getModuleDebugInfo():MutableMap<String,String>{
     }
 }
 
+fun String.openUrl(context: Context) {
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.data = Uri.parse(this)
+    context.startActivity(intent)
+}
 

@@ -9,6 +9,10 @@
 [![4](https://github.com/lliioollcn/PPBuff/actions/workflows/android.yml/badge.svg)](https://github.com/lliioollcn/PPBuff/actions/workflows/android.yml)
 [![Build status](https://build.appcenter.ms/v0.1/apps/f8dfb1e2-1eea-4e7b-ace5-157de75ed2a0/branches/master/badge)](https://appcenter.ms)
 
+## CI版本下载:
+github action: https://github.com/lliioollcn/PPBuff/actions
+appcenter: https://install.appcenter.ms/users/lliioollcn/apps/ppbuff/distribution_groups/alpha
+
 # 已完成功能/开发计划 (皮皮搞笑)
 
 - [x] 去广告

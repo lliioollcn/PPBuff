@@ -2,6 +2,7 @@ package cn.lliiooll.ppbuff.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,7 +26,7 @@ import cn.lliiooll.ppbuff.utils.PColor
 @Composable
 fun PHookStatus() {
     Surface(
-        color = MaterialTheme.colorScheme.background,
+        color = if (isSystemInDarkTheme()) Color.DarkGray else Color.White,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
@@ -34,7 +35,9 @@ fun PHookStatus() {
         ) {
             // 主体
             val color = if (HookStatus.isEnable()) PColor.SUCCESS else PColor.ERROR
-            Surface {
+            Surface(
+                color = if (isSystemInDarkTheme()) Color.DarkGray else Color.White,
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxWidth().padding(10.dp, 0.dp, 10.dp, 0.dp),
                     color = color,
