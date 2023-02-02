@@ -34,7 +34,6 @@ class PLog {
                 Crashes.trackError(throwable, hashMapOf<String, String>().apply {
                     putAll(getModuleDebugInfo())
                 }, arrayListOf())
-
             }
             e("发生了一个错误: ${throwable.message}")
             e("以下是堆栈: ")
