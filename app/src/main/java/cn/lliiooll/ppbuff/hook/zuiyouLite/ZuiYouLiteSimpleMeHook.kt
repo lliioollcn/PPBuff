@@ -66,10 +66,20 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
                         }
 
                         if (viewGroup != null) {
+
+                            val view = viewGroup as View
+                            val lp = view.layoutParams ?: ViewGroup.LayoutParams(0, 0)
+                            lp.width = 0
+                            lp.height = 0
+                            view.layoutParams = lp
+                            view.layout(0,0,0,0)
+                            view.measure(0,0)
                             viewGroup.clearAnimation()
                             viewGroup.removeAllViews()
                             viewGroup.setOnClickListener(null)
                             viewGroup.visibility = View.GONE
+                            view.setPadding(0, 0, 0, 0)
+                            view.visibility = View.GONE
                         }
                     }
 

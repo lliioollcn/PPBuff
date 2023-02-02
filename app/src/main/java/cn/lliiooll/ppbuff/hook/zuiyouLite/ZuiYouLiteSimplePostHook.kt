@@ -50,7 +50,10 @@ object ZuiYouLiteSimplePostHook : BaseHook(
     override fun init(): Boolean {
 
         PConfig.getCache(DEOBFKEY_ALL_ADAPTER).forEach {
-            if (it.startsWith("cn.xiaochuankeji") && !it.contains("SlideDetailAdapter")) {
+            if (it.startsWith("cn.xiaochuankeji")
+                && !it.contains("SlideDetailAdapter")
+                && !it.contains("MessageAdapter")
+            ) {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {
                     if (m.name == "onCreateViewHolder"
@@ -175,7 +178,7 @@ fun Any.hideHolder() {
         "itemView"
     ) as View?
     if (view != null) {
-        val params: ViewGroup.LayoutParams = view.layoutParams ?: ViewGroup.LayoutParams(0, 0)
+        val params = view.layoutParams ?: ViewGroup.LayoutParams(0, 0)
         params.width = 0
         params.height = 0
         view.layoutParams = params
