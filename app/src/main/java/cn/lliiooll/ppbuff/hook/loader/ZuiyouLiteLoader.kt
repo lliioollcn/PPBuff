@@ -9,6 +9,7 @@ import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.R
 import cn.lliiooll.ppbuff.hook.BaseHook
+import cn.lliiooll.ppbuff.hook.common.AppCenterHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiADHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiZyBuffHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
@@ -122,6 +123,7 @@ object ZuiyouLiteLoader : BaseLoader() {
     override fun hooks(): List<BaseHook> {
         return arrayListOf<BaseHook>().apply {
             add(ZuiYouLiteTestHook)// 测试Hook
+            add(AppCenterHook)// AppCenter统计
             add(ZuiYouLiteQuickStartHook)// 快速启动
             add(XiaoChuanAntiADHook)// 去广告
             add(XiaoChuanAntiZyBuffHook)// 去ZyBuff

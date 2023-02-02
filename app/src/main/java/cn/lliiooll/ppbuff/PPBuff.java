@@ -92,6 +92,20 @@ public class PPBuff {
         return 0;
     }
 
+    public static String getHostVersionName() {
+        Application app = getApplication();
+        try {
+            if (app != null) {
+                PackageManager pm = app.getPackageManager();
+                PackageInfo info = pm.getPackageInfo(app.getPackageName(), 0);
+                return info.versionName;
+            }
+        } catch (Throwable e) {
+            PLog.Companion.c(e);
+        }
+        return "null";
+    }
+
     public static String getHostPath() {
         return getApplication().getClassLoader().getResource("AndroidManifest.xml").getPath().replace("!/AndroidManifest.xml", "").replaceFirst("file:", "");
     }

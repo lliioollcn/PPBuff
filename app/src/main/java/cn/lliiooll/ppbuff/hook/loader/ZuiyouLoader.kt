@@ -1,6 +1,7 @@
 package cn.lliiooll.ppbuff.hook.loader
 
 import cn.lliiooll.ppbuff.hook.BaseHook
+import cn.lliiooll.ppbuff.hook.common.AppCenterHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiADHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiZyBuffHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
@@ -21,6 +22,7 @@ object ZuiyouLoader : BaseLoader() {
     override fun hooks(): List<BaseHook> {
         return arrayListOf<BaseHook>().apply {
             add(ZuiYouTestHook)
+            add(AppCenterHook)// AppCenter统计
             add(XiaoChuanAntiADHook)
             add(XiaoChuanEvilInstrumentationHook)
             add(XiaoChuanAntiZyBuffHook)

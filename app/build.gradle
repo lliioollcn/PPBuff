@@ -1,6 +1,9 @@
+import cn.lliiooll.dhl.plugin.Common
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'cn.lliiooll.dhl.plugin'
 }
 
 android {
@@ -11,9 +14,13 @@ android {
         applicationId "cn.lliiooll.ppbuff"
         minSdk 24
         targetSdk 33
-        versionCode 7
-        versionName "1.0"
-
+        if (System.getenv("KEYSTORE_PATH") != null) {
+            versionCode Common.getBuildVersionCode(rootProject)
+        } else {
+            versionCode 1
+        }
+        versionName "1.0.0${Common.getGitHeadRefsSuffix(rootProject)}"
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -113,6 +120,10 @@ dependencies {
     implementation 'com.tencent:mmkv:1.2.15'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
+    def appCenterSdkVersion = '4.4.5'
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
 
 }

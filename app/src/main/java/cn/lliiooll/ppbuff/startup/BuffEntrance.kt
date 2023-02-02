@@ -13,6 +13,7 @@ import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 
 
+
 object BuffEntrance : PXposedEntrance() {
 
     override fun init(param: PXposedParam) {
@@ -26,6 +27,7 @@ object BuffEntrance : PXposedEntrance() {
                 name == "onCreate"
             }.hookAfter {
                 "宿主应用Application加载完毕，开始加载模块......".debug()
+
                 val app = it.thisObject as Application
                 PPBuff.init(app)
                 "尝试注入classLoader".debug()

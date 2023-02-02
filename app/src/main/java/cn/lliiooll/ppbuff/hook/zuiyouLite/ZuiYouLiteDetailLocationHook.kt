@@ -62,7 +62,10 @@ object ZuiYouLiteDetailLocationHook : BaseHook(
                                     ) as TextView
                                     val time =
                                         if (ZuiYouLiteDetailCommentTimeHook.isEnable()) PJavaUtils.commentDetailTime(
-                                            PConfig.string("config_time_format", "yyyy年MM月dd日HH:mm:ss"),
+                                            PConfig.string(
+                                                "config_time_format",
+                                                "yyyy年MM月dd日HH:mm:ss"
+                                            ),
                                             createTime
                                         ) else PJavaUtils.commentTime(createTime)
                                     sync {
@@ -84,6 +87,10 @@ object ZuiYouLiteDetailLocationHook : BaseHook(
                 }
             }
         return true
+    }
+
+    override fun isEnable(): Boolean {
+        return PConfig.boolean(label, false)
     }
 
 }

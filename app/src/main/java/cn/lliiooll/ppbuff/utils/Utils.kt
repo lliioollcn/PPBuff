@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.documentfile.provider.DocumentFile
+import cn.lliiooll.ppbuff.BuildConfig
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.data.types.PRecordType
@@ -263,5 +265,26 @@ fun File.saveVideo(type: PRecordType) {
     }
 }
 
+
+fun getModuleDebugInfo():MutableMap<String,String>{
+    return hashMapOf<String, String>().apply {
+        put("module_version_name", BuildConfig.VERSION_NAME)
+        put("module_version_code", "${BuildConfig.VERSION_CODE}")
+        put("module_version_package", BuildConfig.APPLICATION_ID)
+        put("module_build_type", BuildConfig.BUILD_TYPE)
+        put("module_build_debug", "${BuildConfig.DEBUG}")
+        put(
+            "module_build_time",
+            PJavaUtils.commentDetailTime("yyyy年MM月dd日HH:mm:ss", BuildConfig.BUILD_TIMESTAMP)
+        )
+        put("sys_brand", Build.BRAND)
+        put("sys_display", Build.DISPLAY)
+        put("sys_product", Build.PRODUCT)
+        put("sys_device", Build.DEVICE)
+        put("sys_ver", Build.VERSION.SDK)
+        put("sys_ver_int", "${Build.VERSION.SDK_INT}")
+        put("sys_ver_release", Build.VERSION.RELEASE)
+    }
+}
 
 
