@@ -3,8 +3,8 @@
 给 皮皮搞笑/最右 加个Buff~
 
 ![1](https://img.shields.io/github/stars/lliioollcn/PPBuff)
-![2](https://img.shields.io/github/downloads/Xposed-Modules-Repo/cn.lliiooll.pphelper/total)
-![3](https://img.shields.io/github/v/release/Xposed-Modules-Repo/cn.lliiooll.pphelper)
+![2](https://img.shields.io/github/downloads/Xposed-Modules-Repo/cn.lliiooll.ppbuff/total)
+![3](https://img.shields.io/github/v/release/Xposed-Modules-Repo/cn.lliiooll.ppbuff)
 ![https://github.com/lliioollcn](https://img.shields.io/badge/author-lliioollcn-6cf.svg?style=flat)
 [![4](https://github.com/lliioollcn/PPBuff/actions/workflows/android.yml/badge.svg)](https://github.com/lliioollcn/PPBuff/actions/workflows/android.yml)
 [![Build status](https://build.appcenter.ms/v0.1/apps/f8dfb1e2-1eea-4e7b-ace5-157de75ed2a0/branches/master/badge)](https://appcenter.ms)
