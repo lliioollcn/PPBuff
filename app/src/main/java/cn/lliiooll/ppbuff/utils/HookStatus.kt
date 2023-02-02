@@ -2,11 +2,11 @@ package cn.lliiooll.ppbuff.utils
 
 object HookStatus {
     fun isEnable(): Boolean {
-        return false
+        return true
 
     }
 
     fun getProvider(): String {
-        return "未知"
+        return "神秘的框架"
     }
 }
