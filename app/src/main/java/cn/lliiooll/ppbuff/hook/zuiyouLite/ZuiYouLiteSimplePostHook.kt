@@ -52,7 +52,7 @@ object ZuiYouLiteSimplePostHook : BaseHook(
         PConfig.getCache(DEOBFKEY_ALL_ADAPTER).forEach {
             if (it.startsWith("cn.xiaochuankeji")
                 && !it.contains("SlideDetailAdapter")
-                && !it.contains("MessageAdapter")
+                && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.message")
             ) {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {

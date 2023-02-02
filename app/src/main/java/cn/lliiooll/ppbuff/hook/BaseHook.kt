@@ -94,6 +94,10 @@ fun MutableSet<String>.isValid(): Boolean {
     if (this.isEmpty()) return false
     var b = true
     for (c in this) {
+        if (c.startsWith("androidx")) {
+            "跳过安卓x: $c ".debug()
+            continue
+        }
         "检查类 $c 是否有效".debug()
         if (c.findClassOrNull() == null) {
             b = false

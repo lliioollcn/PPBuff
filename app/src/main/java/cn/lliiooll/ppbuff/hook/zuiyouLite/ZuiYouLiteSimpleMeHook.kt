@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.view.children
 import androidx.navigation.NavHostController
 import cn.lliiooll.ppbuff.data.ZyLiteTypes
 import cn.lliiooll.ppbuff.data.hideMine
@@ -26,10 +27,12 @@ import cn.lliiooll.ppbuff.data.isHideMine
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.data.types.PViewType
+import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.findId
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
+import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import de.robv.android.xposed.XposedHelpers
 
 object ZuiYouLiteSimpleMeHook : BaseHook(
@@ -41,50 +44,74 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
         "cn.xiaochuankeji.zuiyouLite.ui.me.FragmentMyTab"
             .findClass()
             .findMethod {
+                name == "onResume"
+            }
+            .hookBefore {
+                ZyLiteTypes.extraMineList.forEach { (t, u) ->
+
+                    if (t.isHideMine()){
+                        XposedHelpers.setObjectField(it.thisObject, u, null)
+                    }
+                }
+
+            }
+        "cn.xiaochuankeji.zuiyouLite.ui.me.FragmentMyTab"
+            .findClass()
+            .findMethod {
                 name == "onCreateView"
             }
             .hookAfter {
                 val ins = it.thisObject
                 val root = it.result as ViewGroup
+                val vg = it.args[1] as ViewGroup
                 ZyLiteTypes.mineList.forEach { (t, u) ->
-
                     if (u.isHideMine()) {
-                        var viewGroup: ViewGroup? = null
+                        var view: View? = null
                         if (u.startsWith("!")) {
                             if (!"myTabDataLayout".isHideMine()) {
                                 val vg =
                                     XposedHelpers.getObjectField(
                                         ins,
                                         "myTabDataLayout"
-                                    ) as ViewGroup
-                                viewGroup = vg.findViewById(u.replace("!", "").findId())
+                                    ) as View
+                                view = vg.findViewById(u.replace("!", "").findId())
                             }
                         } else if (u.contains("_")) {
-                            viewGroup = root.findViewById(u.findId())
+                            view = root.findViewById(u.findId())
                         } else {
-                            viewGroup = XposedHelpers.getObjectField(ins, u) as ViewGroup
+                            view = XposedHelpers.getObjectField(ins, u) as View
+                            //XposedHelpers.setObjectField(ins, u, null)
                         }
-
-                        if (viewGroup != null) {
-
-                            val view = viewGroup as View
+                        if (view != null) {
+                            if (view is ViewGroup) {
+                                val viewGroup = view
+                                viewGroup.clearAnimation()
+                                viewGroup.removeAllViews()
+                                viewGroup.setOnClickListener(null)
+                                viewGroup.visibility = View.GONE
+                                root.removeView(viewGroup)
+                            }
+                            view.clearAnimation()
+                            view.clearFocus()
                             val lp = view.layoutParams ?: ViewGroup.LayoutParams(0, 0)
                             lp.width = 0
                             lp.height = 0
                             view.layoutParams = lp
-                            view.layout(0,0,0,0)
-                            view.measure(0,0)
-                            viewGroup.clearAnimation()
-                            viewGroup.removeAllViews()
-                            viewGroup.setOnClickListener(null)
-                            viewGroup.visibility = View.GONE
+                            view.layout(0, 0, 0, 0)
+                            view.measure(0, 0)
                             view.setPadding(0, 0, 0, 0)
                             view.visibility = View.GONE
+                            root.removeView(view)
+                            "移除屏蔽的view: $u".debug()
+                        } else {
+                            "view: $u 为null".debug()
                         }
                     }
 
                 }
             }
+
+
 
         return true
     }

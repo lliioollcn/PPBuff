@@ -41,6 +41,10 @@ object ZyLiteTypes {
 
 
     val mineList = sortedMapOf<String, String>().apply {
+        put("功能入口> 游戏中心> 提醒", "my_tab_game_center_warn");
+        put("功能入口> 吹水日记> 提醒", "my_tab_tree_new_bee_warn");
+        put("功能入口> 设置> 提醒", "my_tab_setting_warn");
+        put("功能入口> 免广告> 提醒", "avoid_ad_warn");
         put("功能入口> 共建家园", "my_tab_star_review");
         put("功能入口> 皮皮公益", "my_tab_public_welfare");
         put("功能入口> 我的背包", "my_tab_prize_package");
@@ -65,6 +69,13 @@ object ZyLiteTypes {
         put("个人数据> 浏览历史", "!my_data_history");
         put("个人数据> 插眼", "!my_data_mark_eye");
         put("个人数据> 下载", "!my_data_download");
+    }
+    val extraMineList = sortedMapOf<String, String>().apply {
+        put("my_tab_tree_new_bee","treeNewBeeLayout")
+        put("my_tab_black_layout","blackLayout")
+        put("my_tab_lottery_layout","lotteryLayout")
+        put("my_tab_game_center_layout","gameCenterLayout")
+        put("my_tab_live","liveLayout")
     }
 
 }
