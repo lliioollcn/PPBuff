@@ -362,3 +362,14 @@ fun XC_MethodHook.MethodHookParam.dump() {
     sb += "============================================================"
     sb.toString().debug()
 }
+
+
+fun postOperator(): Any? {
+    val clazz = "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostOperator".findClass()
+    for (m in clazz.declaredMethods) {
+        if (m.returnType == clazz) {
+            return XposedHelpers.callStaticMethod(clazz, m.name)
+        }
+    }
+    return null
+}

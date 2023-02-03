@@ -78,6 +78,10 @@ object ZyLiteTypes {
         put("my_tab_live","liveLayout")
     }
 
+    val taskList = sortedMapOf<String, String>().apply {
+        put("自动分享帖子", "auto_task_share_post")
+    }
+
 }
 
 fun Int.isHidePost(): Boolean {

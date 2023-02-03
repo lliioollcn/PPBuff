@@ -32,9 +32,13 @@ class PConfig {
             return mmkv?.decodeInt(label, def)!!
         }
 
-        fun number(label: String, def: Long): Long {
+        fun numberEx(label: String, def: Long): Long {
             if (mmkv == null) return def
             return mmkv?.decodeLong(label, def)!!
+        }
+
+        fun numberEx(label: String): Long {
+            return numberEx(label, 0L)
         }
 
         fun number(label: String): Int {
@@ -47,6 +51,11 @@ class PConfig {
         }
 
         fun set(label: String, number: Int) {
+            if (mmkv == null) return
+            mmkv?.encode(label, number)!!
+        }
+
+        fun set(label: String, number: Long) {
             if (mmkv == null) return
             mmkv?.encode(label, number)!!
         }

@@ -1,5 +1,6 @@
 package cn.lliiooll.ppbuff.hook.zuiyouLite
 
+import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
@@ -28,9 +29,13 @@ import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.data.types.PViewType
 import cn.lliiooll.ppbuff.hook.isValid
+import cn.lliiooll.ppbuff.utils.PJavaUtils
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
+import cn.lliiooll.ppbuff.utils.postOperator
+import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
+import com.github.kyuubiran.ezxhelper.utils.findField
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
@@ -50,18 +55,13 @@ object ZuiYouLiteSimplePostHook : BaseHook(
     override fun init(): Boolean {
 
         PConfig.getCache(DEOBFKEY_ALL_ADAPTER).forEach {
-            if (it.startsWith("cn.xiaochuankeji")
-                && !it.contains("SlideDetailAdapter")
-                && !it.contains("EmojiPanelAdapter")
-                && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.message")
+            if (it.startsWith("cn.xiaochuankeji") && !it.contains("SlideDetailAdapter") && !it.contains(
+                    "EmojiPanelAdapter"
+                ) && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.message")
             ) {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {
-                    if (m.name == "onCreateViewHolder"
-                        && !java.lang.reflect.Modifier.isAbstract(m.modifiers)
-                        && m.parameterTypes.size == 2
-                        && m.parameterTypes[1] == Int::class.java
-                    ) {
+                    if (m.name == "onCreateViewHolder" && !java.lang.reflect.Modifier.isAbstract(m.modifiers) && m.parameterTypes.size == 2 && m.parameterTypes[1] == Int::class.java) {
                         "Hook 在 $it 的方法".debug()
                         m.hookBefore {
                             if ((it.args[1] as Int).isHidePost()) {
@@ -88,23 +88,63 @@ object ZuiYouLiteSimplePostHook : BaseHook(
             }
         }
 
-        "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostViewHolderSingleVideo"
-            .findClass()
+        "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostViewHolderSingleVideo".findClass()
             .findAllMethods {
                 paramCount > 0 && parameterTypes[0].name.contains("PostDataBean")
-
-            }
-            .hookAfter {
+            }.hookAfter {
+                val postData = it.args[0]
                 if (0x3c.isHidePost()) {
-                    val postData = it.args[0]
                     val activity = XposedHelpers.getObjectField(postData, "activityBean")
                     if (activity != null) {
                         "存在游戏宣传的帖子".debug()
                         it.thisObject.hideHolder()
                     }
                 }
+                if (PConfig.boolean("auto_task_share_post", false)) {
+                    var count = PConfig.number("auto_task_share_post_count")
+                    val time = PConfig.numberEx("auto_task_share_post_time")
+                    if (PJavaUtils.isPassDay(time)) {
+                        val format = PJavaUtils.commentDetailTime("yyyy年MM月dd日HH:mm:ss", time)
+                        "尝试进行自动分享帖子任务，上次执行时间: $format".debug()
+                        count = 0
+                        PConfig.set("auto_task_share_post_count", 0)
+                        PConfig.set("auto_task_share_post_time", System.currentTimeMillis())
+                    }
+                    if (count < 2) {
+                        val clazz =
+                            "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostOperator".findClass()
+                        val m = clazz
+                            .findMethod {
+                                paramCount == 4
+                                        && parameterTypes[0] == Activity::class.java
+                                        && parameterTypes[1] == Long::class.java
+                                        && parameterTypes[2] == Int::class.java
+                                        && parameterTypes[3] == Object::class.java
+                            }
+                        val f = it.thisObject.javaClass.findField(true) {
+                            type == Activity::class.java
+                        }
+                        val pid = XposedHelpers.getLongField(postData, "postId")
+                        val activity = XposedHelpers.getObjectField(it.thisObject, f.name)
+                        XposedHelpers.callStaticMethod(
+                            clazz,
+                            m.name,
+                            activity,
+                            pid,
+                            18,
+                            it.thisObject
+                        )
+                        count++
+                        PConfig.set("auto_task_share_post_count", count)
+                        "已经完成分享帖子 $count/2".toastShort()
+                    }
+                }
             }
 
+        return true
+    }
+
+    override fun isEnable(): Boolean {
         return true
     }
 
@@ -121,16 +161,13 @@ object ZuiYouLiteSimplePostHook : BaseHook(
     override fun customDebof(dexkit: DexKitBridge?): Map<String, List<DexClassDescriptor>> {
 
         return hashMapOf<String, List<DexClassDescriptor>>().apply {
-            put(
-                DEOBFKEY_ALL_ADAPTER,
-                arrayListOf<DexClassDescriptor>().apply {
-                    addAll(hashSetOf<DexClassDescriptor>().apply {
-                        addAll(dexkit?.findSubClasses("androidx.recyclerview.widget.RecyclerView\$Adapter")!!)
-                        addAll(dexkit?.findSubClasses("cn.xiaochuankeji.zuiyouLite.ui.postlist.BasePostListAdapter")!!)
-                        addAll(dexkit?.findSubClasses("cn.xiaochuankeji.zuiyouLite.widget.life.LifeCompatAdapter")!!)
-                    })
-                }
-            )
+            put(DEOBFKEY_ALL_ADAPTER, arrayListOf<DexClassDescriptor>().apply {
+                addAll(hashSetOf<DexClassDescriptor>().apply {
+                    addAll(dexkit?.findSubClasses("androidx.recyclerview.widget.RecyclerView\$Adapter")!!)
+                    addAll(dexkit?.findSubClasses("cn.xiaochuankeji.zuiyouLite.ui.postlist.BasePostListAdapter")!!)
+                    addAll(dexkit?.findSubClasses("cn.xiaochuankeji.zuiyouLite.widget.life.LifeCompatAdapter")!!)
+                })
+            })
         }
     }
 
@@ -175,8 +212,7 @@ object ZuiYouLiteSimplePostHook : BaseHook(
 
 fun Any.hideHolder() {
     val view = XposedHelpers.getObjectField(
-        this,
-        "itemView"
+        this, "itemView"
     ) as View?
     if (view != null) {
         val params = view.layoutParams ?: ViewGroup.LayoutParams(0, 0)

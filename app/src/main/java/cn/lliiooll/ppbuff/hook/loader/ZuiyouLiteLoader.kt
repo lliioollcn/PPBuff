@@ -2,7 +2,6 @@ package cn.lliiooll.ppbuff.hook.loader
 
 import android.app.Activity
 import android.os.Handler
-import android.os.Looper
 import android.widget.ProgressBar
 import android.widget.TextView
 import cn.lliiooll.ppbuff.PConfig
@@ -16,7 +15,7 @@ import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
 import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
-import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoSignHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
@@ -34,7 +33,6 @@ import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import io.luckypray.dexkit.DexKitBridge
 import io.luckypray.dexkit.builder.BatchFindArgs
-import kotlin.concurrent.thread
 
 /**
  * 皮皮搞笑Hook加载器，提供启动界面加载动画
@@ -139,7 +137,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteDetailCommentTimeHook)// 评论详细时间
             add(ZuiYouLiteNoWaterMarkHook)// 去水印
             add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
-            add(ZuiYouLiteAutoSignHook)// 自动签到
+            add(ZuiYouLiteAutoTaskHook)// 自动签到
             add(ZuiYouLiteWebTokenHook)// 获取Token
         }
     }

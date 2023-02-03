@@ -8,9 +8,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import cn.hutool.core.date.DateUtil;
 import cn.lliiooll.ppbuff.tracker.PLog;
 
 public class PJavaUtils {
+
+    public static boolean isPassDay(long time) {
+        return DateUtil.betweenDay(new Date(time), new Date(), true) > 0;
+    }
 
     public static String commentTime(long j2) {
         j2 = j2 * 1000;
@@ -85,5 +90,6 @@ public class PJavaUtils {
             return false;
         }
     }
+
 
 }
