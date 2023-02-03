@@ -16,6 +16,7 @@ import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
 import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoSignHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
@@ -25,6 +26,7 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimplePostHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteTestHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteWebTokenHook
 import cn.lliiooll.ppbuff.utils.*
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findField
@@ -137,6 +139,8 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteDetailCommentTimeHook)// 评论详细时间
             add(ZuiYouLiteNoWaterMarkHook)// 去水印
             add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
+            add(ZuiYouLiteAutoSignHook)// 自动签到
+            add(ZuiYouLiteWebTokenHook)// 获取Token
         }
     }
 

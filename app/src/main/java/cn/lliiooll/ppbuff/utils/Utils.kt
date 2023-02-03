@@ -19,12 +19,17 @@ import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.data.types.PRecordType
 import cn.lliiooll.ppbuff.tracker.PLog
+import com.github.kyuubiran.ezxhelper.utils.findAllFields
 import com.github.kyuubiran.ezxhelper.utils.findField
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.paramCount
+import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import java.io.File
+import java.lang.StringBuilder
 import java.lang.reflect.Field
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
 import java.util.concurrent.Executors
 
 
@@ -296,3 +301,64 @@ fun String.openUrl(context: Context) {
     context.startActivity(intent)
 }
 
+operator fun StringBuilder.plusAssign(str: String) {
+    this.append(str).append("\n")
+}
+
+fun XC_MethodHook.MethodHookParam.dump() {
+    val args = this.args
+    val m = this.method as Method
+    val sb = StringBuilder()
+    sb += "============================================================"
+    sb += "方法 ${m.name} 被调用"
+    if (!Modifier.isStatic(m.modifiers)) {
+        sb += "   方法来自类: ${this.thisObject?.javaClass?.name}"
+        sb += "~~~~~~~~~~~~~~~~~~~~"
+        this.thisObject.javaClass.findAllFields {
+            !Modifier.isStatic(this.modifiers)
+        }.forEach {
+            val value = XposedHelpers.getObjectField(this.thisObject, it.name)
+            if (value == null) {
+                sb += "     变量(${it.type.name}): null"
+            } else {
+                sb += "     变量(${it.type.name}): $value"
+            }
+        }
+    } else {
+        sb += "   方法是静态的，无法获得当前实例"
+    }
+    sb += "~~~~~~~~~~~~~~~~~~~~"
+    if (args != null) {
+        sb += "   方法参数如下(${args.size}):"
+        for ((i, a) in args.withIndex()) {
+            sb += if (a == null) {
+                "[$i](null)       null"
+            } else {
+                "[$i](${a.javaClass.name})       $a"
+            }
+        }
+    } else {
+        sb += "   方法参数为null"
+    }
+    sb += "~~~~~~~~~~~~~~~~~~~~"
+    sb += if (m.returnType != Void.TYPE) {
+        if (this.result == null) {
+            "   方法返回值(${m.returnType.name}): null"
+        } else {
+            "   方法返回值(${m.returnType.name}): ${this.result}"
+        }
+    } else {
+        "   方法没有返回值"
+    }
+    sb += "~~~~~~~~~~~~~~~~~~~~"
+    sb += "   方法参数类型如下(${m.paramCount}):"
+    for ((i, t) in m.parameterTypes.withIndex()) {
+        sb += if (t == null) {
+            "[$i]       null"
+        } else {
+            "[$i]       ${t.name}"
+        }
+    }
+    sb += "============================================================"
+    sb.toString().debug()
+}
