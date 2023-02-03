@@ -58,19 +58,10 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                             && parameterTypes[1] == Int::class.java
                 }
                 .hookAfter {
-                    it.dump()
-                    RuntimeException().catch()
+                    //it.dump()
+                   // RuntimeException().catch()
                 }
         }
-
-        "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostOperator"
-            .findClass()
-            .findAllMethods {
-                returnType == "cn.xiaochuankeji.zuiyouLite.ui.postlist.holder.PostOperator".findClass()
-            }
-            .hookReplace {
-                it.dump()
-            }
         return ZuiYouLiteWebTokenHook.init()
     }
 
