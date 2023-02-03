@@ -18,6 +18,7 @@ import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoWaterMarkHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteQuickStartHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
@@ -135,6 +136,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteDetailLocationHook)// IP精准到市
             add(ZuiYouLiteDetailCommentTimeHook)// 评论详细时间
             add(ZuiYouLiteNoWaterMarkHook)// 去水印
+            add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
         }
     }
 

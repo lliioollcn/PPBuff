@@ -14,7 +14,6 @@ object ZuiYouLiteTestHook : BaseHook(
     "测试Hook", "test", PHookType.DEBUG
 ) {
     override fun init(): Boolean {
-
         "cn.xiaochuankeji.zuiyouLite.ui.main.MainActivity"
             .findClass()
             .findMethod {
