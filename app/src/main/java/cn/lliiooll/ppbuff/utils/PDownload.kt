@@ -16,13 +16,18 @@ object PDownload {
         if (!tempFile.exists()) {
             tempFile.createNewFile()
         }
-        IOUtils.copy(
-            OkHttpClient().newCall(Request.Builder()
-                .url(url)
-                .get()
-                .build()).execute().body?.byteStream(),
-            tempFile
-        )
+        try {
+            IOUtils.copy(
+                OkHttpClient().newCall(Request.Builder()
+                    .url(url)
+                    .get()
+                    .build()).execute().body?.byteStream(),
+                tempFile
+            )
+        }catch (_:Throwable){
+
+        }
+
         return tempFile
     }
 }

@@ -75,8 +75,7 @@ public class PJavaUtils {
                     PLog.Companion.d("链接: " + s + " 返回值: " + conn.getResponseCode());
                     success.set(conn.getResponseCode() == HttpURLConnection.HTTP_OK);
                     ok.set(false);
-                } catch (IOException e) {
-                    PLog.Companion.c(e);
+                } catch (IOException ignored) {
                     success.set(false);
                     ok.set(false);
                 }
