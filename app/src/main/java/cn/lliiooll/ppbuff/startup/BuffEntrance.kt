@@ -38,6 +38,7 @@ object BuffEntrance : PXposedEntrance() {
                     .inject()
                 "尝试初始化Native".debug()
                 PNative.init(app)
+                PConfig.init(false)
                 "尝试注入界面代理".debug()
                 EzXHelperInit.initActivityProxyManager(
                     PPBuff.getModulePackName(),
@@ -49,7 +50,7 @@ object BuffEntrance : PXposedEntrance() {
                 EzXHelperInit.initAppContext(app, true, true)
                 "尝试启用未注册界面".debug()
                 EzXHelperInit.initSubActivity()
-                PConfig.init(false)
+
                 "开始初始化hook".debug()
                 PHook.init(param.packageName)
             }

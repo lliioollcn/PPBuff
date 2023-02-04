@@ -55,9 +55,11 @@ object ZuiYouLiteSimplePostHook : BaseHook(
     override fun init(): Boolean {
 
         PConfig.getCache(DEOBFKEY_ALL_ADAPTER).forEach {
-            if (it.startsWith("cn.xiaochuankeji") && !it.contains("SlideDetailAdapter") && !it.contains(
-                    "EmojiPanelAdapter"
-                ) && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.message")
+            if (it.startsWith("cn.xiaochuankeji")
+                && !it.contains("SlideDetailAdapter")
+                && !it.startsWith("cn.xiaochuankeji.zuiyouLite.widget")
+                && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.message")
+                && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.user")
             ) {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {

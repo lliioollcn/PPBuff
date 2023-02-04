@@ -110,6 +110,7 @@ object ZuiyouLiteLoader : BaseLoader() {
                         e.catch()
                     }
                 } else {
+                    PConfig.init(true)
                     activity.javaClass
                         .findField {
                             this.type == Handler::class.java

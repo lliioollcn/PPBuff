@@ -71,8 +71,11 @@ class PConfig {
                 val last = number(
                     app.packageName
                 )
+                "最新版本号: $last".debug()
+                "当前版本号: ${PPBuff.getHostVersionCode()}".debug()
                 return last == 0 || last != PPBuff.getHostVersionCode()
             }
+            "应用实例为null".debug()
             return false
 
         }
@@ -82,7 +85,7 @@ class PConfig {
         }
 
         fun init(init: Boolean) {
-
+            "设置初始化状态为: $init".debug()
             set("ppbuff_inited", init)
         }
 
