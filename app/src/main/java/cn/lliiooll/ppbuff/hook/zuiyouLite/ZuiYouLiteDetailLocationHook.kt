@@ -20,7 +20,6 @@ object ZuiYouLiteDetailLocationHook : BaseHook(
     "IP信息精准到市(部分没有)", "ip_detail_location", PHookType.PLAY
 ) {
 
-    val DEOBFKEY_TIMEUTILS = "cn.xiaochuankeji.zuiyouLite.control.utils.TimeUtils"
 
     override fun init(): Boolean {
 

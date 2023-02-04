@@ -80,6 +80,7 @@ object ZyLiteTypes {
 
     val taskList = sortedMapOf<String, String>().apply {
         put("自动分享帖子", "auto_task_share_post")
+        put("自动点赞神评", "auto_task_like_comment_god")
     }
 
 }

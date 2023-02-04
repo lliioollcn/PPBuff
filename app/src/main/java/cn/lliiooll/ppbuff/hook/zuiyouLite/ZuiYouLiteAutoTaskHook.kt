@@ -1,12 +1,10 @@
 package cn.lliiooll.ppbuff.hook.zuiyouLite
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -23,25 +21,24 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.data.ZyLiteTypes
-import cn.lliiooll.ppbuff.data.hideMine
-import cn.lliiooll.ppbuff.data.isHideMine
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.data.types.PViewType
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.hook.isValid
-import cn.lliiooll.ppbuff.utils.catch
+import cn.lliiooll.ppbuff.utils.PJavaUtils
 import cn.lliiooll.ppbuff.utils.debug
-import cn.lliiooll.ppbuff.utils.dump
 import cn.lliiooll.ppbuff.utils.findClass
+import cn.lliiooll.ppbuff.utils.sync
 import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
+import com.github.kyuubiran.ezxhelper.utils.findField
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
-import com.github.kyuubiran.ezxhelper.utils.hookReplace
 import com.github.kyuubiran.ezxhelper.utils.paramCount
+import de.robv.android.xposed.XposedHelpers
 
 object ZuiYouLiteAutoTaskHook : BaseHook(
-    "自动签到", "auto_sign", PHookType.PLAY
+    "自动任务", "auto_sign", PHookType.PLAY
 ) {
 
     val DEOBF_API_SHARE_POST = "cn.xiaochuankeji.zuiyouLite.api.SharePost"
@@ -59,7 +56,53 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                 }
                 .hookAfter {
                     //it.dump()
-                   // RuntimeException().catch()
+                    // RuntimeException().catch()
+                }
+            val c = "cn.xiaochuankeji.zuiyouLite.ui.slide.ab.ReviewDetailLikeView"
+                .findClass()
+
+            c.findAllMethods {
+                name == "T"
+            }
+                .hookAfter {
+                    if (PConfig.boolean("auto_task_like_comment_god", false)) {
+                        var count = PConfig.number("auto_task_like_comment_god_count")
+                        val time = PConfig.numberEx("auto_task_like_comment_god_time")
+                        if (PJavaUtils.isPassDay(time)) {
+                            val format =
+                                PJavaUtils.commentDetailTime("yyyy年MM月dd日HH:mm:ss", time)
+                            "尝试进行自动点赞神评任务，上次执行时间: $format".debug()
+                            count = 0
+                            PConfig.set("auto_task_like_comment_god_count", 0)
+                            PConfig.set(
+                                "auto_task_like_comment_god_time",
+                                System.currentTimeMillis()
+                            )
+                        }
+                        //if (count < 6){
+                        //h0
+                        val f = c.findField {
+                            type.name.contains("CommentBean")
+                        }
+                        val commentBean = XposedHelpers.getObjectField(it.thisObject, f.name)
+                        sync {
+                            if (commentBean != null) {
+                                val isGod = XposedHelpers.getIntField(commentBean, "isGod")
+                                if (isGod == 1) {
+                                    while (count < 6){
+                                        XposedHelpers.callMethod(it.thisObject, "a0")
+                                        count++
+                                        PConfig.set("auto_task_like_comment_god_count", count)
+                                        "已经完成点赞神评 $count/6".toastShort()
+                                    }
+                                } else {
+                                    "不是神评，跳过".debug()
+                                }
+                            }
+                        }
+
+                        //}
+                    }
                 }
         }
         return ZuiYouLiteWebTokenHook.init()
