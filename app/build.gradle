@@ -41,7 +41,7 @@ android {
     }
 
 
-    if (System.getenv("KEYSTORE_PATH") != null) {
+    if (System.getenv("KEYSTORE_PATH") != null && System.getenv("KEY_ALIAS") != null) {
         signingConfigs {
             release {
                 keyAlias System.getenv("KEY_ALIAS")
