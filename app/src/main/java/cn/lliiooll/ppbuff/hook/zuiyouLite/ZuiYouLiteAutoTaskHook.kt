@@ -79,29 +79,27 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                                 System.currentTimeMillis()
                             )
                         }
-                        //if (count < 6){
-                        //h0
-                        val f = c.findField {
-                            type.name.contains("CommentBean")
-                        }
-                        val commentBean = XposedHelpers.getObjectField(it.thisObject, f.name)
-                        sync {
-                            if (commentBean != null) {
-                                val isGod = XposedHelpers.getIntField(commentBean, "isGod")
-                                if (isGod == 1) {
-                                    while (count < 6){
+                        if (count < 6) {
+                            //h0
+                            val f = c.findField {
+                                type.name.contains("CommentBean")
+                            }
+                            val commentBean = XposedHelpers.getObjectField(it.thisObject, f.name)
+                            sync {
+                                if (commentBean != null) {
+                                    val isGod = XposedHelpers.getIntField(commentBean, "isGod")
+                                    if (isGod == 1) {
                                         XposedHelpers.callMethod(it.thisObject, "a0")
                                         count++
                                         PConfig.set("auto_task_like_comment_god_count", count)
                                         "已经完成点赞神评 $count/6".toastShort()
+                                    } else {
+                                        "不是神评，跳过".debug()
                                     }
-                                } else {
-                                    "不是神评，跳过".debug()
                                 }
                             }
-                        }
 
-                        //}
+                        }
                     }
                 }
         }

@@ -127,6 +127,17 @@ fun PMainContent() {
                                     )
                                 }
                                 Row(modifier = Modifier.clickable {
+                                    "https://jq.qq.com/?k=ZxP78P4D".openUrl(
+                                        activity
+                                    )
+                                }) {
+                                    Text(
+                                        text = "模块Q群(二群): 632117866",
+                                        textAlign = TextAlign.Center,
+                                        fontSize = TextUnit(13f, TextUnitType.Sp)
+                                    )
+                                }
+                                Row(modifier = Modifier.clickable {
                                     "https://qun.qq.com/qqweb/qunpro/share?inviteCode=1YB7zAnuZAu".openUrl(
                                         activity
                                     )
