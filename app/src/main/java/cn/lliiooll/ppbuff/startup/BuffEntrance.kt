@@ -13,13 +13,12 @@ import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 
 
-
 object BuffEntrance : PXposedEntrance() {
 
     override fun init(param: PXposedParam) {
         if (param.packageName == "cn.lliiooll.ppbuff") {
             // 激活状态检测
-        } else if (PPBuff.isSupportApp(param.packageName) && !param.processName.contains(":")) {
+        } else if (PPBuff.isSupportApp(param.packageName) && param.processName == param.packageName) {
             "PPBuff 正在加载...".info()
             val appClazz =
                 param.classLoader.loadClass(PPBuff.getHostApplicationClassName(param.packageName))
@@ -38,7 +37,6 @@ object BuffEntrance : PXposedEntrance() {
                     .inject()
                 "尝试初始化Native".debug()
                 PNative.init(app)
-                PConfig.init(false)
                 "尝试注入界面代理".debug()
                 EzXHelperInit.initActivityProxyManager(
                     PPBuff.getModulePackName(),
@@ -50,7 +48,7 @@ object BuffEntrance : PXposedEntrance() {
                 EzXHelperInit.initAppContext(app, true, true)
                 "尝试启用未注册界面".debug()
                 EzXHelperInit.initSubActivity()
-
+                PConfig.init(false)
                 "开始初始化hook".debug()
                 PHook.init(param.packageName)
             }
