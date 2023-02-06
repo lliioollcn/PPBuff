@@ -4,7 +4,9 @@ import android.util.Log
 import cn.lliiooll.ppbuff.BuildConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.utils.getModuleDebugInfo
+import cn.lliiooll.ppbuff.utils.plusAssign
 import com.microsoft.appcenter.crashes.Crashes
+import java.lang.StringBuilder
 
 
 class PLog {
@@ -32,13 +34,13 @@ class PLog {
                     putAll(getModuleDebugInfo())
                 }, arrayListOf())
             }
-            e("发生了一个错误: ${throwable.message}")
-            e("以下是堆栈: ")
+            val sb = StringBuilder()
+            sb += "发生了一个错误: ${throwable.message}"
+            sb += "以下是堆栈: "
             for (s in throwable.stackTrace) {
-                e("     $s")
+                sb += "     $s"
             }
-
-
+            e(sb.toString())
         }
 
         fun c(throwable: Throwable) {

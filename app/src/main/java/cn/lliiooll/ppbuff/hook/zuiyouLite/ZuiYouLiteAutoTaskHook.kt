@@ -26,7 +26,9 @@ import cn.lliiooll.ppbuff.data.types.PViewType
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.hook.isValid
 import cn.lliiooll.ppbuff.utils.PJavaUtils
+import cn.lliiooll.ppbuff.utils.catch
 import cn.lliiooll.ppbuff.utils.debug
+import cn.lliiooll.ppbuff.utils.dump
 import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.sync
 import cn.lliiooll.ppbuff.utils.toastShort
@@ -36,6 +38,7 @@ import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import de.robv.android.xposed.XposedHelpers
+import java.lang.RuntimeException
 
 object ZuiYouLiteAutoTaskHook : BaseHook(
     "自动任务", "auto_sign", PHookType.PLAY
@@ -60,7 +63,6 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                 }
             val c = "cn.xiaochuankeji.zuiyouLite.ui.slide.ab.ReviewDetailLikeView"
                 .findClass()
-
             c.findAllMethods {
                 name == "T"
             }
@@ -88,11 +90,18 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                             sync {
                                 if (commentBean != null) {
                                     val isGod = XposedHelpers.getIntField(commentBean, "isGod")
+                                    val liked = XposedHelpers.getIntField(commentBean, "liked")
                                     if (isGod == 1) {
-                                        XposedHelpers.callMethod(it.thisObject, "a0")
-                                        count++
-                                        PConfig.set("auto_task_like_comment_god_count", count)
-                                        "已经完成点赞神评 $count/6".toastShort()
+                                        while (count < 10) {
+                                            if (liked == 1) {
+                                                XposedHelpers.callMethod(it.thisObject, "a0")
+                                                "已取消点赞".debug()
+                                            }
+                                            XposedHelpers.callMethod(it.thisObject, "a0")
+                                            count++
+                                            PConfig.set("auto_task_like_comment_god_count", count)
+                                            "已经完成点赞神评 $count/6".toastShort()
+                                        }
                                     } else {
                                         "不是神评，跳过".debug()
                                     }
@@ -102,6 +111,7 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                         }
                     }
                 }
+
         }
         return ZuiYouLiteWebTokenHook.init()
     }
