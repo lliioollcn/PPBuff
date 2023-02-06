@@ -39,15 +39,31 @@ import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import de.robv.android.xposed.XposedHelpers
 import java.lang.RuntimeException
+import java.lang.reflect.Method
 
 object ZuiYouLiteAutoTaskHook : BaseHook(
     "自动任务", "auto_sign", PHookType.PLAY
 ) {
 
     val DEOBF_API_SHARE_POST = "cn.xiaochuankeji.zuiyouLite.api.SharePost"
+    val DEOBF_API_COMMENT = "cn.xiaochuankeji.zuiyouLite.api.CommentOperate"
 
 
     override fun init(): Boolean {
+        val apiComment = PConfig.getCache(DEOBF_API_COMMENT).toList()[0].findClass()
+        var mCancelLike: Method? =
+            null// commentBean.postId, commentBean.commentId, commentBean.status, null
+        var mLike: Method? =
+            null// commentBean.postId, commentBean.commentId, commentBean.status, null
+        val apiCommentIns = apiComment.newInstance()
+        for (m in apiComment.declaredMethods) {
+            if (m.name == "b" && m.paramCount == 4) {
+                mCancelLike = m
+            }
+            if (m.name == "f" && m.paramCount == 4) {
+                mLike = m
+            }
+        }
         PConfig.getCache(DEOBF_API_SHARE_POST).forEach {
             "@自动分享类: $it".debug()
             it
@@ -91,13 +107,40 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                                 if (commentBean != null) {
                                     val isGod = XposedHelpers.getIntField(commentBean, "isGod")
                                     val liked = XposedHelpers.getIntField(commentBean, "liked")
+                                    val postId = XposedHelpers.getLongField(commentBean, "postId")
+                                    val commentId =
+                                        XposedHelpers.getLongField(commentBean, "commentId")
+                                    val status = XposedHelpers.getLongField(commentBean, "status")
                                     if (isGod == 1) {
                                         while (count < 10) {
                                             if (liked == 1) {
                                                 XposedHelpers.callMethod(it.thisObject, "a0")
+                                                /*
+                                                XposedHelpers.callMethod(
+                                                    apiCommentIns,
+                                                    mCancelLike?.name,
+                                                    postId,
+                                                    commentId,
+                                                    status,
+                                                    it.thisObject
+                                                )
+
+                                                 */
                                                 "已取消点赞".debug()
                                             }
                                             XposedHelpers.callMethod(it.thisObject, "a0")
+                                            /*
+                                            XposedHelpers.callMethod(
+                                                apiCommentIns,
+                                                mLike?.name,
+                                                postId,
+                                                commentId,
+                                                status,
+                                                it.thisObject
+                                            )
+
+                                             */
+                                            "已点赞".debug()
                                             count++
                                             PConfig.set("auto_task_like_comment_god_count", count)
                                             "已经完成点赞神评 $count/6".toastShort()
@@ -111,6 +154,7 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                         }
                     }
                 }
+
 
         }
         return ZuiYouLiteWebTokenHook.init()
@@ -176,13 +220,26 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
             put(DEOBF_API_SHARE_POST, arrayListOf<String>().apply {
                 add(":socialType = [")
             })
+            put(DEOBF_API_COMMENT, arrayListOf<String>().apply {
+                add("pid")
+                add("rid")
+                add("vote_value")
+                add("from")
+                add("reason_id")
+                add("status")
+                add("dislike_type")
+            })
         }
     }
 
     override fun needDeobf(): Boolean {
-        return !PConfig.hasCache(DEOBF_API_SHARE_POST) || !PConfig.getCache(
+        return (!PConfig.hasCache(DEOBF_API_SHARE_POST) || !PConfig.getCache(
             DEOBF_API_SHARE_POST
-        )?.isValid()!!
+        )?.isValid()!!)
+                || (!PConfig.hasCache(DEOBF_API_COMMENT) || !PConfig.getCache(
+            DEOBF_API_COMMENT
+        )?.isValid()!!)
+
     }
 
     override fun router(): Boolean {
