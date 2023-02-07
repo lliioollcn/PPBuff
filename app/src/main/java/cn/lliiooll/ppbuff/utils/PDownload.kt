@@ -1,8 +1,7 @@
 package cn.lliiooll.ppbuff.utils
 
+import cn.hutool.http.HttpUtil
 import cn.lliiooll.ppbuff.PPBuff
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.io.File
 
 object PDownload {
@@ -18,10 +17,8 @@ object PDownload {
         }
         try {
             IOUtils.copy(
-                OkHttpClient().newCall(Request.Builder()
-                    .url(url)
-                    .get()
-                    .build()).execute().body?.byteStream(),
+                HttpUtil.createGet(url)
+                    .execute().bodyStream(),
                 tempFile
             )
         }catch (_:Throwable){
