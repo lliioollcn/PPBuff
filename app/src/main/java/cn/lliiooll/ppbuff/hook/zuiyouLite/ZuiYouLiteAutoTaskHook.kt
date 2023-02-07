@@ -112,7 +112,7 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                                         XposedHelpers.getLongField(commentBean, "commentId")
                                     val status = XposedHelpers.getLongField(commentBean, "status")
                                     if (isGod == 1) {
-                                        while (count < 10) {
+                                        while (count < 12) {
                                             if (liked == 1) {
                                                 XposedHelpers.callMethod(it.thisObject, "a0")
                                                 /*

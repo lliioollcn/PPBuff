@@ -6,6 +6,8 @@ import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.utils.getModuleDebugInfo
 import cn.lliiooll.ppbuff.utils.plusAssign
 import com.microsoft.appcenter.crashes.Crashes
+import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.XposedHelpers
 import java.lang.StringBuilder
 
 
@@ -13,6 +15,7 @@ class PLog {
     companion object {
         fun i(msg: String) {
             Log.i("PPBuff", "[INFO] >> $msg")
+            XposedBridge.log("PPBuff: [INFO] >> $msg")
         }
 
         fun d(msg: String) {
@@ -21,11 +24,13 @@ class PLog {
 
         fun e(msg: String) {
             Log.e("PPBuff", "[ERROR] >> $msg")
+            XposedBridge.log("PPBuff: [ERROR] >> $msg")
         }
 
 
         fun log(level: String, msg: String) {
             Log.d("PPBuff", "[$level] >> $msg")
+            XposedBridge.log("PPBuff: [$level] >> $msg")
         }
 
         fun catch(throwable: Throwable) {

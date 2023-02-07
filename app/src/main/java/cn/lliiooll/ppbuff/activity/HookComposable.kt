@@ -96,6 +96,9 @@ fun HoolList(type: PHookType, navController: NavHostController) {
                 } else if (hook.view() == PViewType.CUSTOM) {
                     Row(modifier = Modifier
                         .clickable {
+                            if (hook.needCustomClick()){
+                                hook.click()
+                            }
                             if (hook.router()) {
                                 navController.navigate(hook.label)
                             }

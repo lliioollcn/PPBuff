@@ -1,12 +1,18 @@
 package cn.lliiooll.ppbuff.hook.zuiyouLite
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import cn.lliiooll.ppbuff.PConfig
+import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.data.callback.TokenGetCallBack
 import cn.lliiooll.ppbuff.data.types.PHookType
+import cn.lliiooll.ppbuff.data.types.PViewType
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.hook.isValid
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
+import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.utils.ArgTypes
 import com.github.kyuubiran.ezxhelper.utils.Args
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
@@ -18,7 +24,7 @@ import com.github.kyuubiran.ezxhelper.utils.paramCount
 import de.robv.android.xposed.XposedHelpers
 
 object ZuiYouLiteWebTokenHook : BaseHook(
-    "获取Token", "web_token", PHookType.HIDE
+    "获取Token", "web_token", PHookType.PLAY
 ) {
     val DEOBF_API_GETDEVICEINFO = "cn.xiaochuan.jsbridge.JSGetDeviceInfo"
     var callBack: TokenGetCallBack? = null
@@ -43,12 +49,16 @@ object ZuiYouLiteWebTokenHook : BaseHook(
                     && data.contains("token")
                 ) {
                     TOKEN = data
+                    "Token获取完毕: $TOKEN".debug()
                     if (callBack != null) {
                         callBack?.onCallBack(TOKEN)
                     }
                 }
 
             }
+        getWebToken {
+            it.debug()
+        }
         inited = true
         return true
     }
@@ -83,6 +93,7 @@ object ZuiYouLiteWebTokenHook : BaseHook(
         val m = clazz.findMethod {
             paramCount == 2 && parameterTypes[0] == String::class.java
         }
+        "尝试获取Token...".debug()
         XposedHelpers.callMethod(obj, m.name, "", insC.newInstance(null))
     }
 
@@ -100,5 +111,31 @@ object ZuiYouLiteWebTokenHook : BaseHook(
         return !PConfig.hasCache(DEOBF_API_GETDEVICEINFO) || !PConfig.getCache(
             DEOBF_API_GETDEVICEINFO
         )?.isValid()!!
+    }
+
+    override fun router(): Boolean {
+        return false
+    }
+
+    override fun click() {
+        "获取中，请稍后".toastShort()
+
+        getWebToken {
+            val clipData = ClipData.newPlainText("ppBuffToken", it)
+            val clipManager = PPBuff.getApplication()
+                .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipManager.setPrimaryClip(clipData)
+
+            "Token已经复制到粘贴板".toastShort()
+        }
+
+    }
+
+    override fun needCustomClick(): Boolean {
+        return true
+    }
+
+    override fun view(): PViewType {
+        return PViewType.CUSTOM
     }
 }

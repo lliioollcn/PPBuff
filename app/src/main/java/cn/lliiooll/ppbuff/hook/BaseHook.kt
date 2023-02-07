@@ -47,6 +47,14 @@ abstract class BaseHook(
         return false
     }
 
+    open fun needCustomClick(): Boolean {
+        return false
+    }
+
+    open fun click() {
+
+    }
+
     open fun customDebof(dexkit: DexKitBridge?): Map<String, List<DexClassDescriptor>> {
         return hashMapOf()
     }
