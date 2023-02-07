@@ -1,6 +1,11 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/public/' }
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io/' }
+        maven { url 'https://api.xposed.info/' }
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap/' }
     }
     dependencies {
         // 因为使用的 Kotlin 需要需要添加 Kotlin 插件
@@ -12,7 +17,11 @@ apply plugin: 'kotlin'
 apply plugin: 'java-gradle-plugin'
 repositories {
     // 需要添加 jcenter 否则会提示找不到 gradlePlugin
-    maven { url 'https://maven.aliyun.com/repository/public/' }
+    google()
+    mavenCentral()
+    maven { url 'https://jitpack.io/' }
+    maven { url 'https://api.xposed.info/' }
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap/' }
 
     dependencies {
         implementation("org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r")
