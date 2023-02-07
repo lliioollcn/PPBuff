@@ -26,6 +26,7 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimplePostHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteTestHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteWebTaskHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteWebTokenHook
 import cn.lliiooll.ppbuff.utils.*
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
@@ -142,6 +143,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
             add(ZuiYouLiteAutoTaskHook)// 自动签到
             add(ZuiYouLiteWebTokenHook)// 获取Token
+            add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
     }
 

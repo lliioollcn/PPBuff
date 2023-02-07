@@ -17,7 +17,7 @@ android {
         if (System.getenv("KEYSTORE_PATH") != null) {
             versionCode Common.getBuildVersionCode(rootProject)
         } else {
-            versionCode 10
+            versionCode 2
         }
         versionName "1.0.0${Common.getGitHeadRefsSuffix(rootProject)}"
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
@@ -118,8 +118,8 @@ dependencies {
     implementation 'com.github.kyuubiran:EzXHelper:1.0.3'
     implementation 'org.luckypray:DexKit:1.1.0'
     implementation 'com.tencent:mmkv:1.2.15'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    //implementation 'com.google.code.gson:gson:2.10.1'
+    //implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'cn.hutool:hutool-all:5.8.11'
 
 

@@ -1,6 +1,7 @@
 package cn.lliiooll.ppbuff.data
 
 import cn.lliiooll.ppbuff.PConfig
+import cn.lliiooll.ppbuff.data.types.PWebTaskType
 import cn.lliiooll.ppbuff.utils.findId
 
 object ZyLiteTypes {
@@ -71,16 +72,21 @@ object ZyLiteTypes {
         put("个人数据> 下载", "!my_data_download");
     }
     val extraMineList = sortedMapOf<String, String>().apply {
-        put("my_tab_tree_new_bee","treeNewBeeLayout")
-        put("my_tab_black_layout","blackLayout")
-        put("my_tab_lottery_layout","lotteryLayout")
-        put("my_tab_game_center_layout","gameCenterLayout")
-        put("my_tab_live","liveLayout")
+        put("my_tab_tree_new_bee", "treeNewBeeLayout")
+        put("my_tab_black_layout", "blackLayout")
+        put("my_tab_lottery_layout", "lotteryLayout")
+        put("my_tab_game_center_layout", "gameCenterLayout")
+        put("my_tab_live", "liveLayout")
     }
 
     val taskList = sortedMapOf<String, String>().apply {
         put("自动分享帖子", "auto_task_share_post")
         put("自动点赞神评", "auto_task_like_comment_god")
+    }
+
+
+    val webTaskList = sortedMapOf<String, String>().apply {
+        put(PWebTaskType.COMMON1.getLabel(), "http://re.xiaole04.top/includes/requests.php")
     }
 
 }

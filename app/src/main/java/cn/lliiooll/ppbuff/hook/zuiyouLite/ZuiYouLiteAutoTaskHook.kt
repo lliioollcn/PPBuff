@@ -157,7 +157,7 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
 
 
         }
-        return ZuiYouLiteWebTokenHook.init()
+        return true
     }
 
     @Composable

@@ -90,7 +90,9 @@ fun <V : Any> List<V>.empty(function: () -> Unit) {
 }
 
 fun String.toastShort(ctx: Context) {
-    Toast.makeText(ctx, this, Toast.LENGTH_SHORT).show()
+    sync {
+        Toast.makeText(ctx, this, Toast.LENGTH_SHORT).show()
+    }
 }
 
 fun String.toastShort() {
@@ -99,7 +101,7 @@ fun String.toastShort() {
 
 
 fun String.toastLong(ctx: Context) {
-    Toast.makeText(ctx, this, Toast.LENGTH_LONG).show()
+    sync { Toast.makeText(ctx, this, Toast.LENGTH_LONG).show() }
 }
 
 fun Context.inflate(layout: Int): View {
