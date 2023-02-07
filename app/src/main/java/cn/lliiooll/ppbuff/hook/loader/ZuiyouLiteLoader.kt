@@ -16,6 +16,7 @@ import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
@@ -125,6 +126,7 @@ object ZuiyouLiteLoader : BaseLoader() {
     override fun hooks(): List<BaseHook> {
         return arrayListOf<BaseHook>().apply {
             add(ZuiYouLiteTestHook)// 测试Hook
+            add(ZuiYouLiteDebugHook)// 调试Hook
             add(AppCenterHook)// AppCenter统计
             add(ZuiYouLiteQuickStartHook)// 快速启动
             add(XiaoChuanAntiADHook)// 去广告

@@ -21,7 +21,8 @@ class PLog {
         }
 
         fun d(msg: String) {
-            if (PPBuff.isDebug()) log("DEBUG", msg)
+            if (PPBuff.isDebug())
+                log("DEBUG", msg)
         }
 
         fun e(msg: String) {
