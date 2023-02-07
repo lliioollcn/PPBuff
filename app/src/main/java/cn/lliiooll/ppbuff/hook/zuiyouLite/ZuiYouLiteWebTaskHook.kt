@@ -46,7 +46,7 @@ import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.toastShort
 
 object ZuiYouLiteWebTaskHook : BaseHook(
-    "云端自动任务", "web_task", PHookType.PLAY
+    "云端自动任务(未成熟，不建议使用)", "web_task", PHookType.PLAY
 ) {
     override fun init(): Boolean {
         async {
@@ -271,6 +271,7 @@ object ZuiYouLiteWebTaskHook : BaseHook(
     }
 
     override fun isEnable(): Boolean {
-        return PConfig.boolean(label,false)
+        //return PConfig.boolean(label,false)
+        return false
     }
 }
