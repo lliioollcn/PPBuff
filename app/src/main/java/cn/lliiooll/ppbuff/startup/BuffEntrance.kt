@@ -20,6 +20,7 @@ object BuffEntrance : PXposedEntrance() {
             // 激活状态检测
         } else if (PPBuff.isSupportApp(param.packageName) && param.processName == param.packageName) {
             "PPBuff 正在加载...".info()
+            "当前进程: ${param.processName}".info()
             val appClazz =
                 param.classLoader.loadClass(PPBuff.getHostApplicationClassName(param.packageName))
             appClazz.findMethod(true) {

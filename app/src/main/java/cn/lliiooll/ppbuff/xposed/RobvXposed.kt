@@ -29,7 +29,7 @@ class RobvXposed : IXposedHookLoadPackage, IXposedHookZygoteInit {
         PXposed.init(
             PXposedParam(
                 packageName = lpparam.packageName,
-                processName = lpparam.packageName,
+                processName = lpparam.processName,
                 classLoader = lpparam.classLoader,
                 appInfo = lpparam.appInfo,
             )

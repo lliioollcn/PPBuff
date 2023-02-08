@@ -4,9 +4,12 @@ import com.github.kyuubiran.ezxhelper.utils.findField
 
 object PPBuffClassLoader : ClassLoader() {
 
+
     override fun loadClass(name: String?, resolve: Boolean): Class<*>? {
+
         if (contextClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
+                //"Context: 尝试加载类: $name".debug()
                 return contextClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
 
@@ -16,15 +19,15 @@ object PPBuffClassLoader : ClassLoader() {
                     name.contains("androidx") ||
                             name.contains("com.tencent.mmkv") ||
                             name.contains("org.jetbrains") ||
-                            name.contains("org.google") ||
-                            name.contains("javax") ||
-                            name.contains("com.squareup")
+                            name.contains("javax")
                     )
         ) {
+            "不允许加载的类: $name".debug()
             throw ClassNotFoundException(name)
         }
         if (appClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
+                //"App: 尝试加载类: $name".debug()
                 return appClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
 
@@ -32,6 +35,7 @@ object PPBuffClassLoader : ClassLoader() {
         }
         if (xposedClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
+                //"Xposed: 尝试加载类: $name".debug()
                 return xposedClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
 
@@ -39,18 +43,23 @@ object PPBuffClassLoader : ClassLoader() {
         }
         if (moduleClassloader != null && contextClassloader !is PPBuffClassLoader) {
             try {
+                //"Module: 尝试加载类: $name".debug()
                 return moduleClassloader!!.loadClass(name)
             } catch (_: ClassNotFoundException) {
 
             }
         }
-        return super.loadClass(name, resolve)
+        throw ClassNotFoundException(name)
+        // 不在父类搜索
+        //return super.loadClass(name, resolve)
     }
 
     fun loadClassOrNull(name: String?): Class<*>? {
         try {
+            //"尝试加载类: $name".debug()
             return loadClass(name)
         } catch (_: ClassNotFoundException) {
+           // "类不存在: $name".debug()
             return null
         }
     }
