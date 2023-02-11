@@ -61,6 +61,7 @@ object ZuiYouLiteSimplePostHook : BaseHook(
                 && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.message")
                 && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.user")
                 && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.me")
+                && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.follow")
             ) {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {
