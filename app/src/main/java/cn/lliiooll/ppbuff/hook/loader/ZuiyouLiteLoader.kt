@@ -47,6 +47,7 @@ object ZuiyouLiteLoader : BaseLoader() {
         val deobfs = hooks().size - hooks().notNeedDeobfs { hook ->
             // 先加载 不用/已经缓存 反混淆的hook
             if (hook.isEnable() && !hook.init()) {
+                //if (!hook.init()) {
                 "Hook ${hook.name} 加载失败!".error()
             }
             "Hook ${hook.name} 是否启用: ${hook.isEnable()}".debug()
@@ -90,7 +91,11 @@ object ZuiyouLiteLoader : BaseLoader() {
                                     bar.progress = deobf
                                 }
                                 "开始加载hook: ${it.name}".debug()
-                                it.init()
+                                if (it.isEnable() && !it.init()) {
+                                    //if (!it.init()) {
+                                    "hook加载失败: ${it.name}".debug()
+                                }
+
                             }
                             sync {
                                 bar.max = 1
@@ -143,7 +148,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
             add(ZuiYouLiteAutoTaskHook)// 自动签到
             add(ZuiYouLiteWebTokenHook)// 获取Token
-            add(ZuiYouLiteWebTaskHook)// 云端自动任务
+            //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
     }
 
