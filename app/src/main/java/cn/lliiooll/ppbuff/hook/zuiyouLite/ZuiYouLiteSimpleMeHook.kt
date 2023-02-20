@@ -2,8 +2,8 @@ package cn.lliiooll.ppbuff.hook.zuiyouLite
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,14 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.view.children
 import androidx.navigation.NavHostController
 import cn.lliiooll.ppbuff.data.ZyLiteTypes
 import cn.lliiooll.ppbuff.data.hideMine
 import cn.lliiooll.ppbuff.data.isHideMine
-import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.data.types.PViewType
+import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.findId
@@ -40,7 +39,6 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
 
 ) {
     override fun init(): Boolean {
-
         "cn.xiaochuankeji.zuiyouLite.ui.me.FragmentMyTab"
             .findClass()
             .findMethod {
@@ -49,7 +47,7 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
             .hookBefore {
                 ZyLiteTypes.extraMineList.forEach { (t, u) ->
 
-                    if (t.isHideMine()){
+                    if (t.isHideMine()) {
                         XposedHelpers.setObjectField(it.thisObject, u, null)
                     }
                 }
@@ -63,7 +61,7 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
             .hookAfter {
                 val ins = it.thisObject
                 val root = it.result as ViewGroup
-                val vg = it.args[1] as ViewGroup
+                //val vg = it.args[1] as ViewGroup
                 ZyLiteTypes.mineList.forEach { (t, u) ->
                     if (u.isHideMine()) {
                         var view: View? = null
@@ -73,7 +71,7 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
                                     XposedHelpers.getObjectField(
                                         ins,
                                         "myTabDataLayout"
-                                    ) as View
+                                    ) as LinearLayout
                                 view = vg.findViewById(u.replace("!", "").findId())
                             }
                         } else if (u.contains("_")) {

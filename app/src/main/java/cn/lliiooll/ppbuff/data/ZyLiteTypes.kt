@@ -61,6 +61,7 @@ object ZyLiteTypes {
         put("功能入口> 吹水日记", "my_tab_tree_new_bee");
         put("功能入口> 锦旗墙", "my_tab_pennants_layout");
         put("功能入口> 设置", "my_tab_setting_layout");
+        put("功能入口> 皮皮微小说", "my_tab_pp_novel");
         put("个人信息> 全部", "headerView");
         put("个人数据> 全部", "myTabDataLayout");
         put("个人数据> 发帖", "!my_data_post");

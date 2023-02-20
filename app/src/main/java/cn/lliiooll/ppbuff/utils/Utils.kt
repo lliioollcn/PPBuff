@@ -30,6 +30,8 @@ import java.lang.StringBuilder
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.nio.charset.StandardCharsets
+import java.util.Arrays
 import java.util.concurrent.Executors
 
 
@@ -336,7 +338,12 @@ fun XC_MethodHook.MethodHookParam.dump() {
             sb += if (a == null) {
                 "[$i](null)       null"
             } else {
-                "[$i](${a.javaClass.name})       $a"
+                if (a is ByteArray) {
+                    "[$i](${a.javaClass.name})       $a(${Arrays.toString(a)})"
+                } else {
+                    "[$i](${a.javaClass.name})       $a"
+                }
+
             }
         }
     } else {

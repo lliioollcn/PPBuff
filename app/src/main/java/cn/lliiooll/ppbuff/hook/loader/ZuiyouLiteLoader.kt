@@ -14,19 +14,20 @@ import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiZyBuffHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
 import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiAntiDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoWaterMarkHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteQuickStartHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimplePostHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteTestHook
-import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteWebTaskHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteWebTokenHook
 import cn.lliiooll.ppbuff.utils.*
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
@@ -44,6 +45,7 @@ object ZuiyouLiteLoader : BaseLoader() {
     var inited = false
     override fun load() {
         if (inited) return
+
         val deobfs = hooks().size - hooks().notNeedDeobfs { hook ->
             // 先加载 不用/已经缓存 反混淆的hook
             if (hook.isEnable() && !hook.init()) {
@@ -148,6 +150,8 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
             add(ZuiYouLiteAutoTaskHook)// 自动签到
             add(ZuiYouLiteWebTokenHook)// 获取Token
+            add(ZuiYouLiteNoCrashHook)// 错误拦截
+            add(ZuiYouLiteAntiAntiDebugHook)// 反反调试
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
     }
