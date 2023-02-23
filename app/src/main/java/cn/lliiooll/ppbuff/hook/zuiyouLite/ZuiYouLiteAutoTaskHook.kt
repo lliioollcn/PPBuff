@@ -66,6 +66,7 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
         }
         PConfig.getCache(DEOBF_API_SHARE_POST).forEach {
             "@自动分享类: $it".debug()
+            /*
             it
                 .findClass()
                 .findMethod {
@@ -77,6 +78,8 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                     //it.dump()
                     // RuntimeException().catch()
                 }
+
+             */
             val c = "cn.xiaochuankeji.zuiyouLite.ui.slide.ab.ReviewDetailLikeView"
                 .findClass()
             c.findAllMethods {

@@ -47,12 +47,16 @@ object ZuiyouLiteLoader : BaseLoader() {
         if (inited) return
 
         val deobfs = hooks().size - hooks().notNeedDeobfs { hook ->
-            // 先加载 不用/已经缓存 反混淆的hook
-            if (hook.isEnable() && !hook.init()) {
-                //if (!hook.init()) {
-                "Hook ${hook.name} 加载失败!".error()
+            try {
+                // 先加载 不用/已经缓存 反混淆的hook
+                if (hook.isEnable() && !hook.init()) {
+                    //if (!hook.init()) {
+                    "Hook ${hook.name} 加载失败!".error()
+                }
+                "Hook ${hook.name} 是否启用: ${hook.isEnable()}".debug()
+            }catch (e:Throwable){
+                e.catch()
             }
-            "Hook ${hook.name} 是否启用: ${hook.isEnable()}".debug()
         }
         // 然后在加载界面处加载需要反混淆的hook
 
@@ -92,12 +96,15 @@ object ZuiyouLiteLoader : BaseLoader() {
                                 sync {
                                     bar.progress = deobf
                                 }
-                                "开始加载hook: ${it.name}".debug()
-                                if (it.isEnable() && !it.init()) {
-                                    //if (!it.init()) {
-                                    "hook加载失败: ${it.name}".debug()
+                                try {
+                                    "开始加载hook: ${it.name}".debug()
+                                    if (it.isEnable() && !it.init()) {
+                                        //if (!it.init()) {
+                                        "hook加载失败: ${it.name}".debug()
+                                    }
+                                }catch (e:Throwable){
+                                    e.catch()
                                 }
-
                             }
                             sync {
                                 bar.max = 1
@@ -133,6 +140,7 @@ object ZuiyouLiteLoader : BaseLoader() {
 
     override fun hooks(): List<BaseHook> {
         return arrayListOf<BaseHook>().apply {
+            add(ZuiYouLiteNoCrashHook)// 错误拦截
             add(ZuiYouLiteTestHook)// 测试Hook
             add(ZuiYouLiteDebugHook)// 调试Hook
             add(AppCenterHook)// AppCenter统计
@@ -150,7 +158,6 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
             add(ZuiYouLiteAutoTaskHook)// 自动签到
             add(ZuiYouLiteWebTokenHook)// 获取Token
-            add(ZuiYouLiteNoCrashHook)// 错误拦截
             add(ZuiYouLiteAntiAntiDebugHook)// 反反调试
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
