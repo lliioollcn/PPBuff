@@ -54,7 +54,7 @@ object ZuiyouLiteLoader : BaseLoader() {
                     "Hook ${hook.name} 加载失败!".error()
                 }
                 "Hook ${hook.name} 是否启用: ${hook.isEnable()}".debug()
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 e.catch()
             }
         }
@@ -102,7 +102,7 @@ object ZuiyouLiteLoader : BaseLoader() {
                                         //if (!it.init()) {
                                         "hook加载失败: ${it.name}".debug()
                                     }
-                                }catch (e:Throwable){
+                                } catch (e: Throwable) {
                                     e.catch()
                                 }
                             }
@@ -127,11 +127,16 @@ object ZuiyouLiteLoader : BaseLoader() {
                     }
                 } else {
                     PConfig.init(true)
-                    activity.javaClass
-                        .findField {
-                            this.type == Handler::class.java
-                        }
-                        .invokeMethod(activity, "sendEmptyMessage", 29)
+                    if (!PConfig.boolean("is_first_launch_pp", true)) {
+                        activity.javaClass
+                            .findField {
+                                this.type == Handler::class.java
+                            }
+                            .invokeMethod(activity, "sendEmptyMessage", 29)
+                    } else {
+                        "第一次启动，不自动跳转".debug()
+                        PConfig.set("is_first_launch_pp", false)
+                    }
                 }
 
             }

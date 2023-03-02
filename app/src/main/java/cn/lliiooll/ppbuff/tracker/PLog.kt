@@ -41,11 +41,13 @@ class PLog {
         }
 
         fun catch(throwable: Throwable) {
+            /*
             if (!BuildConfig.DEBUG) {
                 Crashes.trackError(throwable, hashMapOf<String, String>().apply {
                     putAll(getModuleDebugInfo())
                 }, arrayListOf())
             }
+             */
             val sb = StringBuilder()
             sb += "发生了一个错误: ${throwable.message}"
             sb += "以下是堆栈: "
