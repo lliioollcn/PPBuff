@@ -80,6 +80,9 @@ fun HoolList(type: PHookType, navController: NavHostController) {
                         )
                         Switch(checked = hookEnable, onCheckedChange = {
                             hook.setEnable(it)
+                            if (hook.needCustomClick()) {
+                                hook.click()
+                            }
                             hookEnable = it
                             if (System.currentTimeMillis() - lastSwitch > 5000L) {
                                 "重启应用生效".toastShort(ctx)
@@ -96,7 +99,7 @@ fun HoolList(type: PHookType, navController: NavHostController) {
                 } else if (hook.view() == PViewType.CUSTOM) {
                     Row(modifier = Modifier
                         .clickable {
-                            if (hook.needCustomClick()){
+                            if (hook.needCustomClick()) {
                                 hook.click()
                             }
                             if (hook.router()) {

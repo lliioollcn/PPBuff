@@ -39,7 +39,7 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
                 "收到回调".debug()
                 PConfig.set(ZuiYouLiteAutoFollowHook.label, true)
                 if (PPBuff.isFollow) {
-                    callMethod("a", it.args)
+                    it.thisObject.callMethod("a", it.args)
                 }
             }
         click()
@@ -75,7 +75,6 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
     }
 
     override fun click() {
-        "关注中，请稍后".toastShort()
         "关注中，请稍后".debug()
         val type = PConfig.getCache(DEOBF_API_FOLLOWSERVICE).toList()[0]
         val ins = type.findClass().newInstance()
