@@ -17,10 +17,11 @@ android {
         if (System.getenv("KEYSTORE_PATH") != null) {
             versionCode Common.getBuildVersionCode(rootProject)
         } else {
-            versionCode 1
+            versionCode 10
         }
         versionName "1.0.0${Common.getGitHeadRefsSuffix(rootProject)}"
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
+        buildConfigField "String", "BUILD_HASH", "\"" + Common.getGitCommitHash(rootProject) + "\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -121,11 +122,11 @@ dependencies {
     //implementation 'com.google.code.gson:gson:2.10.1'
     //implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'cn.hutool:hutool-all:5.8.11'
-
-
     def appCenterSdkVersion = '4.4.5'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+}
 
-
+task buildGithub(){
+    
 }
