@@ -15,9 +15,11 @@ import java.time.ZoneId
 import java.util.Date
 
 object UpdateUtils {
+    var acu = false
 
     fun hasUpdateAppCenter(): Boolean {
         if (PPBuff.isDebug()) return false
+        if (acu) return PPBuff.hasUpdate
         // https://install.appcenter.ms/api/v0.1/apps/lliioollcn/ppbuff/distribution_groups/alpha/releases/{$id}?is_install_page=true
         val jstr =
             HttpUtil.get("https://install.appcenter.ms/api/v0.1/apps/lliioollcn/ppbuff/distribution_groups/alpha/public_releases?scope=tester&top=10000")
@@ -29,11 +31,14 @@ object UpdateUtils {
         val latest = json.getJSONObject(0)
         val versionCode = latest.getStr("version")
         "最新版本: $versionCode,本地版本: ${BuildConfig.VERSION_CODE}".debug()
-        return versionCode != "${BuildConfig.VERSION_CODE}"
+        PPBuff.hasUpdate = (versionCode != "${BuildConfig.VERSION_CODE}")
+        acu = true
+        return PPBuff.hasUpdate
     }
 
     fun hasUpdateGithub(): Boolean {
         if (PPBuff.isDebug()) return false
+        if (acu) return PPBuff.hasUpdate
         // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs
         // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/{$id}
         // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/{$id}/artifacts
@@ -48,7 +53,9 @@ object UpdateUtils {
         val latest = workflowRuns.getJSONObject(0)
         val headSha = latest.getStr("head_sha")
         "最新哈希: $headSha,本地哈希: ${BuildConfig.BUILD_HASH}".debug()
-        return headSha != BuildConfig.BUILD_HASH
+        PPBuff.hasUpdate = (headSha != BuildConfig.BUILD_HASH)
+        acu = true
+        return PPBuff.hasUpdate
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -105,5 +112,10 @@ object UpdateUtils {
         details.time =
             Date.from(LocalDateTime.parse(date).atZone(ZoneId.systemDefault()).toInstant()).time
         return details
+    }
+
+    fun hasUpdate(): Boolean {
+        return hasUpdateAppCenter() || hasUpdateGithub()
+
     }
 }

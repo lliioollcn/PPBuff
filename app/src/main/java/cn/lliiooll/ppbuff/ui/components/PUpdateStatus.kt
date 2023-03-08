@@ -161,7 +161,7 @@ fun PUpdateStatus() {
                             if (!PPBuff.checked) {
                                 PPBuff.checked = true
                                 thread {
-                                    if (UpdateUtils.hasUpdateAppCenter() || UpdateUtils.hasUpdateGithub()) {
+                                    if (UpdateUtils.hasUpdate()) {
                                         val details = UpdateUtils.getUpdateDetails()
                                         if (details == null) {
                                             "数据为空".debug()

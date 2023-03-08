@@ -34,7 +34,7 @@ object ZuiYouLiteTestHook : BaseHook(
                 val activity = it.thisObject as Activity
                 "Buff加载成功~".toastShort(activity)
                 thread {
-                    if (UpdateUtils.hasUpdateAppCenter() || UpdateUtils.hasUpdateGithub()){
+                    if (UpdateUtils.hasUpdate()) {
                         sync {
                             "发现模块新版本，请及时更新".toastShort()
                         }

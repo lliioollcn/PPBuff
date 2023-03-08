@@ -33,6 +33,7 @@ public class PPBuff {
     private static Application app;
     @NotNull
     public static  boolean checked = false;
+    public static boolean hasUpdate = false;
 
 
     public static boolean isDebug() {
