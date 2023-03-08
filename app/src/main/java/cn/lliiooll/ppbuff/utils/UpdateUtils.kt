@@ -17,7 +17,7 @@ import java.util.Date
 object UpdateUtils {
 
     fun hasUpdateAppCenter(): Boolean {
-        //if (PPBuff.isDebug()) return false
+        if (PPBuff.isDebug()) return false
         // https://install.appcenter.ms/api/v0.1/apps/lliioollcn/ppbuff/distribution_groups/alpha/releases/{$id}?is_install_page=true
         val jstr =
             HttpUtil.get("https://install.appcenter.ms/api/v0.1/apps/lliioollcn/ppbuff/distribution_groups/alpha/public_releases?scope=tester&top=10000")
@@ -33,7 +33,7 @@ object UpdateUtils {
     }
 
     fun hasUpdateGithub(): Boolean {
-        //if (PPBuff.isDebug()) return false
+        if (PPBuff.isDebug()) return false
         // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs
         // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/{$id}
         // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/{$id}/artifacts
@@ -54,7 +54,7 @@ object UpdateUtils {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUpdateDetails(): PUpdateDetails? {
         val details = PUpdateDetails()
-        //if (PPBuff.isDebug()) return null
+        if (PPBuff.isDebug()) return null
         // https://install.appcenter.ms/api/v0.1/apps/lliioollcn/ppbuff/distribution_groups/alpha/releases/{$id}?is_install_page=true
         var jstr =
             HttpUtil.get("https://install.appcenter.ms/api/v0.1/apps/lliioollcn/ppbuff/distribution_groups/alpha/public_releases?scope=tester&top=10000")
