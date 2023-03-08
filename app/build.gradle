@@ -16,12 +16,14 @@ android {
         targetSdk 33
         if (System.getenv("KEYSTORE_PATH") != null) {
             versionCode Common.getBuildVersionCode(rootProject)
+            buildConfigField "String", "BUILD_HASH", "\"" + Common.getGitCommitHash(rootProject) + "\""
         } else {
-            versionCode 10
+            versionCode 12
+            buildConfigField "String", "BUILD_HASH", "\"awawawa\""
         }
         versionName "1.0.0${Common.getGitHeadRefsSuffix(rootProject)}"
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
-        buildConfigField "String", "BUILD_HASH", "\"" + Common.getGitCommitHash(rootProject) + "\""
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true

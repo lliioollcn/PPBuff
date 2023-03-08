@@ -5,6 +5,7 @@ import cn.lliiooll.ppbuff.BuildConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.utils.getModuleDebugInfo
 import cn.lliiooll.ppbuff.utils.plusAssign
+import cn.lliiooll.ppbuff.utils.toastShort
 import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
@@ -55,6 +56,7 @@ class PLog {
                 sb += "     $s"
             }
             e(sb.toString())
+            "阻止皮皮搞笑闪退-> $throwable".toastShort()
         }
 
         fun c(throwable: Throwable) {

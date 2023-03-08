@@ -31,6 +31,8 @@ public class PPBuff {
         put(HostInfo.TieBa.PACKAGE_NAME, "cn.xiaochuankeji.tieba.ui.home.setting.SettingActivity");// 最右
     }};
     private static Application app;
+    @NotNull
+    public static  boolean checked = false;
 
 
     public static boolean isDebug() {

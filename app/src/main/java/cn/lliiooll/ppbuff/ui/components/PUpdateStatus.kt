@@ -1,7 +1,9 @@
 package cn.lliiooll.ppbuff.ui.components
 
 import android.app.Activity
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,14 +26,17 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import cn.hutool.core.date.DateUtil
+import cn.hutool.json.JSONUtil
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.data.bean.PUpdateDetails
 import cn.lliiooll.ppbuff.utils.UpdateUtils
+import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.openUrl
 import java.util.Date
 import kotlin.concurrent.thread
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun PUpdateStatus() {
@@ -90,7 +95,9 @@ fun PUpdateStatus() {
                             var update by remember {
                                 mutableStateOf(false)
                             }
-                            var detailData: PUpdateDetails? = null
+                            var detailData by remember {
+                                mutableStateOf(PUpdateDetails())
+                            }
                             Text(
                                 text = title,
                                 textAlign = TextAlign.Left,
@@ -98,18 +105,18 @@ fun PUpdateStatus() {
                             )
                             if (update) {
                                 Text(
-                                    text = if (detailData != null) "发现新版本: ${detailData.msg}" else "发现新版本",
+                                    text = if (detailData.version != null) "发现新版本: ${detailData.version}" else "发现新版本",
                                     textAlign = TextAlign.Left,
                                     fontSize = TextUnit(13f, TextUnitType.Sp),
                                 )
                                 Text(
-                                    text = if (detailData != null) detailData.msg else "更新一些你可能知道的，也可能不知道的",
+                                    text = if (detailData.msg != null) detailData.msg else "更新一些你可能知道的，也可能不知道的",
                                     textAlign = TextAlign.Left,
                                     fontSize = TextUnit(13f, TextUnitType.Sp),
                                 )
                                 Text(
                                     text = "更新日期: ${
-                                        if (detailData != null) DateUtil.format(
+                                        if (detailData.time != null) DateUtil.format(
                                             Date(
                                                 detailData.time
                                             ), "yyyy年MM月dd日HH:mm:ss"
@@ -123,7 +130,7 @@ fun PUpdateStatus() {
                                     textAlign = TextAlign.Left,
                                     fontSize = TextUnit(13f, TextUnitType.Sp),
                                     modifier = Modifier.clickable {
-                                        if (detailData != null) {
+                                        if (detailData.downloadUrlAppCenter != null) {
                                             detailData?.downloadUrlAppCenter!!.openUrl(activity)
                                         } else {
                                             Toast.makeText(
@@ -139,7 +146,7 @@ fun PUpdateStatus() {
                                     textAlign = TextAlign.Left,
                                     fontSize = TextUnit(13f, TextUnitType.Sp),
                                     modifier = Modifier.clickable {
-                                        if (detailData != null) {
+                                        if (detailData.downloadUrlGithub != null) {
                                             detailData?.downloadUrlGithub!!.openUrl(activity)
                                         } else {
                                             Toast.makeText(
@@ -151,22 +158,29 @@ fun PUpdateStatus() {
                                     }
                                 )
                             }
-                            thread {
-                                if (UpdateUtils.hasUpdateAppCenter() && UpdateUtils.hasUpdateGithub()) {
-                                    val details = UpdateUtils.getUpdateDetails()
-                                    if (details == null) {
-                                        title = "网络连接失败"
+                            if (!PPBuff.checked) {
+                                PPBuff.checked = true
+                                thread {
+                                    if (UpdateUtils.hasUpdateAppCenter() || UpdateUtils.hasUpdateGithub()) {
+                                        val details = UpdateUtils.getUpdateDetails()
+                                        if (details == null) {
+                                            "数据为空".debug()
+                                            title = "网络连接失败"
+                                        } else {
+                                            "数据: ${JSONUtil.toJsonPrettyStr(details)}".debug()
+                                            detailData = details
+                                            update = true
+                                            title = "检查完毕"
+                                        }
+                                        "需要更新".debug()
                                     } else {
-                                        detailData = details
-                                        update = true
-                                        title = "检查完毕"
+                                        "不需要更新".debug()
+                                        if (PPBuff.isDebug()) {
+                                            title = "调试模式"
+                                        } else {
+                                            title = "暂无更新"
+                                        }
                                     }
-                                }else{
-                                   if (PPBuff.isDebug()){
-                                       title = "调试模式"
-                                   }else{
-                                       title = "暂无更新"
-                                   }
                                 }
                             }
                         }
