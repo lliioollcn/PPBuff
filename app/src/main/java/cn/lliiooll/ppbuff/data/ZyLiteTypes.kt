@@ -25,6 +25,7 @@ object ZyLiteTypes {
         put("FeedActivityHolder", 105);
         put("视频", 11);
         put("普通视频帖子带游戏广告", 0x3c);
+        put("用户直播推荐", 0x3d);
         put("单一图片帖子", 12);
         put("GIF帖子", 13);
         put("GIF&视频混合帖子", 14);
@@ -36,7 +37,6 @@ object ZyLiteTypes {
         put("推荐关注帖子", 217);
         put("未知直播帖子类型", 200);
         put("HolderPrivacyAlert", "layout_holder_privacy_alert".findId("layout"));
-
         put("网页帖子", 102)
     }
 

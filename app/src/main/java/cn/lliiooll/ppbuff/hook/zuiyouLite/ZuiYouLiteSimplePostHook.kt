@@ -104,6 +104,21 @@ object ZuiYouLiteSimplePostHook : BaseHook(
                         it.thisObject.hideHolder()
                     }
                 }
+                if(0x3d.isHidePost()){
+                    val member = XposedHelpers.getObjectField(postData, "member")
+                    if (member != null) {
+                        val liveOn = XposedHelpers.getIntField(member, "liveOn")
+                        if (liveOn == 1){
+                            it.thisObject.hideHolder()
+                        }
+                        /*
+                        val liveRank = XposedHelpers.getIntField(member, "liveRank")
+                        val nickName = XposedHelpers.getObjectField(member, "nickName")
+                        "用户 $nickName 是否正在直播: $liveOn".debug()
+                        "用户 $nickName 是否直播: $liveRank".debug()
+                         */
+                    }
+                }
                 if (PConfig.boolean("auto_task_share_post", false)) {
                     var count = PConfig.number("auto_task_share_post_count")
                     val time = PConfig.numberEx("auto_task_share_post_time")

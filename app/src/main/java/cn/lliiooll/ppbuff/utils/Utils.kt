@@ -382,3 +382,26 @@ fun postOperator(): Any? {
     }
     return null
 }
+
+
+fun Any.callMethod(name: String, vararg a: Any?): Any? {
+    return XposedHelpers.callMethod(this, name, a)
+}
+
+fun Any.callMethod(vararg a: Any?): Any? {
+    for (m in this.javaClass.declaredMethods) {
+        if (m.paramCount == a.size) {
+            var c = true
+            for (i in 0..m.paramCount) {
+                if (a[i]?.javaClass != m.parameterTypes[i]) {
+                    c = false
+                    break
+                }
+            }
+            if (c) {
+                return XposedHelpers.callMethod(this, m.name, a)
+            }
+        }
+    }
+    return null
+}

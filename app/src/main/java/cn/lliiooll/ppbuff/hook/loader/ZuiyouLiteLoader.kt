@@ -16,6 +16,7 @@ import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiAntiDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoFollowHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDebugHook
@@ -166,6 +167,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteWebTokenHook)// 获取Token
             add(ZuiYouLiteAntiAntiDebugHook)// 反反调试
             add(ZuiYouLiteCrashHook)// 手动抛错
+            add(ZuiYouLiteAutoFollowHook)// 自动关注
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
     }

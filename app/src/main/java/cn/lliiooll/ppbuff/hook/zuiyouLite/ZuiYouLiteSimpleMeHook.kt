@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.data.ZyLiteTypes
 import cn.lliiooll.ppbuff.data.hideMine
 import cn.lliiooll.ppbuff.data.isHideMine
@@ -29,9 +30,14 @@ import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.findId
+import com.github.kyuubiran.ezxhelper.utils.findAllConstructors
+import com.github.kyuubiran.ezxhelper.utils.findAllMethods
+import com.github.kyuubiran.ezxhelper.utils.findFieldObject
+import com.github.kyuubiran.ezxhelper.utils.findFieldObjectOrNull
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
+import com.github.kyuubiran.ezxhelper.utils.paramCount
 import de.robv.android.xposed.XposedHelpers
 
 object ZuiYouLiteSimpleMeHook : BaseHook(
@@ -52,6 +58,24 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
                     }
                 }
 
+            }
+        "cn.xiaochuankeji.zuiyouLite.ui.me.MyTabHeaderView"
+            .findClass()
+            .findAllMethods {
+                paramCount > 0 && parameterTypes[0].name.contains("MemberInfoBean")
+            }
+            .hookAfter {
+                val infoBean = it.args[0]
+                if (infoBean != null) {
+                    val id = XposedHelpers.getLongField(infoBean, "id")
+                    val pyid = XposedHelpers.getObjectField(infoBean, "pyID") as String
+                    "当前id: $id ; 当前皮友号: $pyid".debug()
+                    if (PConfig.numberEx("account_id_now", 0L) != id) {
+                        PConfig.set("account_id_now", id)
+                        PConfig.set(ZuiYouLiteAutoFollowHook.label, false)
+                        ZuiYouLiteAutoFollowHook.init()
+                    }
+                }
             }
         "cn.xiaochuankeji.zuiyouLite.ui.me.FragmentMyTab"
             .findClass()

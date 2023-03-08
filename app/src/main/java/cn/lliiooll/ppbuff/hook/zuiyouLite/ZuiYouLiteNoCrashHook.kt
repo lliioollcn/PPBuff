@@ -33,6 +33,7 @@ object ZuiYouLiteNoCrashHook : BaseHook(
             e.catch()
         }
 
+        /*
         Handler(Looper.getMainLooper()).post {
             while (true) {
                 try {
@@ -51,6 +52,8 @@ object ZuiYouLiteNoCrashHook : BaseHook(
                 }
             }
         }
+
+         */
         return true
     }
 }

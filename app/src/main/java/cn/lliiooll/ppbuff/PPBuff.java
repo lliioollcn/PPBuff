@@ -34,6 +34,7 @@ public class PPBuff {
     @NotNull
     public static  boolean checked = false;
     public static boolean hasUpdate = false;
+    public static boolean isFollow = false;
 
 
     public static boolean isDebug() {
