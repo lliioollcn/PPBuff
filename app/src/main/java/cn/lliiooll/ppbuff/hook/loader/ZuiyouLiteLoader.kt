@@ -15,6 +15,7 @@ import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
 import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiAntiDebugHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiUpdateHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoFollowHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
@@ -172,6 +173,8 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteAntiAntiDebugHook)// 反反调试
             add(ZuiYouLiteCrashHook)// 手动抛错
             add(ZuiYouLiteAutoFollowHook)// 自动关注
+            add(ZuiYouLiteAntiUpdateHook)// 屏蔽更新
+
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
     }
