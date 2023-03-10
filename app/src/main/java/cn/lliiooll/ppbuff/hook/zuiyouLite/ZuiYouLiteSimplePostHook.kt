@@ -104,11 +104,11 @@ object ZuiYouLiteSimplePostHook : BaseHook(
                         it.thisObject.hideHolder()
                     }
                 }
-                if(0x3d.isHidePost()){
+                if (0x3d.isHidePost()) {
                     val member = XposedHelpers.getObjectField(postData, "member")
                     if (member != null) {
                         val liveOn = XposedHelpers.getIntField(member, "liveOn")
-                        if (liveOn == 1){
+                        if (liveOn == 1) {
                             it.thisObject.hideHolder()
                         }
                         /*
@@ -196,22 +196,24 @@ object ZuiYouLiteSimplePostHook : BaseHook(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(10.dp, 5.dp, 10.dp, 0.dp)
+
         ) {
-            LazyColumn {
-                ZyLiteTypes.postList.forEach { (t, u) ->
-                    item {
-                        Row(modifier = Modifier.clickable {
-                            u.hidePost()
-                        }) {
-                            var hide by remember {
-                                mutableStateOf(u.isHidePost())
-                            }
-                            Text(text = t, modifier = Modifier.weight(1f, true))
-                            Checkbox(checked = hide, onCheckedChange = {
+            Surface(modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 0.dp)) {
+                LazyColumn {
+                    ZyLiteTypes.postList.forEach { (t, u) ->
+                        item {
+                            Row(modifier = Modifier.clickable {
                                 u.hidePost()
-                                hide = u.isHidePost()
-                            })
+                            }) {
+                                var hide by remember {
+                                    mutableStateOf(u.isHidePost())
+                                }
+                                Text(text = t, modifier = Modifier.weight(1f, true))
+                                Checkbox(checked = hide, onCheckedChange = {
+                                    u.hidePost()
+                                    hide = u.isHidePost()
+                                })
+                            }
                         }
                     }
                 }

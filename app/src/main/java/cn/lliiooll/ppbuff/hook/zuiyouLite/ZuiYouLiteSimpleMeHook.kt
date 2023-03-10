@@ -144,26 +144,28 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(10.dp, 5.dp, 10.dp, 0.dp)
-        ) {
 
-            LazyColumn {
-                ZyLiteTypes.mineList.forEach { (t, u) ->
-                    item {
-                        Row(modifier = Modifier.clickable {
-                            u.hideMine()
-                        }) {
-                            var hide by remember {
-                                mutableStateOf(u.isHideMine())
-                            }
-                            Text(text = t, modifier = Modifier.weight(1f, true))
-                            Checkbox(checked = hide, onCheckedChange = {
+        ) {
+            Surface(modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 0.dp)) {
+                LazyColumn {
+                    ZyLiteTypes.mineList.forEach { (t, u) ->
+                        item {
+                            Row(modifier = Modifier.clickable {
                                 u.hideMine()
-                                hide = u.isHideMine()
-                            })
+                            }) {
+                                var hide by remember {
+                                    mutableStateOf(u.isHideMine())
+                                }
+                                Text(text = t, modifier = Modifier.weight(1f, true))
+                                Checkbox(checked = hide, onCheckedChange = {
+                                    u.hideMine()
+                                    hide = u.isHideMine()
+                                })
+                            }
                         }
                     }
                 }
+
             }
         }
     }

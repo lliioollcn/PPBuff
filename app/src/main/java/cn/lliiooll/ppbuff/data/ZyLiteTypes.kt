@@ -23,7 +23,7 @@ object ZyLiteTypes {
         put("语音帖子/评论", 2);
         put("混合广告帖子", 27);
         put("FeedActivityHolder", 105);
-        put("视频", 11);
+        put("视频 [不推荐屏蔽]", 11);
         put("普通视频帖子带游戏广告", 0x3c);
         put("用户直播推荐", 0x3d);
         put("单一图片帖子", 12);
@@ -33,7 +33,7 @@ object ZyLiteTypes {
         put("PartitionHeadHolder", -10);
         put("HolderStoryAlert", -102);
         put("BottomInfoHolder", 101);
-        put("普通图片/文字帖", 1);
+        put("普通图片/文字帖 [不推荐屏蔽]", 1);
         put("推荐关注帖子", 217);
         put("未知直播帖子类型", 200);
         put("HolderPrivacyAlert", "layout_holder_privacy_alert".findId("layout"));
@@ -60,7 +60,7 @@ object ZyLiteTypes {
         put("功能入口> 小黑屋", "my_tab_black_layout");
         put("功能入口> 吹水日记", "my_tab_tree_new_bee");
         put("功能入口> 锦旗墙", "my_tab_pennants_layout");
-        put("功能入口> 设置", "my_tab_setting_layout");
+        //put("功能入口> 设置", "my_tab_setting_layout");
         put("功能入口> 皮皮微小说", "my_tab_pp_novel");
         put("个人信息> 全部", "headerView");
         put("个人数据> 全部", "myTabDataLayout");

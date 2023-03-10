@@ -46,4 +46,8 @@ object ZuiYouLiteAntiUpdateHook : BaseHook(
             DEOBFKEY_UPDATE_UTILS
         )?.isValid()!!
     }
+
+    override fun isEnable(): Boolean {
+        return PConfig.boolean(label, false)
+    }
 }

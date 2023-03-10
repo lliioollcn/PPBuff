@@ -18,7 +18,7 @@ android {
             versionCode Common.getBuildVersionCode(rootProject)
             buildConfigField "String", "BUILD_HASH", "\"" + Common.getGitCommitHash(rootProject) + "\""
         } else {
-            versionCode 2
+            versionCode 1
             buildConfigField "String", "BUILD_HASH", "\"awawawa\""
         }
         versionName "1.0.1${Common.getGitHeadRefsSuffix(rootProject)}"

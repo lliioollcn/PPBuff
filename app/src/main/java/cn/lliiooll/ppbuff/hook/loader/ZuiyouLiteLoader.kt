@@ -152,8 +152,8 @@ object ZuiyouLiteLoader : BaseLoader() {
     override fun hooks(): List<BaseHook> {
         return arrayListOf<BaseHook>().apply {
             add(ZuiYouLiteNoCrashHook)// 错误拦截
-            add(ZuiYouLiteTestHook)// 测试Hook
             add(ZuiYouLiteDebugHook)// 调试Hook
+            add(ZuiYouLiteTestHook)// 测试Hook
             add(AppCenterHook)// AppCenter统计
             add(ZuiYouLiteQuickStartHook)// 快速启动
             add(XiaoChuanAntiADHook)// 去广告

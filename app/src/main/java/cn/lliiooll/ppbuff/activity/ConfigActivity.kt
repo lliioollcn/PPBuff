@@ -39,7 +39,6 @@ import cn.lliiooll.ppbuff.utils.toastShort
 class ConfigActivity : PActivity() {
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -50,7 +49,8 @@ class ConfigActivity : PActivity() {
                     PTitleBar()// 标题栏
                     NavHost(
                         navController = navController,
-                        startDestination = "main"
+                        startDestination = "main",
+                        modifier =  Modifier.fillMaxWidth().fillMaxHeight()
                     ) {// 导航界面
                         composable("main") {// 主界面
                             ConfigMainComposable(navController)
