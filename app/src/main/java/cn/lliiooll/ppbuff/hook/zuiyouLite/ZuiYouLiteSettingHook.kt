@@ -15,10 +15,12 @@ import cn.lliiooll.ppbuff.activity.ConfigActivity
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.utils.UpdateUtils
+import cn.lliiooll.ppbuff.utils.async
 import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.findId
 import cn.lliiooll.ppbuff.utils.jumpTo
 import cn.lliiooll.ppbuff.utils.openUrl
+import cn.lliiooll.ppbuff.utils.sync
 import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findMethod
@@ -60,13 +62,14 @@ object ZuiYouLiteSettingHook : BaseHook(
                 }
                 host.setOnLongClickListener {
                     if (UpdateUtils.hasUpdate()) {
-                        "发现更新".toastShort()
-                        val details = UpdateUtils.getUpdateDetails()
-                        if (details?.downloadUrlAppCenter != null) {
-                            details.downloadUrlAppCenter.openUrl(activity)
-                        } else if (details?.downloadUrlGithub != null) {
-                            details.downloadUrlGithub.openUrl(activity)
+                        //"发现更新".toastShort()
+                        async {
+                            val details = UpdateUtils.getUpdateDetails()
+                            if (details?.downloadUrlAppCenter != null) {
+                                sync { details.downloadUrlAppCenter.openUrl(activity) }
+                            }
                         }
+
                     } else {
                         "暂无更新".toastShort()
                     }
