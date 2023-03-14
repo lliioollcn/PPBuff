@@ -176,6 +176,7 @@ public class PPBuff {
             private static final int PP_2_48_10 = 2481000;
             private static final int PP_2_49_10 = 2491000;
             private static final int PP_2_50_10 = 2501000;
+            private static final int PP_2_52_11 = 2521100;
         }
 
         public static class TieBa {
