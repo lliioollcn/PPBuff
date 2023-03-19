@@ -30,8 +30,10 @@ import cn.hutool.json.JSONUtil
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.data.bean.PUpdateDetails
 import cn.lliiooll.ppbuff.utils.UpdateUtils
+import cn.lliiooll.ppbuff.utils.async
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.openUrl
+import cn.lliiooll.ppbuff.utils.sync
 import java.util.Date
 import kotlin.concurrent.thread
 
@@ -160,25 +162,28 @@ fun PUpdateStatus() {
                             }
                             if (!PPBuff.checked) {
                                 PPBuff.checked = true
-                                thread {
+                                async {
                                     if (UpdateUtils.hasUpdate()) {
                                         val details = UpdateUtils.getUpdateDetails()
                                         if (details == null) {
                                             "数据为空".debug()
-                                            title = "网络连接失败"
+                                            sync { title = "网络连接失败" }
+
                                         } else {
                                             "数据: ${JSONUtil.toJsonPrettyStr(details)}".debug()
-                                            detailData = details
-                                            update = true
-                                            title = "检查完毕"
+                                            sync {
+                                                detailData = details
+                                                update = true
+                                                title = "检查完毕"
+                                            }
                                         }
                                         "需要更新".debug()
                                     } else {
                                         "不需要更新".debug()
                                         if (PPBuff.isDebug()) {
-                                            title = "调试模式"
+                                            sync { title = "调试模式" }
                                         } else {
-                                            title = "暂无更新"
+                                            sync { title = "暂无更新" }
                                         }
                                     }
                                 }

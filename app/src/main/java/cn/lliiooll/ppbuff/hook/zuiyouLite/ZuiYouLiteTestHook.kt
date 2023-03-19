@@ -6,6 +6,7 @@ import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.utils.UpdateUtils
+import cn.lliiooll.ppbuff.utils.async
 import cn.lliiooll.ppbuff.utils.catch
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.dump
@@ -33,7 +34,7 @@ object ZuiYouLiteTestHook : BaseHook(
             .hookAfter {
                 val activity = it.thisObject as Activity
                 "Buff加载成功~".toastShort(activity)
-                thread {
+                async {
                     if (UpdateUtils.hasUpdate()) {
                         sync {
                             "发现模块新版本，请及时更新".toastShort()
