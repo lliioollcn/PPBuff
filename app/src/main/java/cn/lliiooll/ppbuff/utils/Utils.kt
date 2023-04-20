@@ -384,7 +384,7 @@ fun postOperator(): Any? {
 }
 
 
-fun Any.callMethod(name: String, vararg a: Any?): Any? {
+fun Any.callMethod(name: String, vararg a: Any): Any? {
     return XposedHelpers.callMethod(this, name, a)
 }
 

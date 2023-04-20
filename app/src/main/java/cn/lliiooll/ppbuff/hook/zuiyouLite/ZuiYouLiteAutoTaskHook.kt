@@ -115,13 +115,43 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                                         XposedHelpers.getLongField(commentBean, "commentId")
                                     val status = XposedHelpers.getLongField(commentBean, "status")
                                     if (isGod == 1) {
-                                        while (count < 12) {
-                                            if (liked == 1) {
-                                                XposedHelpers.callMethod(it.thisObject, "a0")
+                                        var met: Method? = null
+                                        for (m in it.thisObject.javaClass.methods) {
+                                            if (m.paramCount == 0 && (m.name == "a0" || m.name == "Y")) {
+                                                met = m
+                                                break
+                                            }
+                                        }
+                                        if (count <= 12) {
+                                            while (count < 12) {
+                                                if (liked == 1) {
+                                                    if (met != null)
+                                                        XposedHelpers.callMethod(
+                                                            it.thisObject,
+                                                            met.name
+                                                        )
+                                                    /*
+                                                    XposedHelpers.callMethod(
+                                                        apiCommentIns,
+                                                        mCancelLike?.name,
+                                                        postId,
+                                                        commentId,
+                                                        status,
+                                                        it.thisObject
+                                                    )
+
+                                                     */
+                                                    "已取消点赞".debug()
+                                                }
+                                                if (met != null)
+                                                    XposedHelpers.callMethod(
+                                                        it.thisObject,
+                                                        met.name
+                                                    )
                                                 /*
                                                 XposedHelpers.callMethod(
                                                     apiCommentIns,
-                                                    mCancelLike?.name,
+                                                    mLike?.name,
                                                     postId,
                                                     commentId,
                                                     status,
@@ -129,25 +159,21 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                                                 )
 
                                                  */
-                                                "已取消点赞".debug()
+                                                "已点赞".debug()
+                                                count++
+                                                PConfig.set(
+                                                    "auto_task_like_comment_god_count",
+                                                    count
+                                                )
                                             }
-                                            XposedHelpers.callMethod(it.thisObject, "a0")
-                                            /*
-                                            XposedHelpers.callMethod(
-                                                apiCommentIns,
-                                                mLike?.name,
-                                                postId,
-                                                commentId,
-                                                status,
-                                                it.thisObject
-                                            )
-
-                                             */
-                                            "已点赞".debug()
-                                            count++
-                                            PConfig.set("auto_task_like_comment_god_count", count)
-                                            "已经完成点赞神评 $count/6".toastShort()
+                                            if (met != null)
+                                                XposedHelpers.callMethod(
+                                                    it.thisObject,
+                                                    met.name
+                                                )
+                                            "点赞神评任务已完成 ${count / 2}/6".toastShort()
                                         }
+
                                     } else {
                                         "不是神评，跳过".debug()
                                     }

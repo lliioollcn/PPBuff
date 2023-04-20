@@ -29,6 +29,7 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
             return true
         }
         if (inited) return true
+        PPBuff.isFollow = false
         "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$b"
             .findClass()
             .findMethod {
@@ -37,7 +38,7 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
             .hookReplace {
                 PPBuff.isFollow = true
                 "收到回调".debug()
-                PConfig.set(ZuiYouLiteAutoFollowHook.label, true)
+                //PConfig.set(ZuiYouLiteAutoFollowHook.label, true)
                 if (PPBuff.isFollow) {
                     it.thisObject.callMethod("a", it.args)
                 }
