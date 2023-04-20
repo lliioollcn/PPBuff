@@ -52,15 +52,12 @@ object ZuiYouLiteSettingHook : BaseHook(
                 // 初始化界面
                 val view = LayoutInflater.from(activity).inflate(R.layout.pp_setting, null, false)
                 val version = view.findViewById<TextView>(R.id.pp_setting_version)
+                version.text = BuildConfig.VERSION_NAME
                 async {
                     if (UpdateUtils.hasUpdate()) {
                         sync {
                             version.text =
                                 "有更新,长按获取"
-                        }
-                    } else {
-                        sync {
-                            version.text = BuildConfig.VERSION_NAME
                         }
                     }
                 }
