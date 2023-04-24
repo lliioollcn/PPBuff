@@ -44,7 +44,9 @@ import kotlin.concurrent.thread
 fun PUpdateStatus() {
     Surface(
         color = if (isSystemInDarkTheme()) Color.DarkGray else Color.White,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
     ) {
         Column(
             modifier = Modifier

@@ -19,9 +19,11 @@ class MainActivity : PActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PPBuffTheme {
-                LazyColumn(modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                ) {
                     item {
                         StatusBar()// 沉浸式状态栏
 
