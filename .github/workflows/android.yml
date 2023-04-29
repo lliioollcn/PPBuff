@@ -1,14 +1,14 @@
 name: Android CI
 
-on:
-  push:
-    branches: [ "master" ]
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
-      - '.github/**'
-      - '.idea/**'
-      - '!.github/workflows/**'
+#on:
+#  push:
+#    branches: [ "master" ]
+#    paths-ignore:
+#      - '**.md'
+#      - '**.txt'
+#      - '.github/**'
+#      - '.idea/**'
+#      - '!.github/workflows/**'
 
 jobs:
   build:
