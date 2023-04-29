@@ -7,12 +7,14 @@ import com.tencent.mmkv.MMKV
 
 object PNative {
     val libList = arrayListOf<String>().apply {
-        add("dexkit")
-        add("mmkv")
+        add("ppbuff")
+        add("ffmpeg")
     }
 
     fun init(app: Application) {
         try {
+            Natives.init()
+            /*
             if (PPBuff.isInHostApp()) {
                 val mmkvDir = app.getExternalFilesDir("buffMMKV")?.checkDir()
                 MMKV.initialize(app, mmkvDir?.absolutePath) {
@@ -27,6 +29,8 @@ object PNative {
                     System.loadLibrary(it)
                 }
             }
+
+             */
         } catch (e: Throwable) {
             e.catch()
         }

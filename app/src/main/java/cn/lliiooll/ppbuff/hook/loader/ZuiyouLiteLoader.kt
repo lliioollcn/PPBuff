@@ -32,6 +32,7 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimplePostHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteTestHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteVoiceSendHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteWebTokenHook
 import cn.lliiooll.ppbuff.utils.*
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
@@ -174,6 +175,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteCrashHook)// 手动抛错
             add(ZuiYouLiteAutoFollowHook)// 自动关注
             add(ZuiYouLiteAntiUpdateHook)// 屏蔽更新
+            add(ZuiYouLiteVoiceSendHook)// 语音发送
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }

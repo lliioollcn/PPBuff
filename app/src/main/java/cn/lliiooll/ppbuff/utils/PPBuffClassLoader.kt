@@ -59,11 +59,12 @@ object PPBuffClassLoader : ClassLoader() {
             //"尝试加载类: $name".debug()
             return loadClass(name)
         } catch (_: ClassNotFoundException) {
-           // "类不存在: $name".debug()
+            // "类不存在: $name".debug()
             return null
         }
     }
 
+    private var sObfuscatedPackageName: String? = null
     private var xposedClassloader: ClassLoader? = null
     private var appClassloader: ClassLoader? = null
     private var contextClassloader: ClassLoader? = null
@@ -94,6 +95,23 @@ object PPBuffClassLoader : ClassLoader() {
         clazz.findField(true) {
             name == "parent"
         }.set(this, PPBuffClassLoader)
+    }
+
+    @JvmStatic
+    fun getXposedBridgeClassName(): String? {
+        return if (sObfuscatedPackageName == null) {
+            "de.robv.android.xposed.XposedBridge"
+        } else {
+            val sb: StringBuilder =
+                StringBuilder(sObfuscatedPackageName)
+            sb.append(".XposedBridge")
+            sb.toString()
+        }
+    }
+
+    @JvmStatic
+    fun setObfuscatedXposedApiPackage(packageName: String) {
+        sObfuscatedPackageName = packageName
     }
 }
 

@@ -4,16 +4,21 @@ import android.app.Application
 import android.content.Context
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
+import cn.lliiooll.ppbuff.ffmpeg.FFmpeg
 import cn.lliiooll.ppbuff.hook.PHook
 import cn.lliiooll.ppbuff.utils.*
 import cn.lliiooll.ppbuff.xposed.PXposedEntrance
 import cn.lliiooll.ppbuff.xposed.PXposedParam
+import cn.lliiooll.ppbuff.xposed.PZygoteParam
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 
 
 object BuffEntrance : PXposedEntrance() {
+
+    @JvmStatic
+    var modulePath: String? = null
 
     override fun init(param: PXposedParam) {
         if (param.packageName == "cn.lliiooll.ppbuff") {
@@ -30,14 +35,17 @@ object BuffEntrance : PXposedEntrance() {
 
                 val app = it.thisObject as Application
                 PPBuff.init(app)
+                "尝试初始化Native".debug()
+                PNative.init(app)
+                "尝试初始化FFmpeg".debug()
+                FFmpeg.init()
                 "尝试注入classLoader".debug()
                 PPBuffClassLoader
                     .withXposed(param.classLoader)
                     .withApplition(app.classLoader)
                     .withContext(Context::class.java.classLoader)
                     .inject()
-                "尝试初始化Native".debug()
-                PNative.init(app)
+
                 "尝试注入界面代理".debug()
                 EzXHelperInit.initActivityProxyManager(
                     PPBuff.getModulePackName(),
@@ -59,6 +67,11 @@ object BuffEntrance : PXposedEntrance() {
             "不是支持的应用/进程，不进行加载...".error()
         }
 
+    }
+
+    override fun initZygote(pZygoteParam: PZygoteParam) {
+
+        BuffEntrance.modulePath = pZygoteParam.modulePath
     }
 
 

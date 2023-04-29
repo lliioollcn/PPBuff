@@ -36,6 +36,27 @@ import java.util.concurrent.Executors
 
 
 class Utils {
+    companion object {
+        @JvmStatic
+        fun syncStatic(runnable: Runnable) {
+            sync {
+                runnable.run()
+            }
+        }
+
+        @JvmStatic
+        fun asyncStatic(runnable: Runnable) {
+            async {
+                runnable.run()
+            }
+
+        }
+
+        @JvmStatic
+        fun loadClass(s: String): Class<*> {
+            return s.findClass()
+        }
+    }
 }
 
 fun String.info() {

@@ -15,6 +15,7 @@ import java.lang.StringBuilder
 
 class PLog {
     companion object {
+        @JvmStatic
         fun i(msg: String) {
             if (PPBuff.isDebug())
                 Log.i("PPBuff", "[INFO] >> $msg")
@@ -22,11 +23,13 @@ class PLog {
                 XposedBridge.log("PPBuff: [INFO] >> $msg")
         }
 
+        @JvmStatic
         fun d(msg: String) {
             if (PPBuff.isDebug())
                 log("DEBUG", msg)
         }
 
+        @JvmStatic
         fun e(msg: String) {
             if (PPBuff.isDebug())
                 Log.e("PPBuff", "[ERROR] >> $msg")
@@ -35,6 +38,7 @@ class PLog {
         }
 
 
+        @JvmStatic
         fun log(level: String, msg: String) {
             if (PPBuff.isDebug())
                 Log.d("PPBuff", "[$level] >> $msg")
@@ -42,6 +46,7 @@ class PLog {
                 XposedBridge.log("PPBuff: [$level] >> $msg")
         }
 
+        @JvmStatic
         fun catch(throwable: Throwable) {
             /*
             if (!BuildConfig.DEBUG) {
@@ -60,6 +65,7 @@ class PLog {
             "阻止皮皮搞笑闪退-> $throwable".toastShort()
         }
 
+        @JvmStatic
         fun c(throwable: Throwable) {
             catch(throwable)
 

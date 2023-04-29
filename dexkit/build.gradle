@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+
+}
+
+android {
+    compileSdk 32
+    defaultConfig {
+        minSdk 26
+        targetSdk 31
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile("DexKit/dexkit-android/src/main/AndroidManifest.xml")
+            java.srcDirs = ["DexKit/dexkit/src/main/java"]
+            res.srcDirs = ["DexKit/dexkit/src/main/res"]
+        }
+    }
+}
+

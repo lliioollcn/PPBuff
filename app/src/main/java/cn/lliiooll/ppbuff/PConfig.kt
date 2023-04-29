@@ -9,7 +9,8 @@ class PConfig {
 
         private var mmkv: MMKV? = null
 
-        init {
+        @JvmStatic
+        fun init() {
             mmkv = MMKV.defaultMMKV()
         }
 
@@ -17,6 +18,16 @@ class PConfig {
         fun boolean(label: String, def: Boolean): Boolean {
             if (mmkv == null) return def
             return mmkv?.decodeBool(label, def)!!
+        }
+
+        @JvmStatic
+        fun bool(label: String, def: Boolean): Boolean {
+            return boolean(label, def)
+        }
+
+        @JvmStatic
+        fun bool(label: String): Boolean {
+            return boolean(label)
         }
 
         fun isHideConfig(): Boolean {
@@ -27,20 +38,24 @@ class PConfig {
             return boolean(label, true)
         }
 
+        @JvmStatic
         fun number(label: String, def: Int): Int {
             if (mmkv == null) return def
             return mmkv?.decodeInt(label, def)!!
         }
 
+        @JvmStatic
         fun numberEx(label: String, def: Long): Long {
             if (mmkv == null) return def
             return mmkv?.decodeLong(label, def)!!
         }
 
+        @JvmStatic
         fun numberEx(label: String): Long {
             return numberEx(label, 0L)
         }
 
+        @JvmStatic
         fun number(label: String): Int {
             return number(label, 0)
         }

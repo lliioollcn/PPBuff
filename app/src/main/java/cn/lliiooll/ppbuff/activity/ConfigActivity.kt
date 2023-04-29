@@ -50,7 +50,9 @@ class ConfigActivity : PActivity() {
                     NavHost(
                         navController = navController,
                         startDestination = "main",
-                        modifier =  Modifier.fillMaxWidth().fillMaxHeight()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
                     ) {// 导航界面
                         composable("main") {// 主界面
                             ConfigMainComposable(navController)
@@ -76,14 +78,32 @@ class ConfigActivity : PActivity() {
                     val uri = data.data
                     if (uri != null) {
                         val takeFlags =
-                            (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                    or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                            (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                         this.contentResolver.takePersistableUriPermission(
-                            uri,
-                            takeFlags
+                            uri, takeFlags
                         )
                         PConfig.set("video_record_uri", uri.toString())
                         PConfig.set("video_record", PRecordType.SAF.getLabel())
+                        "保存成功".toastShort(this)
+                    } else {
+                        "错误: 选择的路径不存在".toastShort(this)
+                    }
+                } else {
+                    "错误: 数据为空".toastShort(this)
+                }
+            }
+        readVoiceDir =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val data = result.data
+                if (data != null) {
+                    val uri = data.data
+                    if (uri != null) {
+                        val takeFlags =
+                            (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        this.contentResolver.takePersistableUriPermission(
+                            uri, takeFlags
+                        )
+                        PConfig.set("voicePath", uri.toString())
                         "保存成功".toastShort(this)
                     } else {
                         "错误: 选择的路径不存在".toastShort(this)
@@ -97,6 +117,7 @@ class ConfigActivity : PActivity() {
 
     companion object {
         var requestVideoRecord: ActivityResultLauncher<Intent>? = null
+        var readVoiceDir: ActivityResultLauncher<Intent>? = null
     }
 }
 
@@ -105,8 +126,7 @@ fun ConfigMainComposable(navController: NavHostController) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
-        color = if (isSystemInDarkTheme()) {
+            .fillMaxHeight(), color = if (isSystemInDarkTheme()) {
             Color.DarkGray
         } else {
             Color.White
@@ -123,8 +143,7 @@ fun ConfigMainComposable(navController: NavHostController) {
                             shape = MaterialTheme.shapes.medium
                         ) {
                             Column(
-                                modifier = Modifier
-                                    .padding(15.dp, 5.dp, 15.dp, 5.dp),
+                                modifier = Modifier.padding(15.dp, 5.dp, 15.dp, 5.dp),
                             ) {
                                 Text(
                                     text = it.getLabel(),

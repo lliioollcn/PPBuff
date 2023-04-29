@@ -4,7 +4,6 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,14 +24,13 @@ import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.data.ZyLiteTypes
 import cn.lliiooll.ppbuff.data.hidePost
 import cn.lliiooll.ppbuff.data.isHidePost
-import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.data.types.PViewType
+import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.hook.isValid
 import cn.lliiooll.ppbuff.utils.PJavaUtils
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
-import cn.lliiooll.ppbuff.utils.postOperator
 import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.findField

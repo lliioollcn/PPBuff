@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 rootProject.name = "PPBuff"
 include ':app'
 includeBuild 'versionPlugin'
+include ':dexkit'
+include ':mmkv'
