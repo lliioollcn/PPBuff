@@ -25,8 +25,8 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoCrashHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoTrackerHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoWaterMarkHook
-import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNovelVipHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteQuickStartHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
@@ -159,7 +159,6 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteQuickStartHook)// 快速启动
             add(XiaoChuanAntiADHook)// 去广告
             add(XiaoChuanAntiZyBuffHook)// 去ZyBuff
-            add(ZuiYouLiteNovelVipHook)// 破解小说vip
             add(XiaoChuanEvilInstrumentationHook)// 去EvilInstrumentatio
             add(ZuiYouLiteAntiVoiceRoomHook)// 去语音房
             add(ZuiYouLiteSimpleMeHook)// 精简"我的"
@@ -176,6 +175,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteAutoFollowHook)// 自动关注
             add(ZuiYouLiteAntiUpdateHook)// 屏蔽更新
             add(ZuiYouLiteVoiceSendHook)// 语音发送
+            add(ZuiYouLiteNoTrackerHook)// 链接防止追踪
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }

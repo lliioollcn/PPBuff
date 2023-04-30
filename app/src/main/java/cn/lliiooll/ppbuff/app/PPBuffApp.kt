@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import cn.lliiooll.ppbuff.BuildConfig
 import cn.lliiooll.ppbuff.PPBuff
+import cn.lliiooll.ppbuff.utils.Natives
 import cn.lliiooll.ppbuff.utils.PJavaUtils
 import cn.lliiooll.ppbuff.utils.getModuleDebugInfo
 import com.microsoft.appcenter.AppCenter
@@ -16,7 +17,7 @@ class PPBuffApp : Application() {
     override fun onCreate() {
         super.onCreate()
         PPBuff.init(this)
-        MMKV.initialize(this)
+        Natives.init()
         if (!AppCenter.isConfigured()) {
             AppCenter.start(
                 this,
