@@ -41,33 +41,6 @@ object UpdateUtils {
 
     }
 
-    fun hasUpdateGithub(): Boolean {
-        try {
-            if (PPBuff.isDebug()) return false
-            if (acu) return PPBuff.hasUpdate
-            // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs
-            // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/{$id}
-            // https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/{$id}/artifacts
-            val jstr =
-                HttpUtil.get("https://api.github.com/repos/lliioollcn/PPBuff/actions/runs")
-                    ?: return false
-            val json = JSONUtil.parseObj(jstr)
-            val workflowRuns = json.getJSONArray("workflow_runs")
-            if (workflowRuns == null || workflowRuns.size < 1) {
-                return false
-            }
-            val latest = workflowRuns.getJSONObject(0)
-            val headSha = latest.getStr("head_sha")
-            "最新哈希: $headSha,本地哈希: ${BuildConfig.BUILD_HASH}".debug()
-            PPBuff.hasUpdate = (headSha != BuildConfig.BUILD_HASH)
-            acu = true
-            return PPBuff.hasUpdate
-        }catch (e:Throwable){
-            return false
-        }
-
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUpdateDetails(): PUpdateDetails? {
         try {
@@ -87,34 +60,6 @@ object UpdateUtils {
                 HttpUtil.get("https://install.appcenter.ms/api/v0.1/apps/lliioollcn/ppbuff/distribution_groups/alpha/releases/$id?is_install_page=true")
                     ?: return null
             val jObjAppCenter = JSONUtil.parseObj(jstr)
-            jstr =
-                HttpUtil.get("https://api.github.com/repos/lliioollcn/PPBuff/actions/runs")
-                    ?: return null
-            val jObj = JSONUtil.parseObj(jstr)
-            val workflowRuns = jObj.getJSONArray("workflow_runs")
-            if (workflowRuns != null) {
-                if (workflowRuns.size < 1) {
-                    return null
-                }
-                latest = workflowRuns.getJSONObject(0)
-                val runId = latest.getLong("id")
-                val checkSuiteId = latest.getLong("check_suite_id")
-                "https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/$runId/artifacts".debug()
-                jstr =
-                    HttpUtil.get("https://api.github.com/repos/lliioollcn/PPBuff/actions/runs/$runId/artifacts")
-                        ?: return null
-                jstr.debug()
-                val jArrays = JSONUtil.parseObj(jstr).getJSONArray("artifacts")
-                if (jArrays.size < 1) {
-                    return null
-                }
-                val jObjGithub = jArrays
-                    .getJSONObject(0)
-                val artifactId = jObjGithub.getLong("id")
-                details.hash = jObjGithub.getJSONObject("workflow_run").getStr("head_sha")
-                details.downloadUrlGithub =
-                    "https://github.com/lliioollcn/PPBuff/suites/$checkSuiteId/artifacts/$artifactId"
-            }
             details.hash = "unknown"
             details.msg = jObjAppCenter.getStr("release_notes")
             details.downloadUrlAppCenter = jObjAppCenter.getStr("download_url")
@@ -130,7 +75,7 @@ object UpdateUtils {
     }
 
     fun hasUpdate(): Boolean {
-        return hasUpdateAppCenter() || hasUpdateGithub()
+        return hasUpdateAppCenter()
 
     }
 }

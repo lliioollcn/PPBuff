@@ -138,7 +138,6 @@ class PConfig {
         fun getCache(k: String): MutableSet<String> {
             if (mmkv == null) return hashSetOf()
             return mmkv?.decodeStringSet("debof_$k", hashSetOf())!!
-
         }
 
         fun setHideConfig() {

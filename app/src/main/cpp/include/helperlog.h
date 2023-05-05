@@ -2,7 +2,7 @@
 
 #pragma once
 
-#define TAG "PPHelper"
+#define TAG "PPBuff"
 
 #if 1
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
