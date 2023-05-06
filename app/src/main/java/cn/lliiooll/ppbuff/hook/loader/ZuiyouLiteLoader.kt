@@ -9,6 +9,7 @@ import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.R
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.hook.common.AppCenterHook
+import cn.lliiooll.ppbuff.hook.common.EasterEggHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiADHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiZyBuffHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
@@ -180,6 +181,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteNoTrackerHook)// 链接防止追踪
             add(ZuiYouLiteAudioDownloadHook)// 语音发送
             add(ZuiYouLiteDragReadHook)// 拖动已读消息
+            add(EasterEggHook)// 彩蛋
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
