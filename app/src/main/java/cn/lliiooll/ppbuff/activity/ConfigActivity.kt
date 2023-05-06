@@ -112,11 +112,32 @@ class ConfigActivity : PActivity() {
                     "错误: 数据为空".toastShort(this)
                 }
             }
+        saveAudioRecord =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val data = result.data
+                if (data != null) {
+                    val uri = data.data
+                    if (uri != null) {
+                        val takeFlags =
+                            (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        this.contentResolver.takePersistableUriPermission(
+                            uri, takeFlags
+                        )
+                        PConfig.set("voiceSavePath", uri.toString())
+                        "保存成功".toastShort(this)
+                    } else {
+                        "错误: 选择的路径不存在".toastShort(this)
+                    }
+                } else {
+                    "错误: 数据为空".toastShort(this)
+                }
+            }
 
     }
 
     companion object {
         var requestVideoRecord: ActivityResultLauncher<Intent>? = null
+        var saveAudioRecord: ActivityResultLauncher<Intent>? = null
         var readVoiceDir: ActivityResultLauncher<Intent>? = null
     }
 }

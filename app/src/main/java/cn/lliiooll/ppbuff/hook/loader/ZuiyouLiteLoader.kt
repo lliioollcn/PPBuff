@@ -17,12 +17,14 @@ import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiAntiDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiUpdateHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAudioDownloadHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoFollowHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDragReadHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoTrackerHook
@@ -176,6 +178,8 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteAntiUpdateHook)// 屏蔽更新
             add(ZuiYouLiteVoiceSendHook)// 语音发送
             add(ZuiYouLiteNoTrackerHook)// 链接防止追踪
+            add(ZuiYouLiteAudioDownloadHook)// 语音发送
+            add(ZuiYouLiteDragReadHook)// 拖动已读消息
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }

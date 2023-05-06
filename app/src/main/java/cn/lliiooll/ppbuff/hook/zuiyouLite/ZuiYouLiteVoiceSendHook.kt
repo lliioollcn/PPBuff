@@ -293,6 +293,10 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
                             .size(25.dp)
                     )
                 }
+                Text(
+                    text = "语音发送自定义秒数,单位: 秒",
+                    fontSize = TextUnit(12f, TextUnitType.Sp),
+                )
                 Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {// 自定义时间
                     var timeFormat by remember {
                         mutableStateOf(PConfig.numberEx("voiceTime", 5201314L))
