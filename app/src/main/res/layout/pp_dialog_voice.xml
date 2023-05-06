@@ -24,10 +24,19 @@
             android:id="@+id/pp_dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:paddingEnd="10dp"
             android:text="发送语音"
             android:textColor="#ff000000"
             android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/pp_dialog_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="100"
+            android:hint="点此搜索..."
+            android:inputType="text" />
 
         <ImageView
             android:id="@+id/pp_voice_music"
@@ -40,6 +49,8 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/ic_close" />
+
+
     </LinearLayout>
 
 

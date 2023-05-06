@@ -160,6 +160,6 @@ dependencies {
     implementation project(":mmkv")
 }
 
-task buildGithub(){
-    
+task buildGithub() {
+
 }

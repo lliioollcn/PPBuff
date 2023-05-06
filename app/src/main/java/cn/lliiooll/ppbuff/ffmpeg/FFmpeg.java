@@ -14,10 +14,13 @@ public class FFmpeg {
     }
 
     public static void runCmd(String command, FFmpegCallBack callBack) {
-        FFmpeg.callBack = callBack;
-        PLog.d("处理ffmpeg指令: " + command);
-        String[] cmd = command.split(" ");
-        runCmd(cmd.length, cmd, callBack);
+        Utils.syncStatic(()->{
+            FFmpeg.callBack = callBack;
+            PLog.d("处理ffmpeg指令: " + command);
+            String[] cmd = command.split(" ");
+            runCmd(cmd.length, cmd, callBack);
+        });
+
     }
 
     public static native void runCmd(int argc, String[] argv, FFmpegCallBack callBack);

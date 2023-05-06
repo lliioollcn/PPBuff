@@ -18,10 +18,11 @@ object PDownload {
         try {
             IOUtils.copy(
                 HttpUtil.createGet(url)
+                    .setFollowRedirects(true)
                     .execute().bodyStream(),
                 tempFile
             )
-        }catch (_:Throwable){
+        } catch (_: Throwable) {
 
         }
 

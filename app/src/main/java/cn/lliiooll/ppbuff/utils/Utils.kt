@@ -56,6 +56,14 @@ class Utils {
         fun loadClass(s: String): Class<*> {
             return s.findClass()
         }
+        @JvmStatic
+        fun toastShort(s: String) {
+           s.toastShort()
+        }
+        @JvmStatic
+        fun toastLong(s: String) {
+           s.toastLong()
+        }
     }
 }
 
@@ -120,6 +128,9 @@ fun String.toastShort(ctx: Context) {
 
 fun String.toastShort() {
     toastShort(PPBuff.getApplication())
+}
+fun String.toastLong() {
+    toastLong(PPBuff.getApplication())
 }
 
 
