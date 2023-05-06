@@ -14,7 +14,7 @@ import de.robv.android.xposed.XposedHelpers
 import kotlin.math.abs
 
 object ZuiYouLiteDragReadHook : BaseHook(
-    "拖动清除未读消息(未完成)", "msg_drag_read", PHookType.COMMON
+    "拖动清除未读消息", "msg_drag_read", PHookType.COMMON
 ) {
 
 
