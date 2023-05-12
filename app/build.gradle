@@ -20,7 +20,7 @@ android {
             buildConfigField "String", "BUILD_HASH", "\"" + Common.getGitCommitHash(rootProject) + "\""
         } else {
             versionCode 1
-            buildConfigField "String", "BUILD_HASH", "\"awawawa\""
+            buildConfigField "String", "BUILD_HASH", "\"debug-only\""
         }
         versionName "1.0.2${Common.getGitHeadRefsSuffix(rootProject)}"
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"

@@ -1,8 +1,10 @@
 package cn.lliiooll.ppbuff.data
 
 import cn.lliiooll.ppbuff.PConfig
+import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.data.types.PWebTaskType
 import cn.lliiooll.ppbuff.utils.findId
+import cn.lliiooll.ppbuff.utils.requireMinVersion
 
 object ZyLiteTypes {
 
@@ -49,7 +51,10 @@ object ZyLiteTypes {
         put("功能入口> 共建家园", "my_tab_star_review");
         put("功能入口> 皮皮公益", "my_tab_public_welfare");
         put("功能入口> 我的背包", "my_tab_prize_package");
-        put("功能入口> 皮皮短剧", "my_tab_skit_layout");
+        put(
+            "功能入口> 皮皮短剧",
+            if (!requireMinVersion(PPBuff.HostInfo.ZuiyouLite.PP_2_60_11)) "my_tab_skit_layout" else "my_tab_drama_layout"
+        );
         put("功能入口> 免广告", "avoid_ad");
         put("功能入口> 皮皮直播", "my_tab_live");
         put("功能入口> 游戏中心", "my_tab_game_center_layout");
@@ -78,6 +83,8 @@ object ZyLiteTypes {
         put("my_tab_lottery_layout", "lotteryLayout")
         put("my_tab_game_center_layout", "gameCenterLayout")
         put("my_tab_live", "liveLayout")
+        put("my_tab_drama_layout", "dramaLayout")
+        put("my_tab_pp_novel", "novelEntrance")
     }
 
     val taskList = sortedMapOf<String, String>().apply {

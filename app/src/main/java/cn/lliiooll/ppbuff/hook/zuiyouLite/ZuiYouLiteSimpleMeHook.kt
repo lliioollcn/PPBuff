@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.view.children
 import androidx.navigation.NavHostController
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.data.ZyLiteTypes
@@ -52,7 +53,6 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
             }
             .hookBefore {
                 ZyLiteTypes.extraMineList.forEach { (t, u) ->
-
                     if (t.isHideMine()) {
                         XposedHelpers.setObjectField(it.thisObject, u, null)
                     }

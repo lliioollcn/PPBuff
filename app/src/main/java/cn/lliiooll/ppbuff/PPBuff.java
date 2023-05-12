@@ -7,13 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Process;
 
-import androidx.compose.ui.graphics.Color;
-
 import cn.lliiooll.ppbuff.app.PPBuffApp;
 import cn.lliiooll.ppbuff.tracker.PLog;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,7 +28,6 @@ public class PPBuff {
         put(HostInfo.TieBa.PACKAGE_NAME, "cn.xiaochuankeji.tieba.ui.home.setting.SettingActivity");// 最右
     }};
     private static Application app;
-    @NotNull
     public static  boolean checked = false;
     public static boolean hasUpdate = false;
     public static boolean isFollow = false;
@@ -168,15 +164,16 @@ public class PPBuff {
     public static class HostInfo {
         public static class ZuiyouLite {
             public static final String PACKAGE_NAME = "cn.xiaochuankeji.zuiyouLite";
-            private static final int PP_2_45_10 = 2451000;
-            private static final int PP_2_46_0 = 2460000;
-            private static final int PP_2_46_1 = 2460100;
-            private static final int PP_2_47_1 = 2470100;
-            private static final int PP_2_47_10 = 2471000;
-            private static final int PP_2_48_10 = 2481000;
-            private static final int PP_2_49_10 = 2491000;
-            private static final int PP_2_50_10 = 2501000;
-            private static final int PP_2_52_11 = 2521100;
+            public static final int PP_2_45_10 = 2451000;
+            public static final int PP_2_46_0 = 2460000;
+            public static final int PP_2_46_1 = 2460100;
+            public static final int PP_2_47_1 = 2470100;
+            public static final int PP_2_47_10 = 2471000;
+            public static final int PP_2_48_10 = 2481000;
+            public static final int PP_2_49_10 = 2491000;
+            public static final int PP_2_50_10 = 2501000;
+            public static final int PP_2_52_11 = 2521100;
+            public static final int PP_2_60_11 = 2601100;
         }
 
         public static class TieBa {

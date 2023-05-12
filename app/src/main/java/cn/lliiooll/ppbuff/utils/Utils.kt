@@ -133,6 +133,9 @@ fun String.toastLong() {
     toastLong(PPBuff.getApplication())
 }
 
+fun requireMinVersion(version:Int):Boolean{
+    return PPBuff.getHostVersionCode() >= version
+}
 
 fun String.toastLong(ctx: Context) {
     sync { Toast.makeText(ctx, this, Toast.LENGTH_LONG).show() }
