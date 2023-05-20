@@ -130,7 +130,10 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
                 }
 
                 if (dialog != null) {
-                    dialog!!.dismiss()
+                    if (dialog!!.isShowing){
+                        dialog!!.dismiss()
+                    }
+
                     dialog = null
                 }
 

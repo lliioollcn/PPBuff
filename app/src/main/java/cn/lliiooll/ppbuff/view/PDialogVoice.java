@@ -162,6 +162,7 @@ public class PDialogVoice extends Dialog {
                                     }
 
                                 });
+
                             });
                             text.setPadding(0, 10, 0, 10);
                             list.addView(text);
@@ -205,6 +206,7 @@ public class PDialogVoice extends Dialog {
                             addFiles(list, file.getUri(), "");
                         } else {
                             sendVoice(file);
+
                         }
                     });
                     text.setPadding(0, 10, 0, 10);
@@ -218,6 +220,7 @@ public class PDialogVoice extends Dialog {
     }
 
     private void sendVoice(DocumentFile file) {
+        dismiss();
         File tempDir = activity.getExternalFilesDir("helperVoiceTemp");
         File covertDir = activity.getExternalFilesDir("helperVoiceCovert");
         if (!tempDir.exists()) {
@@ -275,15 +278,7 @@ public class PDialogVoice extends Dialog {
         };
         if (PConfig.bool("voiceAutoCovert", true)) {
             PLog.d("开始转换格式...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
-            Utils.toastLong("正在转换，如有卡顿请耐心等待...");
+            Utils.toastShort("语音转换中,请查看通知以获取转换进度...");
             FFmpeg.runCmd("ffmpeg.exe -i " + tempFile.getAbsolutePath() + " -map_metadata -1 " + covertile.getAbsolutePath(), callBack);
         } else {
             PLog.d("未启用自动转换，直接发送");

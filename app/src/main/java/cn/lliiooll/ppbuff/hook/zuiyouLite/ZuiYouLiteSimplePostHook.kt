@@ -60,6 +60,7 @@ object ZuiYouLiteSimplePostHook : BaseHook(
                 && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.user")
                 && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.me")
                 && !it.startsWith("cn.xiaochuankeji.zuiyouLite.ui.follow")
+                && it != "cn.xiaochuankeji.zuiyouLite.ui.slide.ReviewsFilterAdapter"
             ) {
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {

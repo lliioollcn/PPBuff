@@ -1,6 +1,9 @@
 package cn.lliiooll.ppbuff.utils;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
@@ -17,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import cn.lliiooll.ppbuff.PPBuff;
+import cn.lliiooll.ppbuff.R;
 import cn.lliiooll.ppbuff.tracker.PLog;
 
 /**
@@ -35,9 +40,9 @@ public class IOUtils {
                 file.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(file);
-            copy(is, fos);
+            copy(is, fos, is.available());
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
     }
 
@@ -46,17 +51,43 @@ public class IOUtils {
         write(bis, file);
     }
 
-    public static void copy(InputStream is, OutputStream os) {
+    public static void copy(InputStream is, OutputStream os, long len) {
+        NotificationManager notificationManager = PPBuff.getApplication().getSystemService(NotificationManager.class);
+        NotificationChannel notificationChannel = new NotificationChannel("io_copy", "文件复制", NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.enableLights(false); //关闭闪光灯
+        notificationChannel.enableVibration(false); //关闭震动
+        notificationChannel.setSound(null, null); //设置静音
+        notificationManager.createNotificationChannel(notificationChannel);
+
+
+        Notification.Builder notification = new Notification.Builder(PPBuff.getApplication(), "io_copy")
+                .setContentTitle("文件复制中...")
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_round_check)
+                .setProgress(0, 0, true);
+
+
+        notificationManager.notify(1919810, notification.build());
+        int readSize = 0;
         try {
+            notification.setProgress((int) len, readSize, false);
+            notificationManager.notify(1919810, notification.build());
             int read = 0;
             byte[] buf = new byte[2048];
             while ((read = is.read(buf)) != -1) {
                 os.write(buf, 0, read);
+                readSize += 2048;
+                if (readSize > len) {
+                    len = readSize;
+                }
+                notification.setProgress((int) len, readSize, false);
+                notificationManager.notify(1919810, notification.build());
             }
             is.close();
             os.close();
+            notificationManager.cancel(1919810);
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
     }
 
@@ -70,10 +101,10 @@ public class IOUtils {
             }
             FileInputStream fis = new FileInputStream(file);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            copy(fis, bos);
+            copy(fis, bos, fis.available());
             sb.append(bos.toString("UTF-8"));
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
         return sb.toString();
     }
@@ -106,7 +137,7 @@ public class IOUtils {
                 }
             }
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
         return map;
     }
@@ -120,19 +151,19 @@ public class IOUtils {
             fw.append(m);
             fw.close();
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
     }
 
     public static void copy(File file, File sFile) {
         try {
-            PLog.Companion.d("复制文件: " + file.getAbsolutePath());
-            PLog.Companion.d("到文件: " + sFile.getAbsolutePath());
+            PLog.d("复制文件: " + file.getAbsolutePath());
+            PLog.d("到文件: " + sFile.getAbsolutePath());
             FileInputStream fis = new FileInputStream(file);
             BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(sFile));
-            copy(fis, fos);
+            copy(fis, fos, fis.available());
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
     }
 
@@ -150,7 +181,7 @@ public class IOUtils {
             br.close();
             fr.close();
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
         return sb.toString();
     }
@@ -164,9 +195,9 @@ public class IOUtils {
                 file.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(file);
-            copy(is, fos);
+            copy(is, fos, is.available());
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
     }
 
@@ -179,18 +210,21 @@ public class IOUtils {
                 file.createNewFile();
             }
             FileInputStream fis = new FileInputStream(file);
-            copy(fis, fos);
+            copy(fis, fos, fis.available());
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
 
     }
 
-    public static void copy(@Nullable InputStream byteStream, @NotNull File tempFile) {
+    public static void copy(@Nullable InputStream byteStream, @NotNull File tempFile, long size) {
         try {
-            copy(byteStream, new FileOutputStream(tempFile));
+            if (size < 0) {
+                size = byteStream.available();
+            }
+            copy(byteStream, new FileOutputStream(tempFile), size);
         } catch (Throwable e) {
-            PLog.Companion.c(e);
+            PLog.c(e);
         }
     }
 }

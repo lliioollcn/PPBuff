@@ -90,12 +90,15 @@ fun List<BaseHook>.notNeedDeobfs(function: (BaseHook) -> Unit): Int {
     return c
 }
 
-fun List<BaseHook>.needDeobfs(function: (BaseHook) -> Unit) {
+fun List<BaseHook>.needDeobfs(function: (BaseHook) -> Unit): Int {
+    var c = 0
     this.forEach {
         if (it.needDeobf()) {
+            c++;
             function.invoke(it)
         }
     }
+    return c;
 }
 
 fun MutableSet<String>.isValid(): Boolean {

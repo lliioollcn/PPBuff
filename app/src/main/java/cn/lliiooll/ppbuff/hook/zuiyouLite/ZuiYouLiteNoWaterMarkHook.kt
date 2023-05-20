@@ -68,7 +68,7 @@ object ZuiYouLiteNoWaterMarkHook : BaseHook(
                 val clazz = it.findClass()
                 for (m in clazz.declaredMethods) {
                     if (m.parameterTypes.size == 1 && m.parameterTypes[0].name.contains("CommentBean") &&
-                        (m.name == "u0" || m.name == "y0"|| m.name == "z0")
+                        (m.name == "u0" || m.name == "y0" || m.name == "z0")
                     ) {
                         "在类 $it 中找到方法".debug()
                         m.hookReplace {

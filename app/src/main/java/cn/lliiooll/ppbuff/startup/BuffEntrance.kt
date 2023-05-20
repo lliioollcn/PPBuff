@@ -37,8 +37,6 @@ object BuffEntrance : PXposedEntrance() {
                 PPBuff.init(app)
                 "尝试初始化Native".debug()
                 PNative.init(app)
-                "尝试初始化FFmpeg".debug()
-                FFmpeg.init()
                 "尝试注入classLoader".debug()
                 PPBuffClassLoader
                     .withXposed(param.classLoader)

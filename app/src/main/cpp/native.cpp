@@ -21,8 +21,8 @@ extern "C"
 #include <ffmpeg.h>
 namespace {
     jclass ffmpegClazz;
-    jmethodID nativeMsgM;
     jmethodID progressM;
+    jmethodID finishM;
     JNIEnv *globalEnv;
 
     jint MMKV_JNI_OnLoad(JavaVM *vm, void *reserved);
@@ -58,19 +58,18 @@ namespace {
     }
 
     void progress_callback(int position, int duration, int state) {
-        /*
-            if (globalEnv && ffmpegClazz && progressM)
-            {
-                globalEnv->CallStaticVoidMethod(ffmpegClazz, progressM, position, duration, state);
-            }
-            */
+
+        if (globalEnv && ffmpegClazz && progressM) {
+            globalEnv->CallStaticVoidMethod(ffmpegClazz, progressM, position, duration, state);
+        }
+
         LOGI("[FFmpeg] 进度: %d, 时长: %d, 状态: %d", position, duration, state);
     }
 
     void finish_callback() {
         LOGI("[FFmpeg] 处理完毕");
-        if (globalEnv && ffmpegClazz && progressM) {
-            globalEnv->CallStaticVoidMethod(ffmpegClazz, progressM, 0, 0, 0);
+        if (globalEnv && ffmpegClazz && finishM) {
+            globalEnv->CallStaticVoidMethod(ffmpegClazz, finishM);
         }
         LOGI("[FFmpeg] 回调完毕");
     }
@@ -93,9 +92,11 @@ namespace {
         LOGI("[Native] 尝试加载Class: cn.lliiooll.pphelper.ffmpeg.FFmpeg");
         ffmpegClazz = env->FindClass("cn/lliiooll/ppbuff/ffmpeg/FFmpeg");
         LOGI("[Native] 尝试寻找方法: nativeMsg");
-        nativeMsgM = env->GetStaticMethodID(ffmpegClazz, "nativeMsg", "(Ljava/lang/String;)V");
+        //nativeMsgM = env->GetStaticMethodID(ffmpegClazz, "nativeMsg", "(Ljava/lang/String;)V");
         LOGI("[Native] 尝试寻找方法: progress");
         progressM = env->GetStaticMethodID(ffmpegClazz, "progress", "(III)V");
+        LOGI("[Native] 尝试寻找方法: finish");
+        finishM = env->GetStaticMethodID(ffmpegClazz, "finish", "()V");
         LOGI("[Native] 初始化完毕!");
     }
 

@@ -54,19 +54,7 @@ object ZuiyouLiteLoader : BaseLoader() {
     override fun load() {
         if (inited) return
 
-        val deobfs = hooks().size - hooks().notNeedDeobfs { hook ->
-            try {
-                // 先加载 不用/已经缓存 反混淆的hook
-                if (hook.isEnable() && !hook.init()) {
-                    //if (!hook.init()) {
-                    "Hook ${hook.name} 加载失败!".error()
-                }
-                "Hook ${hook.name} 是否启用: ${hook.isEnable()}".debug()
-            } catch (e: Throwable) {
-                "Hook ${hook.name} 加载失败!".error()
-                e.catch()
-            }
-        }
+
         // 然后在加载界面处加载需要反混淆的hook
 
         "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
@@ -75,8 +63,9 @@ object ZuiyouLiteLoader : BaseLoader() {
             .hookAfter {
                 val activity = it.thisObject as Activity
                 EzXHelperInit.addModuleAssetPath(activity)
-                if (PConfig.isUpdateHost() || deobfs > 0) {
+                if (PConfig.isUpdateHost()) {
                     try {
+                        val deobfs = hooks().needDeobfs {}
                         val splash = activity.inflate(R.layout.pp_spalsh)
                         activity.setContentView(splash)
                         val text = splash.findViewById<TextView>(R.id.spalsh_text)
@@ -127,7 +116,7 @@ object ZuiyouLiteLoader : BaseLoader() {
                                     .findField {
                                         this.type == Handler::class.java
                                     }
-                                    .invokeMethod(activity, "sendEmptyMessageDelayed", 29, 2000L)
+                                    .invokeMethod(activity, "sendEmptyMessageDelayed", 29)
 
                             }
                             dexkit?.close()
@@ -138,11 +127,21 @@ object ZuiyouLiteLoader : BaseLoader() {
                 } else {
                     PConfig.init(true)
                     if (!PConfig.boolean("is_first_launch_pp", true)) {
+
                         activity.javaClass
                             .findField {
                                 this.type == Handler::class.java
                             }
                             .invokeMethod(activity, "sendEmptyMessage", 29)
+                        async {
+                            hooks().forEach { h ->
+
+                                if (h.isEnable() && !h.init()) {
+                                    "hook加载失败: ${h.name}".debug()
+                                }
+
+                            }
+                        }
                     } else {
                         "第一次启动，不自动跳转".debug()
                         PConfig.set("is_first_launch_pp", false)

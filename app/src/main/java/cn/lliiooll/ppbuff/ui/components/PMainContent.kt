@@ -121,7 +121,7 @@ fun PMainContent() {
                                 }
                                 Row {
                                     Text(
-                                        text = "模块Q群(一群): 1028233124 (已满)",
+                                        text = "模块Q群(一群): 1028233124",
                                         textAlign = TextAlign.Center,
                                         fontSize = TextUnit(13f, TextUnitType.Sp)
                                     )
