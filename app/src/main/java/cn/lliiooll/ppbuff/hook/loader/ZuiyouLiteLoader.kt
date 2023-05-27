@@ -63,9 +63,10 @@ object ZuiyouLiteLoader : BaseLoader() {
             .hookAfter {
                 val activity = it.thisObject as Activity
                 EzXHelperInit.addModuleAssetPath(activity)
-                if (PConfig.isUpdateHost()) {
+                val deobfs = hooks().needDeobfs {}
+                if (PConfig.isUpdateHost() || deobfs > 0) {
                     try {
-                        val deobfs = hooks().needDeobfs {}
+
                         val splash = activity.inflate(R.layout.pp_spalsh)
                         activity.setContentView(splash)
                         val text = splash.findViewById<TextView>(R.id.spalsh_text)
@@ -105,6 +106,13 @@ object ZuiyouLiteLoader : BaseLoader() {
                                     e.catch()
                                 }
                             }
+                            async {
+                                hooks().notNeedDeobfs { h ->
+                                    if (h.isEnable() && !h.init()) {
+                                        "hook加载失败: ${h.name}".debug()
+                                    }
+                                }
+                            }
                             sync {
                                 bar.max = 1
                                 bar.progress = 1
@@ -112,11 +120,16 @@ object ZuiyouLiteLoader : BaseLoader() {
                                 PConfig.init(true)
                                 inited = true
                                 if (PConfig.isUpdateHost()) PConfig.updateHost()
-                                activity.javaClass
-                                    .findField {
-                                        this.type == Handler::class.java
-                                    }
-                                    .invokeMethod(activity, "sendEmptyMessageDelayed", 29)
+                                if (PConfig.boolean("is_first_launch_pp", true)) {
+                                    "第一次启动，不自动跳转".debug()
+                                } else {
+                                    activity.javaClass
+                                        .findField {
+                                            this.type == Handler::class.java
+                                        }
+                                        .invokeMethod(activity, "sendEmptyMessageDelayed", 29)
+                                }
+
 
                             }
                             dexkit?.close()
@@ -125,27 +138,28 @@ object ZuiyouLiteLoader : BaseLoader() {
                         e.catch()
                     }
                 } else {
+                    async {
+                        hooks().forEach { h ->
+                            if (h.isEnable() && !h.init()) {
+                                "hook加载失败: ${h.name}".debug()
+                            }
+
+                        }
+                    }
                     PConfig.init(true)
                     if (!PConfig.boolean("is_first_launch_pp", true)) {
-
-                        activity.javaClass
+                        val handler = activity.javaClass
                             .findField {
                                 this.type == Handler::class.java
                             }
-                            .invokeMethod(activity, "sendEmptyMessage", 29)
-                        async {
-                            hooks().forEach { h ->
-
-                                if (h.isEnable() && !h.init()) {
-                                    "hook加载失败: ${h.name}".debug()
-                                }
-
-                            }
+                        if (handler.get(activity) != null) {
+                            handler.invokeMethod(activity, "sendEmptyMessage", 29)
                         }
                     } else {
                         "第一次启动，不自动跳转".debug()
                         PConfig.set("is_first_launch_pp", false)
                     }
+
                 }
 
             }
