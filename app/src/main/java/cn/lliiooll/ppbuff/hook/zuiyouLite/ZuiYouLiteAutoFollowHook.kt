@@ -12,6 +12,7 @@ import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.utils.findAllConstructors
 import com.github.kyuubiran.ezxhelper.utils.findMethod
+import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import com.github.kyuubiran.ezxhelper.utils.hookReplace
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import de.robv.android.xposed.XposedHelpers
@@ -35,12 +36,11 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
             .findMethod {
                 name == "call"
             }
-            .hookReplace {
-                PPBuff.isFollow = true
-                "收到回调".debug()
-                //PConfig.set(ZuiYouLiteAutoFollowHook.label, true)
-                if (PPBuff.isFollow) {
-                    it.thisObject.callMethod("a", it.args)
+            .hookBefore {
+                if (!PPBuff.isFollow){
+                    PPBuff.isFollow = true
+                    "收到回调".debug()
+                    it.result = null
                 }
             }
         click()

@@ -66,7 +66,6 @@ object ZuiyouLiteLoader : BaseLoader() {
                 val deobfs = hooks().needDeobfs {}
                 if (PConfig.isUpdateHost() || deobfs > 0) {
                     try {
-
                         val splash = activity.inflate(R.layout.pp_spalsh)
                         activity.setContentView(splash)
                         val text = splash.findViewById<TextView>(R.id.spalsh_text)
@@ -106,13 +105,6 @@ object ZuiyouLiteLoader : BaseLoader() {
                                     e.catch()
                                 }
                             }
-                            async {
-                                hooks().notNeedDeobfs { h ->
-                                    if (h.isEnable() && !h.init()) {
-                                        "hook加载失败: ${h.name}".debug()
-                                    }
-                                }
-                            }
                             sync {
                                 bar.max = 1
                                 bar.progress = 1
@@ -127,9 +119,15 @@ object ZuiyouLiteLoader : BaseLoader() {
                                         .findField {
                                             this.type == Handler::class.java
                                         }
-                                        .invokeMethod(activity, "sendEmptyMessageDelayed", 29)
+                                        .invokeMethod(activity, "sendEmptyMessage", 29)
                                 }
-
+                                async {
+                                    hooks().notNeedDeobfs { h ->
+                                        if (h.isEnable() && !h.init()) {
+                                            "hook加载失败: ${h.name}".debug()
+                                        }
+                                    }
+                                }
 
                             }
                             dexkit?.close()
@@ -138,15 +136,14 @@ object ZuiyouLiteLoader : BaseLoader() {
                         e.catch()
                     }
                 } else {
+                    PConfig.init(true)
                     async {
                         hooks().forEach { h ->
                             if (h.isEnable() && !h.init()) {
                                 "hook加载失败: ${h.name}".debug()
                             }
-
                         }
                     }
-                    PConfig.init(true)
                     if (!PConfig.boolean("is_first_launch_pp", true)) {
                         val handler = activity.javaClass
                             .findField {

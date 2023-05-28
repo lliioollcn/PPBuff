@@ -22,7 +22,7 @@ android {
             versionCode 1
             buildConfigField "String", "BUILD_HASH", "\"debug-only\""
         }
-        versionName "1.0.3${Common.getGitHeadRefsSuffix(rootProject)}"
+        versionName "1.0.4${Common.getGitHeadRefsSuffix(rootProject)}"
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
