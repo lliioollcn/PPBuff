@@ -44,18 +44,29 @@ object ZuiYouLiteEulaHook : BaseHook(
                         .build()
                         .setStyle(IOSStyle.style())
                         .setTitle("用户协议")
+                        .setMaxHeight(1000)
                         .setMessage(PPBuff.loadEula())
                         .setOkButton("接受") { _, _ ->
                             PConfig.set("first_inited", false)
                             PopNotification.build()
                                 .setStyle(IOSStyle.style())
                                 .setTitle("提示")
-                                .setMessage("重启以生效")
+                                .setMessage("重启应用以继续加载模块")
                                 .show(activity)
                                 .noAutoDismiss()
+                                .showAlways()
+                                .show()
                             false
                         }
                         .setCancelButton("拒绝") { _, _ ->
+                            MessageDialog.build()
+                                .setStyle(IOSStyle.style())
+                                .setTitle("继续")
+                                .setMessage("您在接受协议后模块才会继续加载")
+                                .setOkButton("确定") { _, _ ->
+                                    false
+                                }
+                                .show(activity)
                             false
                         }
                         .show(activity)

@@ -57,8 +57,6 @@ object ZuiYouLiteDetailCommentTimeHook : BaseHook(
                     val createTime = XposedHelpers.getLongField(commentData, "createTime")
                     val nameMultiView = XposedHelpers.getObjectField(it.thisObject, "nameMultiView")
                     val ipAtribution = XposedHelpers.getObjectField(commentData, "ipAtribution")
-                    val clazz =
-                        "cn.xiaochuankeji.zuiyouLite.widget.user.NameMultiView\$a".findClass()
                     var i = 0
                     for (f in nameMultiView.javaClass.declaredFields) {
                         if (f.type == TextView::class.java) {

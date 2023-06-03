@@ -16,6 +16,7 @@ import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
 import cn.lliiooll.ppbuff.hook.needDeobfs
 import cn.lliiooll.ppbuff.hook.notNeedDeobfs
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiAntiDebugHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiLongestTextHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiUpdateHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAudioDownloadHook
@@ -200,6 +201,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteDragReadHook)// 拖动已读消息
             add(EasterEggHook)// 彩蛋
             add(ZuiYouLiteUpdateHook)// 检查更新
+            add(ZuiYouLiteAntiLongestTextHook)// 屏蔽评论超长刷屏文本
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }
