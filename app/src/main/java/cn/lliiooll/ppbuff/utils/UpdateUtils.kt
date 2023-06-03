@@ -35,7 +35,7 @@ object UpdateUtils {
             PPBuff.hasUpdate = (versionCode != "${BuildConfig.VERSION_CODE}")
             acu = true
             return PPBuff.hasUpdate
-        }catch (e:Throwable){
+        } catch (e: Throwable) {
             return false
         }
 
@@ -68,13 +68,17 @@ object UpdateUtils {
             details.time =
                 Date.from(LocalDateTime.parse(date).atZone(ZoneId.systemDefault()).toInstant()).time
             return details
-        }catch (e:Throwable){
+        } catch (e: Throwable) {
             return null
         }
 
     }
 
     fun hasUpdate(): Boolean {
+        if (PPBuff.lspatch) {
+            // 内置版不提醒
+            return false
+        }
         return hasUpdateAppCenter()
 
     }

@@ -68,8 +68,12 @@ object BuffEntrance : PXposedEntrance() {
     }
 
     override fun initZygote(pZygoteParam: PZygoteParam) {
-
         BuffEntrance.modulePath = pZygoteParam.modulePath
+        "模块安装包路径: $modulePath".debug()
+        if (modulePath?.contains("cache")!! && modulePath?.contains("lspatch")!!) {
+            "框架使用lspatch".debug()
+            PPBuff.lspatch = true
+        }
     }
 
 

@@ -1,6 +1,15 @@
 package cn.lliiooll.ppbuff.utils
 
+import android.content.res.Resources
+import cn.hutool.core.io.resource.Resource
+import cn.lliiooll.ppbuff.PPBuff
+import cn.lliiooll.ppbuff.hook.zuiyouLite.hideHolder
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findField
+import com.github.kyuubiran.ezxhelper.utils.findMethod
+import com.github.kyuubiran.ezxhelper.utils.hookAfter
+import com.github.kyuubiran.ezxhelper.utils.hookBefore
+import com.github.kyuubiran.ezxhelper.utils.paramCount
 
 object PPBuffClassLoader : ClassLoader() {
 
@@ -49,9 +58,10 @@ object PPBuffClassLoader : ClassLoader() {
 
             }
         }
-        throw ClassNotFoundException(name)
+
+
         // 不在父类搜索
-        //return super.loadClass(name, resolve)
+        return PPBuffClassLoader::class.java.classLoader?.loadClass(name)
     }
 
     fun loadClassOrNull(name: String?): Class<*>? {
@@ -64,6 +74,7 @@ object PPBuffClassLoader : ClassLoader() {
         }
     }
 
+    private var mClassLoader: PPBuffClassLoader? = null
     private var sObfuscatedPackageName: String? = null
     private var xposedClassloader: ClassLoader? = null
     private var appClassloader: ClassLoader? = null
@@ -86,12 +97,37 @@ object PPBuffClassLoader : ClassLoader() {
     }
 
     fun inject() {
-        val clazz = PPBuffClassLoader::class.java
+        mClassLoader = this
+        inject(PPBuffClassLoader::class.java)
+        Class::class.java.findMethod {
+            name == "forName" &&
+                    paramCount == 3 &&
+                    parameterTypes[0] == String::class.java &&
+                    parameterTypes[1] == Boolean::class.java &&
+                    parameterTypes[2] == ClassLoader::class.java
+        }
+            .hookBefore {
+
+                val name = it.args[0] as String
+                if (name.startsWith("com.kongzue.dialogx")) {
+                    "尝试替换classloader".debug()
+                    it.args[2] = mClassLoader
+                }
+
+            }
+        Resources::class.java.findMethod {
+            name == "loadXmlResourceParser"
+        }
+            .hookBefore {
+                EzXHelperInit.addModuleAssetPath(it.thisObject as Resources)
+            }
+    }
+
+    private fun inject(clazz: Class<*>) {
         val parent = clazz.findField(true) {
             name == "parent"
         }.get(this) as ClassLoader
         moduleClassloader = parent
-
         clazz.findField(true) {
             name == "parent"
         }.set(this, PPBuffClassLoader)

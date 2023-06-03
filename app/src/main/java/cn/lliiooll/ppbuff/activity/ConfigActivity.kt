@@ -1,7 +1,9 @@
 package cn.lliiooll.ppbuff.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,12 +30,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cn.lliiooll.ppbuff.PConfig
+import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.activity.base.PActivity
 import cn.lliiooll.ppbuff.activity.base.theme.PPBuffTheme
 import cn.lliiooll.ppbuff.data.types.PHookType
 import cn.lliiooll.ppbuff.data.types.PRecordType
 import cn.lliiooll.ppbuff.hook.PHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteVoiceSendHook
 import cn.lliiooll.ppbuff.ui.components.PTitleBar
+import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.toastShort
 
 class ConfigActivity : PActivity() {
@@ -135,6 +140,29 @@ class ConfigActivity : PActivity() {
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 0x3c) {
+            if (!Settings.canDrawOverlays(this)) {
+                "请开启皮皮搞笑的悬浮窗权限来使用此功能".toastShort()
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                intent.data =
+                    Uri.parse("package:" + PPBuff.getApplication().packageName)
+                this.startActivityForResult(
+                    intent,
+                    0x3c
+                )
+            } else {
+                "请选择一个读取路径".toastShort()
+                if (ConfigActivity.readVoiceDir != null) {
+                    ConfigActivity.readVoiceDir!!.launch(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE))
+                }
+                "启动完毕".debug()
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+
+    }
+
     companion object {
         var requestVideoRecord: ActivityResultLauncher<Intent>? = null
         var saveAudioRecord: ActivityResultLauncher<Intent>? = null
@@ -215,4 +243,6 @@ fun ConfigMainComposable(navController: NavHostController) {
             }
         }
     }
+
+
 }

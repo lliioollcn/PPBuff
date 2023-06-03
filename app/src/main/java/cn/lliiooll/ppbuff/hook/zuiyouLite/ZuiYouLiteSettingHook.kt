@@ -53,33 +53,10 @@ object ZuiYouLiteSettingHook : BaseHook(
                 val view = LayoutInflater.from(activity).inflate(R.layout.pp_setting, null, false)
                 val version = view.findViewById<TextView>(R.id.pp_setting_version)
                 version.text = BuildConfig.VERSION_NAME
-                async {
-                    if (UpdateUtils.hasUpdate()) {
-                        sync {
-                            version.text =
-                                "有更新,长按获取"
-                        }
-                    }
-                }
                 content.addView(view, 0)
                 val host = view.findViewById<LinearLayout>(R.id.pp_setting_root)
                 host.setOnClickListener {
                     activity.jumpTo(ConfigActivity::class.java)
-                }
-                host.setOnLongClickListener {
-                    async {
-                        if (UpdateUtils.hasUpdate()) {
-                            //"发现更新".toastShort()
-                            val details = UpdateUtils.getUpdateDetails()
-                            if (details?.downloadUrlAppCenter != null) {
-                                sync { details.downloadUrlAppCenter.openUrl(activity) }
-
-                            }
-                        } else {
-                            "暂无更新".toastShort()
-                        }
-                    }
-                    true
                 }
             }
         return true

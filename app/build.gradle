@@ -22,7 +22,7 @@ android {
             versionCode 1
             buildConfigField "String", "BUILD_HASH", "\"debug-only\""
         }
-        versionName "1.0.4${Common.getGitHeadRefsSuffix(rootProject)}"
+        versionName "1.0.5${Common.getGitHeadRefsSuffix(rootProject)}"
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -148,6 +148,8 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
 
     implementation 'com.github.kyuubiran:EzXHelper:1.0.3'
+    implementation "com.kongzue.dialogx:DialogX:0.0.48"
+    implementation "com.kongzue.dialogx.style:DialogXIOSStyle:0.0.48"
     //implementation 'org.luckypray:DexKit:1.1.0'
     //implementation 'com.tencent:mmkv:1.2.15'
     //implementation 'com.google.code.gson:gson:2.10.1'

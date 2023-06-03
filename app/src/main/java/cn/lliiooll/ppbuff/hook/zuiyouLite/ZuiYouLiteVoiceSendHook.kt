@@ -73,11 +73,7 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
             .hookAfter {
                 val activity = it.thisObject as Activity
                 if (!Settings.canDrawOverlays(activity)) {
-                    Toast.makeText(
-                        activity,
-                        "请开启皮皮搞笑的悬浮窗权限来使用此功能",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    "请开启皮皮搞笑的悬浮窗权限来使用此功能".toastShort()
                     val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
                     intent.data =
                         Uri.parse("package:" + PPBuff.getApplication().packageName)
@@ -99,11 +95,7 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
                 val activity = it.thisObject as Activity
                 if (req == 0x3c) {
                     if (!Settings.canDrawOverlays(activity)) {
-                        Toast.makeText(
-                            activity,
-                            "请开启皮皮搞笑的悬浮窗权限来使用此功能",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        "请开启皮皮搞笑的悬浮窗权限来使用此功能".toastShort()
                         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
                         intent.data =
                             Uri.parse("package:" + PPBuff.getApplication().packageName)
@@ -130,7 +122,7 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
                 }
 
                 if (dialog != null) {
-                    if (dialog!!.isShowing){
+                    if (dialog!!.isShowing) {
                         dialog!!.dismiss()
                     }
 
@@ -148,10 +140,7 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
             imageView!!.setOnClickListener { v: View? ->
                 val path: String = PConfig.string("voicePath", "")
                 if (path.isBlank()) {
-                    "请选择语音路径".toastLong(activity)
-                    if (ConfigActivity.readVoiceDir != null) {
-                        ConfigActivity.readVoiceDir!!.launch(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE))
-                    }
+                    "请到设置中选择语音路径后继续".toastLong(activity)
                     "启动完毕".debug()
                 } else {
                     val uri = Uri.parse(path)
@@ -204,7 +193,7 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
                 .padding(10.dp, 5.dp, 10.dp, 0.dp)
         ) {
             Column {
-                val ctx = LocalContext.current
+                val ctx = LocalContext.current as Activity
                 Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)) {// 开关
                     var hookEnable by remember {
                         mutableStateOf(isEnable())
@@ -226,7 +215,16 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
                         setEnable(it)
                         hookEnable = it
                         if (System.currentTimeMillis() - lastSwitch > 5000L) {
-                            "重启应用生效".toastShort(ctx)
+                            if (!Settings.canDrawOverlays(ctx)) {
+                                "请开启皮皮搞笑的悬浮窗权限来使用此功能".toastShort()
+                                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                                intent.data =
+                                    Uri.parse("package:" + PPBuff.getApplication().packageName)
+                                ctx.startActivityForResult(
+                                    intent,
+                                    0x3c
+                                )
+                            }
                             quickSwitch = 0
                         } else {
                             quickSwitch++
@@ -236,9 +234,6 @@ object ZuiYouLiteVoiceSendHook : BaseHook(
                         }
                         lastSwitch = System.currentTimeMillis()
                     })
-                }
-                var openMenu by remember {
-                    mutableStateOf(false)
                 }
 
                 Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 5.dp)) {// 自动转换

@@ -26,6 +26,7 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDragReadHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteEulaHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoTrackerHook
@@ -35,6 +36,7 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimplePostHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteTestHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteUpdateHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteVoiceSendHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteWebTokenHook
 import cn.lliiooll.ppbuff.utils.*
@@ -42,8 +44,11 @@ import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findField
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
+import com.kongzue.dialogx.dialogs.MessageDialog
+import com.kongzue.dialogx.style.IOSStyle
 import io.luckypray.dexkit.DexKitBridge
 import io.luckypray.dexkit.builder.BatchFindArgs
+import kotlin.system.exitProcess
 
 /**
  * 皮皮搞笑Hook加载器，提供启动界面加载动画
@@ -53,114 +58,116 @@ object ZuiyouLiteLoader : BaseLoader() {
     var inited = false
     override fun load() {
         if (inited) return
-
-
-        // 然后在加载界面处加载需要反混淆的hook
-
         "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
             .findClass()
             .findMethod { name == "onCreate" }
             .hookAfter {
                 val activity = it.thisObject as Activity
-                EzXHelperInit.addModuleAssetPath(activity)
-                val deobfs = hooks().needDeobfs {}
-                if (PConfig.isUpdateHost() || deobfs > 0) {
-                    try {
-                        val splash = activity.inflate(R.layout.pp_spalsh)
-                        activity.setContentView(splash)
-                        val text = splash.findViewById<TextView>(R.id.spalsh_text)
-                        val bar = splash.findViewById<ProgressBar>(R.id.spalsh_bar)
-                        bar.max = deobfs
-                        "开始进行反混淆操作".debug()
-                        async {
-                            val dexkit = DexKitBridge.create(PPBuff.getHostPath())
-                            var deobf = 0
-                            hooks().needDeobfs {
-                                "开始为 ${it.name} 进行反混淆操作...".debug()
-                                val result = if (it.needCustomDeobf()) {
-                                    it.customDebof(dexkit)
-                                } else {
-                                    dexkit?.batchFindClassesUsingStrings(BatchFindArgs.build {
-                                        sync {
-                                            bar.progress = deobf
-                                            text.text = "正在为 ${it.name} 寻找被混淆的类"
-                                        }
-                                        queryMap(it.deobfMap())
-                                    })
-                                }
-                                "开始为 ${it.name} 缓存反混淆...".debug()
-                                PConfig.cache(result)
-                                deobf++
+                if (PConfig.boolean("first_inited", true)) {
+                    ZuiYouLiteEulaHook.init()
+                } else {
+                    init(activity)
+                }
+            }
+
+    }
+
+    private fun init(activity: Activity) {
+        EzXHelperInit.addModuleAssetPath(activity)
+        val deobfs = hooks().needDeobfs {}
+        if (PConfig.isUpdateHost() || deobfs > 0) {
+            try {
+                val splash = activity.inflate(R.layout.pp_spalsh)
+                activity.setContentView(splash)
+                val text = splash.findViewById<TextView>(R.id.spalsh_text)
+                val bar = splash.findViewById<ProgressBar>(R.id.spalsh_bar)
+                bar.max = deobfs
+                "开始进行反混淆操作".debug()
+                async {
+                    val dexkit = DexKitBridge.create(PPBuff.getHostPath())
+                    var deobf = 0
+                    hooks().needDeobfs {
+                        "开始为 ${it.name} 进行反混淆操作...".debug()
+                        val result = if (it.needCustomDeobf()) {
+                            it.customDebof(dexkit)
+                        } else {
+                            dexkit?.batchFindClassesUsingStrings(BatchFindArgs.build {
                                 sync {
                                     bar.progress = deobf
+                                    text.text = "正在为 ${it.name} 寻找被混淆的类"
                                 }
+                                queryMap(it.deobfMap())
+                            })
+                        }
+                        "开始为 ${it.name} 缓存反混淆...".debug()
+                        PConfig.cache(result)
+                        deobf++
+                        sync {
+                            bar.progress = deobf
+                        }
+                    }
+                    sync {
+                        bar.max = 1
+                        bar.progress = 1
+                        text.text = "加载成功~"
+                        PConfig.init(true)
+                        inited = true
+                        if (PConfig.isUpdateHost()) PConfig.updateHost()
+                        if (PConfig.boolean("is_first_launch_pp", true)) {
+                            "第一次启动，不自动跳转".debug()
+                        } else {
+                            hooks().forEach { h ->
                                 try {
-                                    "开始加载hook: ${it.name}".debug()
-                                    if (it.isEnable() && !it.init()) {
+                                    "开始加载hook: ${h.name}".debug()
+                                    if (h.isEnable() && !h.init()) {
                                         //if (!it.init()) {
-                                        "hook加载失败: ${it.name}".debug()
+                                        "hook加载失败: ${h.name}".debug()
                                     }
                                 } catch (e: Throwable) {
-                                    "Hook ${it.name} 加载失败!".error()
+                                    "Hook ${h.name} 加载失败!".error()
                                     e.catch()
                                 }
                             }
-                            sync {
-                                bar.max = 1
-                                bar.progress = 1
-                                text.text = "加载成功~"
-                                PConfig.init(true)
-                                inited = true
-                                if (PConfig.isUpdateHost()) PConfig.updateHost()
-                                if (PConfig.boolean("is_first_launch_pp", true)) {
-                                    "第一次启动，不自动跳转".debug()
-                                } else {
-                                    activity.javaClass
-                                        .findField {
-                                            this.type == Handler::class.java
-                                        }
-                                        .invokeMethod(activity, "sendEmptyMessage", 29)
+                            activity.javaClass
+                                .findField {
+                                    this.type == Handler::class.java
                                 }
-                                async {
-                                    hooks().notNeedDeobfs { h ->
-                                        if (h.isEnable() && !h.init()) {
-                                            "hook加载失败: ${h.name}".debug()
-                                        }
-                                    }
-                                }
-
-                            }
-                            dexkit?.close()
-                        }
-                    } catch (e: Throwable) {
-                        e.catch()
-                    }
-                } else {
-                    PConfig.init(true)
-                    async {
-                        hooks().forEach { h ->
-                            if (h.isEnable() && !h.init()) {
-                                "hook加载失败: ${h.name}".debug()
-                            }
+                                .invokeMethod(activity, "sendEmptyMessage", 29)
                         }
                     }
-                    if (!PConfig.boolean("is_first_launch_pp", true)) {
-                        val handler = activity.javaClass
-                            .findField {
-                                this.type == Handler::class.java
-                            }
-                        if (handler.get(activity) != null) {
-                            handler.invokeMethod(activity, "sendEmptyMessage", 29)
-                        }
-                    } else {
-                        "第一次启动，不自动跳转".debug()
-                        PConfig.set("is_first_launch_pp", false)
-                    }
-
+                    dexkit?.close()
                 }
-
+            } catch (e: Throwable) {
+                e.catch()
+            }
+        } else {
+            PConfig.init(true)
+            hooks().forEach { h ->
+                try {
+                    "开始加载hook: ${h.name}".debug()
+                    if (h.isEnable() && !h.init()) {
+                        //if (!it.init()) {
+                        "hook加载失败: ${h.name}".debug()
+                    }
+                } catch (e: Throwable) {
+                    "Hook ${h.name} 加载失败!".error()
+                    e.catch()
+                }
+            }
+            if (!PConfig.boolean("is_first_launch_pp", true)) {
+                val handler = activity.javaClass
+                    .findField {
+                        this.type == Handler::class.java
+                    }
+                if (handler.get(activity) != null) {
+                    handler.invokeMethod(activity, "sendEmptyMessage", 29)
+                }
+            } else {
+                "第一次启动，不自动跳转".debug()
+                PConfig.set("is_first_launch_pp", false)
             }
 
+        }
     }
 
     override fun hooks(): List<BaseHook> {
@@ -192,6 +199,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteAudioDownloadHook)// 语音发送
             add(ZuiYouLiteDragReadHook)// 拖动已读消息
             add(EasterEggHook)// 彩蛋
+            add(ZuiYouLiteUpdateHook)// 检查更新
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }

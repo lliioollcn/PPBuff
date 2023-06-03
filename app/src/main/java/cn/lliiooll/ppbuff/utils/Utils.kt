@@ -19,10 +19,13 @@ import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.data.types.PRecordType
 import cn.lliiooll.ppbuff.tracker.PLog
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findAllFields
 import com.github.kyuubiran.ezxhelper.utils.findField
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.paramCount
+import com.kongzue.dialogx.dialogs.PopTip
+import com.kongzue.dialogx.style.IOSStyle
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import java.io.File
@@ -56,13 +59,15 @@ class Utils {
         fun loadClass(s: String): Class<*> {
             return s.findClass()
         }
+
         @JvmStatic
         fun toastShort(s: String) {
-           s.toastShort()
+            s.toastShort()
         }
+
         @JvmStatic
         fun toastLong(s: String) {
-           s.toastLong()
+            s.toastLong()
         }
     }
 }
@@ -122,23 +127,36 @@ fun <V : Any> List<V>.empty(function: () -> Unit) {
 
 fun String.toastShort(ctx: Context) {
     sync {
-        Toast.makeText(ctx, this, Toast.LENGTH_SHORT).show()
+        EzXHelperInit.addModuleAssetPath(ctx)
+        PopTip.show(this)
+            .setRadius(50f)
+            .setStyle(IOSStyle.style())
+            .showShort()
+        //Toast.makeText(ctx, this, Toast.LENGTH_SHORT).show()
     }
 }
 
 fun String.toastShort() {
     toastShort(PPBuff.getApplication())
 }
+
 fun String.toastLong() {
     toastLong(PPBuff.getApplication())
 }
 
-fun requireMinVersion(version:Int):Boolean{
+fun requireMinVersion(version: Int): Boolean {
     return PPBuff.getHostVersionCode() >= version
 }
 
 fun String.toastLong(ctx: Context) {
-    sync { Toast.makeText(ctx, this, Toast.LENGTH_LONG).show() }
+    sync {
+        EzXHelperInit.addModuleAssetPath(ctx)
+        PopTip.show(this)
+            .setRadius(50f)
+            .setStyle(IOSStyle.style())
+            .showLong()
+        //Toast.makeText(ctx, this, Toast.LENGTH_LONG).show()
+    }
 }
 
 fun Context.inflate(layout: Int): View {

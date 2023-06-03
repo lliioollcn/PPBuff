@@ -2,6 +2,7 @@ package cn.lliiooll.ppbuff.hook.zuiyouLite
 
 import android.app.Activity
 import android.os.Bundle
+import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
@@ -18,11 +19,14 @@ import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.paramCount
+import com.kongzue.dialogx.dialogs.MessageDialog
+import com.kongzue.dialogx.style.IOSStyle
 import de.robv.android.xposed.XposedHelpers
 import java.lang.RuntimeException
 import kotlin.concurrent.thread
+import kotlin.system.exitProcess
 
-object ZuiYouLiteTestHook : BaseHook(
+object ZuiYouLiteEulaHook : BaseHook(
     "测试Hook", "test", PHookType.DEBUG
 ) {
     override fun init(): Boolean {
@@ -33,7 +37,22 @@ object ZuiYouLiteTestHook : BaseHook(
             }
             .hookAfter {
                 val activity = it.thisObject as Activity
-                "Buff加载成功~".toastShort(activity)
+                sync {
+                    MessageDialog
+                        .build()
+                        .setStyle(IOSStyle.style())
+                        .setTitle("用户协议")
+                        .setMessage(PPBuff.loadEula())
+                        .setOkButton("接受") { _, _ ->
+                            PConfig.set("first_inited", false)
+                            exitProcess(0)
+                            false
+                        }
+                        .setCancelButton("拒绝") { _, _ ->
+                            false
+                        }
+                        .show(activity)
+                }
             }
 
         /*

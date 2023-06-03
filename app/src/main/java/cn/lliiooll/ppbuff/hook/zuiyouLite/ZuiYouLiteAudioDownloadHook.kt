@@ -1,7 +1,6 @@
 package cn.lliiooll.ppbuff.hook.zuiyouLite
 
 import android.app.Activity
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -47,12 +46,13 @@ import cn.lliiooll.ppbuff.utils.async
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.downloadVideo
 import cn.lliiooll.ppbuff.utils.findClass
-import cn.lliiooll.ppbuff.utils.saveVideo
 import cn.lliiooll.ppbuff.utils.sync
 import cn.lliiooll.ppbuff.utils.toastShort
-import cn.lliiooll.ppbuff.view.PDialog
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookReplace
+import com.kongzue.dialogx.dialogs.MessageDialog
+import com.kongzue.dialogx.style.IOSStyle
 import de.robv.android.xposed.XposedHelpers
 import java.lang.reflect.Method
 
@@ -94,6 +94,8 @@ object ZuiYouLiteAudioDownloadHook : BaseHook(
                     d("调用方法: " + m.name)
                     d("来自: $it")
                     val view = param.args[0] as View
+                    EzXHelperInit.addModuleAssetPath(view.context)
+                    EzXHelperInit.addModuleAssetPath(view.context)
                     for (f in clazz.declaredFields) {
                         if (f.type.name.contains("CommentBean")) {
                             val commentBean = XposedHelpers.getObjectField(param.thisObject, f.name)
@@ -103,52 +105,17 @@ object ZuiYouLiteAudioDownloadHook : BaseHook(
                                 if (audio != null) {
                                     val url = XposedHelpers.getObjectField(audio, "url") as String
                                     d("语音url: $url")
-                                    PDialog(view.context)
-                                        .title("请选择操作")
-                                        .success {
-                                            if (PConfig.string("voiceSavePath", "").isEmpty()) {
-                                                sync {
-                                                    "请选择一个读取路径".toastShort()
-                                                    if (ConfigActivity.saveAudioRecord != null) {
-                                                        ConfigActivity.saveAudioRecord!!.launch(
-                                                            Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                                                        )
-                                                    }
-                                                    "启动完毕".debug()
-                                                }
-                                            } else {
-                                                async {
-                                                    val file = PDownload.downloadTemp(url)
-                                                    val path = PConfig.string("voiceSavePath", "")
-                                                    if (path.isBlank()) {
-                                                        "未设置SAF路径，语音保存失败!".toastShort()
-                                                    } else {
-                                                        val uri = Uri.parse(path)
-                                                        val saveDir = DocumentFile.fromTreeUri(
-                                                            PPBuff.getApplication(), uri
-                                                        )
-                                                        val saveFile = saveDir?.createFile(
-                                                            "audio/x-mpeg",
-                                                            file.name
-                                                        )
-                                                        async {
-                                                            IOUtils.copy(
-                                                                PPBuff.getApplication(),
-                                                                file,
-                                                                saveFile?.uri
-                                                            )
-                                                            sync {
-                                                                "语音下载成功".toastShort()
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-
+                                    MessageDialog.build()
+                                        .setTitle("选择")
+                                        .setMessage("请选择你的操作")
+                                        .setStyle(IOSStyle.style())
+                                        .setOkButton("下载语音") { _, _ ->
+                                            doDownloadVoice(url)
+                                            false
                                         }
-                                        .cancel {
-                                            //TODO: 原操作
+                                        .setCancelButton("原操作") { _, _ ->
                                             src1(view, param.thisObject)
+                                            false
                                         }
                                         .show()
                                 } else {
@@ -167,6 +134,47 @@ object ZuiYouLiteAudioDownloadHook : BaseHook(
 
 
         return true
+    }
+
+    private fun doDownloadVoice(url: String) {
+        if (PConfig.string("voiceSavePath", "").isEmpty()) {
+            sync {
+                "请选择一个读取路径".toastShort()
+                if (ConfigActivity.saveAudioRecord != null) {
+                    ConfigActivity.saveAudioRecord!!.launch(
+                        Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                    )
+                }
+                "启动完毕".debug()
+            }
+        } else {
+            async {
+                val file = PDownload.downloadTemp(url)
+                val path = PConfig.string("voiceSavePath", "")
+                if (path.isBlank()) {
+                    "未设置SAF路径，语音保存失败!".toastShort()
+                } else {
+                    val uri = Uri.parse(path)
+                    val saveDir = DocumentFile.fromTreeUri(
+                        PPBuff.getApplication(), uri
+                    )
+                    val saveFile = saveDir?.createFile(
+                        "audio/x-mpeg",
+                        file.name
+                    )
+                    async {
+                        IOUtils.copy(
+                            PPBuff.getApplication(),
+                            file,
+                            saveFile?.uri
+                        )
+                        sync {
+                            "语音下载成功".toastShort()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun src1(view: View, thisObject: Any) {
@@ -357,8 +365,6 @@ object ZuiYouLiteAudioDownloadHook : BaseHook(
             })
             put(OBF_AIO2, arrayListOf<String>().apply {
                 add("巡查举报")
-                add("开启存储权限才能正常下载")
-                add("去设置")
                 add("举报成功，感谢你对家园的贡献!")
             })
             put(OBF_AIO3, arrayListOf<String>().apply {
