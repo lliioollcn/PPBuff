@@ -16,7 +16,7 @@ object ZuiYouLiteDebugHook : BaseHook(
     }
 
     override fun isEnable(): Boolean {
-        return PConfig.boolean(label, PPBuff.isDebug())
+        return PConfig.boolean(label, BuildConfig.DEBUG)
     }
 
     override fun setEnable(enable: Boolean) {
