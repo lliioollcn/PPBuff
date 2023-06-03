@@ -33,6 +33,7 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoTrackerHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoWaterMarkHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteQuickStartHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteRemoveYouthModeDialogHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSettingHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimpleMeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteSimplePostHook
@@ -64,11 +65,15 @@ object ZuiyouLiteLoader : BaseLoader() {
             .findMethod { name == "onCreate" }
             .hookAfter {
                 val activity = it.thisObject as Activity
+                //init(activity)
+
                 if (PConfig.boolean("first_inited", true)) {
                     ZuiYouLiteEulaHook.init()
                 } else {
                     init(activity)
                 }
+
+
             }
 
     }
@@ -102,6 +107,16 @@ object ZuiyouLiteLoader : BaseLoader() {
                         }
                         "开始为 ${it.name} 缓存反混淆...".debug()
                         PConfig.cache(result)
+                        try {
+                            "开始加载hook: ${it.name}".debug()
+                            if (it.isEnable() && !it.init()) {
+                                //if (!it.init()) {
+                                "hook加载失败: ${it.name}".debug()
+                            }
+                        } catch (e: Throwable) {
+                            "Hook ${it.name} 加载失败!".error()
+                            e.catch()
+                        }
                         deobf++
                         sync {
                             bar.progress = deobf
@@ -114,28 +129,25 @@ object ZuiyouLiteLoader : BaseLoader() {
                         PConfig.init(true)
                         inited = true
                         if (PConfig.isUpdateHost()) PConfig.updateHost()
-                        if (PConfig.boolean("is_first_launch_pp", true)) {
-                            "第一次启动，不自动跳转".debug()
-                        } else {
-                            hooks().forEach { h ->
-                                try {
-                                    "开始加载hook: ${h.name}".debug()
-                                    if (h.isEnable() && !h.init()) {
-                                        //if (!it.init()) {
-                                        "hook加载失败: ${h.name}".debug()
-                                    }
-                                } catch (e: Throwable) {
-                                    "Hook ${h.name} 加载失败!".error()
-                                    e.catch()
+                        hooks().notNeedDeobfs { h ->
+                            try {
+                                "开始加载hook: ${h.name}".debug()
+                                if (h.isEnable() && !h.init()) {
+                                    //if (!it.init()) {
+                                    "hook加载失败: ${h.name}".debug()
                                 }
+                            } catch (e: Throwable) {
+                                "Hook ${h.name} 加载失败!".error()
+                                e.catch()
                             }
-                            activity.javaClass
-                                .findField {
-                                    this.type == Handler::class.java
-                                }
-                                .invokeMethod(activity, "sendEmptyMessage", 29)
                         }
+                        activity.javaClass
+                            .findField {
+                                this.type == Handler::class.java
+                            }
+                            .invokeMethod(activity, "sendEmptyMessage", 29)
                     }
+
                     dexkit?.close()
                 }
             } catch (e: Throwable) {
@@ -202,6 +214,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(EasterEggHook)// 彩蛋
             add(ZuiYouLiteUpdateHook)// 检查更新
             add(ZuiYouLiteAntiLongestTextHook)// 屏蔽评论超长刷屏文本
+            add(ZuiYouLiteRemoveYouthModeDialogHook)// 去除青少年模式弹窗
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }

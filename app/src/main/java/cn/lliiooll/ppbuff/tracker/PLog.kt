@@ -57,12 +57,28 @@ class PLog {
              */
             val sb = StringBuilder()
             sb += "发生了一个错误: ${throwable.message}"
-            sb += "以下是堆栈: "
+            sb += "以下是堆栈: ${throwable.javaClass.name}"
             for (s in throwable.stackTrace) {
                 sb += "     $s"
             }
             e(sb.toString())
+            if (throwable.cause != null) {
+                catchSub(throwable.cause!!)
+            }
             "阻止皮皮搞笑闪退-> $throwable".toastShort()
+        }
+
+        private fun catchSub(throwable: Throwable) {
+            val sb = StringBuilder()
+            sb += "在错误: ${throwable.message}"
+            sb += "以下是堆栈: ${throwable.javaClass.name}"
+            for (s in throwable.stackTrace) {
+                sb += "     $s"
+            }
+            e(sb.toString())
+            if (throwable.cause != null) {
+                catchSub(throwable.cause!!)
+            }
         }
 
         @JvmStatic

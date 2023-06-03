@@ -29,7 +29,7 @@ import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
 object ZuiYouLiteEulaHook : BaseHook(
-    "测试Hook", "test", PHookType.DEBUG
+    "EULA", "eula", PHookType.HIDE
 ) {
     override fun init(): Boolean {
         "cn.xiaochuankeji.zuiyouLite.ui.main.MainActivity"
@@ -46,22 +46,24 @@ object ZuiYouLiteEulaHook : BaseHook(
                         .setTitle("用户协议")
                         .setMaxHeight(1000)
                         .setMessage(PPBuff.loadEula())
+                        .setCancelable(false)
                         .setOkButton("接受") { _, _ ->
                             PConfig.set("first_inited", false)
                             PopNotification.build()
                                 .setStyle(IOSStyle.style())
                                 .setTitle("提示")
                                 .setMessage("重启应用以继续加载模块")
-                                .show(activity)
                                 .noAutoDismiss()
                                 .showAlways()
-                                .show()
+                                .show(activity)
+
                             false
                         }
                         .setCancelButton("拒绝") { _, _ ->
                             MessageDialog.build()
                                 .setStyle(IOSStyle.style())
                                 .setTitle("继续")
+                                .setCancelable(false)
                                 .setMessage("您在接受协议后模块才会继续加载")
                                 .setOkButton("确定") { _, _ ->
                                     false
