@@ -15,13 +15,9 @@ android {
         minSdk 26
         targetSdk 33
         multiDexEnabled = false
-        if (System.getenv("KEYSTORE_PATH") != null) {
-            versionCode Common.getBuildVersionCode(rootProject)
-            buildConfigField "String", "BUILD_HASH", "\"" + Common.getGitCommitHash(rootProject) + "\""
-        } else {
-            versionCode 1
-            buildConfigField "String", "BUILD_HASH", "\"debug-only\""
-        }
+        versionCode Common.getBuildVersionCode(rootProject)
+        buildConfigField "String", "BUILD_HASH", "\"" + Common.getGitCommitHash(rootProject) + "\""
+
         versionName "1.0.5${Common.getGitHeadRefsSuffix(rootProject)}"
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
 

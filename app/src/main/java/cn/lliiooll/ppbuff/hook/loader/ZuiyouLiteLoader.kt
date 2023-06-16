@@ -65,14 +65,16 @@ object ZuiyouLiteLoader : BaseLoader() {
             .findMethod { name == "onCreate" }
             .hookAfter {
                 val activity = it.thisObject as Activity
-                //init(activity)
+                init(activity)
 
+                /*
                 if (PConfig.boolean("first_inited", true)) {
                     ZuiYouLiteEulaHook.init()
                 } else {
                     init(activity)
                 }
 
+                 */
 
             }
 
@@ -109,8 +111,11 @@ object ZuiyouLiteLoader : BaseLoader() {
                         PConfig.cache(result)
                         try {
                             "开始加载hook: ${it.name}".debug()
-                            if (it.isEnable() && !it.init()) {
-                                //if (!it.init()) {
+                            if (
+                                it.isEnable() &&
+                                !it.init()
+                            ) {
+
                                 "hook加载失败: ${it.name}".debug()
                             }
                         } catch (e: Throwable) {
@@ -132,8 +137,10 @@ object ZuiyouLiteLoader : BaseLoader() {
                         hooks().notNeedDeobfs { h ->
                             try {
                                 "开始加载hook: ${h.name}".debug()
-                                if (h.isEnable() && !h.init()) {
-                                    //if (!it.init()) {
+                                if (
+                                    h.isEnable() &&
+                                    !h.init()) {
+
                                     "hook加载失败: ${h.name}".debug()
                                 }
                             } catch (e: Throwable) {
@@ -158,8 +165,10 @@ object ZuiyouLiteLoader : BaseLoader() {
             hooks().forEach { h ->
                 try {
                     "开始加载hook: ${h.name}".debug()
-                    if (h.isEnable() && !h.init()) {
-                        //if (!it.init()) {
+                    if (
+                         h.isEnable() &&
+                        !h.init()) {
+
                         "hook加载失败: ${h.name}".debug()
                     }
                 } catch (e: Throwable) {
