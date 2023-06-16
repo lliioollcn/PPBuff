@@ -59,7 +59,9 @@ object ZuiyouLiteLoader : BaseLoader() {
 
     var inited = false
     override fun load() {
-        if (inited) return
+        //if (inited) return
+        init()
+        /*
         "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
             .findClass()
             .findMethod { name == "onCreate" }
@@ -78,6 +80,89 @@ object ZuiyouLiteLoader : BaseLoader() {
 
             }
 
+         */
+
+    }
+
+    private fun init() {
+        val deobfs = hooks().needDeobfs {}
+        if (PConfig.isUpdateHost() || deobfs > 0) {
+            try {
+                "开始进行反混淆操作".debug()
+                async {
+                    val dexkit = DexKitBridge.create(PPBuff.getHostPath())
+                    var deobf = 0
+                    hooks().needDeobfs {
+                        "开始为 ${it.name} 进行反混淆操作...".debug()
+                        val result = if (it.needCustomDeobf()) {
+                            it.customDebof(dexkit)
+                        } else {
+                            dexkit?.batchFindClassesUsingStrings(BatchFindArgs.build {
+                                queryMap(it.deobfMap())
+                            })
+                        }
+                        "开始为 ${it.name} 缓存反混淆...".debug()
+                        PConfig.cache(result)
+                        try {
+                            "开始加载hook: ${it.name}".debug()
+                            if (
+                                it.isEnable() &&
+                                !it.init()
+                            ) {
+
+                                "hook加载失败: ${it.name}".debug()
+                            }
+                        } catch (e: Throwable) {
+                            "Hook ${it.name} 加载失败!".error()
+                            e.catch()
+                        }
+                        deobf++
+                    }
+
+                    PConfig.init(true)
+                    inited = true
+                    if (PConfig.isUpdateHost()) PConfig.updateHost()
+                    hooks().notNeedDeobfs { h ->
+                        try {
+                            "开始加载hook: ${h.name}".debug()
+                            if (
+                                h.isEnable() &&
+                                !h.init()
+                            ) {
+
+                                "hook加载失败: ${h.name}".debug()
+                            }
+                        } catch (e: Throwable) {
+                            "Hook ${h.name} 加载失败!".error()
+                            e.catch()
+                        }
+                    }
+
+
+                    dexkit?.close()
+                }
+            } catch (e: Throwable) {
+                e.catch()
+            }
+        } else {
+            PConfig.init(true)
+            hooks().forEach { h ->
+                try {
+                    "开始加载hook: ${h.name}".debug()
+                    if (
+                        h.isEnable() &&
+                        !h.init()
+                    ) {
+
+                        "hook加载失败: ${h.name}".debug()
+                    }
+                } catch (e: Throwable) {
+                    "Hook ${h.name} 加载失败!".error()
+                    e.catch()
+                }
+            }
+
+        }
     }
 
     private fun init(activity: Activity) {
@@ -90,6 +175,7 @@ object ZuiyouLiteLoader : BaseLoader() {
                 val text = splash.findViewById<TextView>(R.id.spalsh_text)
                 val bar = splash.findViewById<ProgressBar>(R.id.spalsh_bar)
                 bar.max = deobfs
+
                 "开始进行反混淆操作".debug()
                 async {
                     val dexkit = DexKitBridge.create(PPBuff.getHostPath())
@@ -139,7 +225,8 @@ object ZuiyouLiteLoader : BaseLoader() {
                                 "开始加载hook: ${h.name}".debug()
                                 if (
                                     h.isEnable() &&
-                                    !h.init()) {
+                                    !h.init()
+                                ) {
 
                                     "hook加载失败: ${h.name}".debug()
                                 }
@@ -166,8 +253,9 @@ object ZuiyouLiteLoader : BaseLoader() {
                 try {
                     "开始加载hook: ${h.name}".debug()
                     if (
-                         h.isEnable() &&
-                        !h.init()) {
+                        h.isEnable() &&
+                        !h.init()
+                    ) {
 
                         "hook加载失败: ${h.name}".debug()
                     }
