@@ -8,6 +8,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +43,7 @@ public class IOUtils {
                 file.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(file);
-            copy(is, fos, is.available());
+            copy(is, fos, is.available(), true);
         } catch (Throwable e) {
             PLog.c(e);
         }
@@ -51,7 +54,52 @@ public class IOUtils {
         write(bis, file);
     }
 
-    public static void copy(InputStream is, OutputStream os, long len) {
+    public static void copy(InputStream is, OutputStream os, long len, boolean close) {
+        NotificationManager notificationManager = PPBuff.getApplication().getSystemService(NotificationManager.class);
+        Notification.Builder notification = new Notification.Builder(PPBuff.getApplication(), "io_copy")
+                .setContentTitle("文件复制中...")
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_round_check)
+                .setProgress(0, 0, true);
+        long readSize = 0;
+        if (notificationManager.areNotificationsEnabled()) {
+            NotificationChannel notificationChannel = new NotificationChannel("io_copy", "文件复制", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.enableLights(false); //关闭闪光灯
+            notificationChannel.enableVibration(false); //关闭震动
+            notificationChannel.setSound(null, null); //设置静音
+            notificationManager.createNotificationChannel(notificationChannel);
+            notificationManager.notify(1919810, notification.build());
+            notification.setProgress((int) len, (int) readSize, false);
+            notificationManager.notify(1919810, notification.build());
+        }
+        try {
+            int read = 0;
+            byte[] buf = new byte[2048];
+            PLog.d("开始进行I/O操作");
+            while ((read = is.read(buf)) != -1) {
+                os.write(buf, 0, read);
+                readSize += 2048;
+                if (readSize > len) {
+                    len = readSize;
+                }
+                PLog.d("I/O字节: " + readSize + " 总字节: " + len);
+                if (notificationManager.areNotificationsEnabled()) {
+                    notification.setProgress((int) len, (int) readSize, false);
+                    notificationManager.notify(1919810, notification.build());
+                }
+            }
+            if (close) {
+                is.close();
+                os.close();
+            }
+            PLog.d("I/O完成");
+            if (notificationManager.areNotificationsEnabled()) notificationManager.cancel(1919810);
+        } catch (Throwable e) {
+            PLog.c(e);
+        }
+    }
+
+    public static void copy(InputStream is, RandomAccessFile os, long len, boolean close) {
         NotificationManager notificationManager = PPBuff.getApplication().getSystemService(NotificationManager.class);
         NotificationChannel notificationChannel = new NotificationChannel("io_copy", "文件复制", NotificationManager.IMPORTANCE_DEFAULT);
         notificationChannel.enableLights(false); //关闭闪光灯
@@ -83,8 +131,10 @@ public class IOUtils {
                 notification.setProgress((int) len, readSize, false);
                 notificationManager.notify(1919810, notification.build());
             }
-            is.close();
-            os.close();
+            if (close) {
+                is.close();
+                os.close();
+            }
             notificationManager.cancel(1919810);
         } catch (Throwable e) {
             PLog.c(e);
@@ -101,7 +151,7 @@ public class IOUtils {
             }
             FileInputStream fis = new FileInputStream(file);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            copy(fis, bos, fis.available());
+            copy(fis, bos, fis.available(), true);
             sb.append(bos.toString("UTF-8"));
         } catch (Throwable e) {
             PLog.c(e);
@@ -161,7 +211,7 @@ public class IOUtils {
             PLog.d("到文件: " + sFile.getAbsolutePath());
             FileInputStream fis = new FileInputStream(file);
             BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(sFile));
-            copy(fis, fos, fis.available());
+            copy(fis, fos, fis.available(), true);
         } catch (Throwable e) {
             PLog.c(e);
         }
@@ -195,7 +245,7 @@ public class IOUtils {
                 file.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(file);
-            copy(is, fos, is.available());
+            copy(is, fos, is.available(), true);
         } catch (Throwable e) {
             PLog.c(e);
         }
@@ -210,7 +260,7 @@ public class IOUtils {
                 file.createNewFile();
             }
             FileInputStream fis = new FileInputStream(file);
-            copy(fis, fos, fis.available());
+            copy(fis, fos, fis.available(), true);
         } catch (Throwable e) {
             PLog.c(e);
         }
@@ -222,7 +272,7 @@ public class IOUtils {
             if (size < 0) {
                 size = byteStream.available();
             }
-            copy(byteStream, new FileOutputStream(tempFile), size);
+            copy(byteStream, new FileOutputStream(tempFile), size, true);
         } catch (Throwable e) {
             PLog.c(e);
         }

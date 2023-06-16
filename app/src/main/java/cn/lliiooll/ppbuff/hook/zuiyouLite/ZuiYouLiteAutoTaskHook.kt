@@ -46,6 +46,7 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
 ) {
 
     val DEOBF_API_SHARE_POST = "cn.xiaochuankeji.zuiyouLite.api.SharePost"
+    val DEOBF_API_TASK_SYSTEM = "cn.xiaochuankeji.zuiyouLite.api.impl.TaskSystemImpl"
     val DEOBF_API_COMMENT = "cn.xiaochuankeji.zuiyouLite.api.CommentOperate"
 
 
@@ -186,6 +187,22 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
 
 
         }
+
+        PConfig.getCache(DEOBF_API_TASK_SYSTEM).forEach {
+            ">>>> api task service: $it".debug()
+            val clazz = it.findClass()
+            clazz
+                .findMethod {
+
+                    "API Task Service: 寻找方法: ${this.name}".debug()
+                    return@findMethod paramCount == 2
+                }
+                .hookAfter {
+                    val i2 = it.args[0]
+                    val i3 = it.args[1]
+                    "condition_id,action_id:$i2   count:$i3".debug()
+                }
+        }
         return true
     }
 
@@ -258,6 +275,11 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
                 add("status")
                 add("dislike_type")
             })
+            put(DEOBF_API_TASK_SYSTEM, arrayListOf<String>().apply {
+                add("condition_id")
+                add("count")
+                add("action_id")
+            })
         }
     }
 
@@ -267,6 +289,9 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
         )?.isValid()!!)
                 || (!PConfig.hasCache(DEOBF_API_COMMENT) || !PConfig.getCache(
             DEOBF_API_COMMENT
+        )?.isValid()!!)
+                || (!PConfig.hasCache(DEOBF_API_TASK_SYSTEM) || !PConfig.getCache(
+            DEOBF_API_TASK_SYSTEM
         )?.isValid()!!)
 
     }

@@ -261,9 +261,12 @@ fun Any.downloadVideo() {
                 "下载url: $url".debug()
             } else {
                 url = XposedHelpers.getObjectField(videoBean, "urlsrc") as String
+                "下载url: $url".debug()
             }
             async {
+                "开始下载文件: $url".debug()
                 val file = PDownload.downloadTemp(url)
+                "文件下载完毕: $url".debug()
                 val recordType = PRecordType.getValue(
                     PConfig.string(
                         "video_record",
@@ -271,6 +274,7 @@ fun Any.downloadVideo() {
                     )
                 )
                 sync {
+                    "开始保存到相册: $url".debug()
                     file.saveVideo(recordType)
                 }
             }

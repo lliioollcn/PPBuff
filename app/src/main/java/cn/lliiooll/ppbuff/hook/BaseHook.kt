@@ -103,6 +103,7 @@ fun List<BaseHook>.needDeobfs(function: (BaseHook) -> Unit): Int {
 
 fun MutableSet<String>.isValid(): Boolean {
     if (this.isEmpty()) return false
+    if (PConfig.isUpdateHost()) return false
     var b = true
     for (c in this) {
         if (c.startsWith("androidx")) {

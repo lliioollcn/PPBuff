@@ -15,7 +15,7 @@ object XiaoChuanAntiADHook : BaseHook(
         "cn.xiaochuankeji.hermes.core.Hermes"
             .findClass()
             .findAllMethods(true) {
-                this.name.contains("create") && this.name.contains("AD")
+                name.contains("create") && name.contains("AD") && !name.contains("RewardAD")
             }
             .hookReplace {
                 "阻止广告加载，类型: ${it.method.name}".debug()

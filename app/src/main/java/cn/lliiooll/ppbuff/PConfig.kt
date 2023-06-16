@@ -132,6 +132,7 @@ class PConfig {
 
         fun hasCache(k: String): Boolean {
             if (mmkv == null) return false
+            if (isUpdateHost()) return false
             return mmkv?.decodeStringSet("debof_$k", null) != null
         }
 
