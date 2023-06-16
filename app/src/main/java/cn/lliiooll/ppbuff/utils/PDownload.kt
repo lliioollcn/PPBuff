@@ -1,9 +1,13 @@
 package cn.lliiooll.ppbuff.utils
 
+import android.os.FileUtils
+import cn.hutool.core.io.FileUtil
+import cn.hutool.core.io.IoUtil
 import cn.hutool.http.HttpUtil
 import cn.lliiooll.ppbuff.PPBuff
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.net.HttpURLConnection
 import java.net.URL
@@ -26,11 +30,15 @@ object PDownload {
             // 超过5MB
             //  downloadMultiThread(url, tempFile, conn.contentLengthLong)
             //  } else {
+            IoUtil.copy(conn.getInputStream(), FileOutputStream(tempFile))
+            /*
             IOUtils.copy(
                 conn.getInputStream(),
                 tempFile,
                 conn.contentLengthLong
             )
+
+             */
             //  }
         } catch (_: Throwable) {
 
