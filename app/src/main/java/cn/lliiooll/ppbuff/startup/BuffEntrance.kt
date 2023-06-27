@@ -32,7 +32,6 @@ object BuffEntrance : PXposedEntrance() {
                 name == "onCreate"
             }.hookAfter {
                 "宿主应用Application加载完毕，开始加载模块......".debug()
-
                 val app = it.thisObject as Application
                 PPBuff.init(app)
                 "尝试初始化Native".debug()

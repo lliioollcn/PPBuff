@@ -185,5 +185,14 @@ class PConfig {
         fun string(str: String, def: String): String {
             return mmkv?.decodeString(str, def)!!
         }
+
+        fun clearCache() {
+            if (mmkv == null) return
+            mmkv?.allKeys()?.forEach {
+                if (it.startsWith("debof_")) {
+                    mmkv?.remove(it)
+                }
+            }
+        }
     }
 }

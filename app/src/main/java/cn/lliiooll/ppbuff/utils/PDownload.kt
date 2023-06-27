@@ -1,11 +1,7 @@
 package cn.lliiooll.ppbuff.utils
 
-import android.os.FileUtils
-import cn.hutool.core.io.FileUtil
 import cn.hutool.core.io.IoUtil
-import cn.hutool.http.HttpUtil
 import cn.lliiooll.ppbuff.PPBuff
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
@@ -25,7 +21,7 @@ object PDownload {
             tempFile.createNewFile()
         }
         try {
-            val conn = URL(url).openConnection()
+            val conn = URL(url).openConnection() as HttpURLConnection
             //if (conn.contentLengthLong > 1024 * 1024 * 5) {
             // 超过5MB
             //  downloadMultiThread(url, tempFile, conn.contentLengthLong)

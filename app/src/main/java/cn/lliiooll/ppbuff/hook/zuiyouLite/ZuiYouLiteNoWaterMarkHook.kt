@@ -94,9 +94,8 @@ object ZuiYouLiteNoWaterMarkHook : BaseHook(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(10.dp, 5.dp, 10.dp, 0.dp)
         ) {
-            Column {
+            Column(modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 0.dp)) {
                 val ctx = LocalContext.current
                 Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 5.dp)) {// 开关
                     var hookEnable by remember {

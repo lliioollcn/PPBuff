@@ -2,6 +2,7 @@ package cn.lliiooll.ppbuff.hook.zuiyouLite
 
 import android.app.Activity
 import android.os.Bundle
+import android.widget.Toast
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
@@ -37,16 +38,24 @@ object ZuiYouLiteTestHook : BaseHook(
             }
 
         /*
-        "com.izuiyou.network.NetCrypto"
-            .findClass()
-            .findMethod { true }
-            .hookAfter {
-                it.dump()
-                //RuntimeException().catch()
-            }
-        //PPBuff.getApplication().packageManager.checkSignatures()
+                "com.google.android.exoplayer2.MediaItem"
+                    .findClass()
+                    .findAllConstructors { true }
+                    .hookAfter {
+                        it.args.forEach { arg ->
+                            if (arg is String) {
+                                if (arg.length >= 25)
+                                    "Url: ${arg.subSequence(0, 25)}".toastShort()
+                            }
+                        }
+                        //it.dump()
+                        //RuntimeException().catch()
+                    }
 
          */
+        //PPBuff.getApplication().packageManager.checkSignatures()
+
+
         return true
     }
 }

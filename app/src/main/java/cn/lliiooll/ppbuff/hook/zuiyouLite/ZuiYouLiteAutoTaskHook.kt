@@ -212,10 +212,10 @@ object ZuiYouLiteAutoTaskHook : BaseHook(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(10.dp, 5.dp, 10.dp, 0.dp)
+
         ) {
 
-            LazyColumn {
+            LazyColumn(modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 0.dp)) {
                 ZyLiteTypes.taskList.forEach { (t, u) ->
                     item {
                         var hookEnable by remember {

@@ -61,6 +61,7 @@ object ZuiyouLiteLoader : BaseLoader() {
     override fun load() {
         //if (inited) return
         init()
+
         /*
         "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
             .findClass()
@@ -68,7 +69,6 @@ object ZuiyouLiteLoader : BaseLoader() {
             .hookAfter {
                 val activity = it.thisObject as Activity
                 init(activity)
-
                 /*
                 if (PConfig.boolean("first_inited", true)) {
                     ZuiYouLiteEulaHook.init()
@@ -77,7 +77,6 @@ object ZuiyouLiteLoader : BaseLoader() {
                 }
 
                  */
-
             }
 
          */
@@ -88,81 +87,49 @@ object ZuiyouLiteLoader : BaseLoader() {
         val deobfs = hooks().needDeobfs {}
         if (PConfig.isUpdateHost() || deobfs > 0) {
             try {
-                "开始进行反混淆操作".debug()
-                async {
-                    val dexkit = DexKitBridge.create(PPBuff.getHostPath())
-                    var deobf = 0
-                    hooks().needDeobfs {
-                        "开始为 ${it.name} 进行反混淆操作...".debug()
-                        val result = if (it.needCustomDeobf()) {
-                            it.customDebof(dexkit)
-                        } else {
-                            dexkit?.batchFindClassesUsingStrings(BatchFindArgs.build {
-                                queryMap(it.deobfMap())
-                            })
-                        }
-                        "开始为 ${it.name} 缓存反混淆...".debug()
-                        PConfig.cache(result)
-                        try {
-                            "开始加载hook: ${it.name}".debug()
-                            if (
-                                it.isEnable() &&
-                                !it.init()
-                            ) {
-
-                                "hook加载失败: ${it.name}".debug()
-                            }
-                        } catch (e: Throwable) {
-                            "Hook ${it.name} 加载失败!".error()
-                            e.catch()
-                        }
-                        deobf++
+                "开始清理反混淆信息...".debug()
+                PConfig.clearCache()
+                "开始进行反混淆操作...".debug()
+                val dexkit = DexKitBridge.create(PPBuff.getHostPath())
+                var deobf = 0
+                hooks().needDeobfs {
+                    "开始为 ${it.name} 进行反混淆操作...".debug()
+                    val result = if (it.needCustomDeobf()) {
+                        it.customDebof(dexkit)
+                    } else {
+                        dexkit?.batchFindClassesUsingStrings(BatchFindArgs.build {
+                            queryMap(it.deobfMap())
+                        })
                     }
-
-                    PConfig.init(true)
-                    inited = true
-                    if (PConfig.isUpdateHost()) PConfig.updateHost()
-                    hooks().notNeedDeobfs { h ->
-                        try {
-                            "开始加载hook: ${h.name}".debug()
-                            if (
-                                h.isEnable() &&
-                                !h.init()
-                            ) {
-
-                                "hook加载失败: ${h.name}".debug()
-                            }
-                        } catch (e: Throwable) {
-                            "Hook ${h.name} 加载失败!".error()
-                            e.catch()
-                        }
-                    }
-
-
-                    dexkit?.close()
+                    "开始为 ${it.name} 缓存反混淆...".debug()
+                    PConfig.cache(result)
+                    deobf++
                 }
+                PConfig.init(true)
+                inited = true
+                if (PConfig.isUpdateHost()) PConfig.updateHost()
+                dexkit?.close()
             } catch (e: Throwable) {
                 e.catch()
             }
-        } else {
-            PConfig.init(true)
-            hooks().forEach { h ->
-                try {
-                    "开始加载hook: ${h.name}".debug()
-                    if (
-                        h.isEnable() &&
-                        !h.init()
-                    ) {
-
-                        "hook加载失败: ${h.name}".debug()
-                    }
-                } catch (e: Throwable) {
-                    "Hook ${h.name} 加载失败!".error()
-                    e.catch()
-                }
-            }
-
         }
+
+        hooks().forEach { h ->
+            try {
+                "开始加载hook: ${h.name}".debug()
+                if (
+                    h.isEnable() &&
+                    !h.init()
+                ) {
+                    "hook加载失败: ${h.name}".debug()
+                }
+            } catch (e: Throwable) {
+                "Hook ${h.name} 加载失败!".error()
+                e.catch()
+            }
+        }
+
+
     }
 
     private fun init(activity: Activity) {

@@ -1,6 +1,8 @@
 package cn.lliiooll.ppbuff.utils
 
+import android.content.Context
 import android.content.res.Resources
+import android.view.LayoutInflater
 import cn.hutool.core.io.resource.Resource
 import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.hook.zuiyouLite.hideHolder
@@ -98,7 +100,28 @@ object PPBuffClassLoader : ClassLoader() {
 
     fun inject() {
         mClassLoader = this
-        inject(PPBuffClassLoader::class.java)
+        inject(PPBuffClassLoader::class.java)/*
+        LayoutInflater::class.java.findMethod {
+            name == "createView"
+                    && paramCount == 4
+                    && parameterTypes[1] == String::class.java
+                    && parameterTypes[2] == String::class.java
+                    && parameterTypes[0] == Context::class.java
+        }
+            .hookBefore {
+                val prefixObj = it.args[2]
+                if (prefixObj != null) {
+                    val prefix = prefixObj as String
+                    if (prefix.startsWith("com.kongzue.dialogx")) {
+                        "尝试替换classloader".debug()
+                        it.thisObject.javaClass.findField(true) {
+                            name == "parent"
+                        }.set(it.thisObject, mClassLoader)
+                    }
+                }
+
+            }
+            */
         Class::class.java.findMethod {
             name == "forName" &&
                     paramCount == 3 &&

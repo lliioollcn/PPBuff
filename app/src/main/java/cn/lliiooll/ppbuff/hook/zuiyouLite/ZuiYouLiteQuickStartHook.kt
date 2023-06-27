@@ -26,14 +26,6 @@ object ZuiYouLiteQuickStartHook : BaseHook(
         }
             .hookBefore {
                 if (it.args[0] == 29) {
-                    if ((PConfig.isUpdateHost() || !PConfig.isInited()) && !first) {
-                        // 等待反混淆完毕后再跳转
-                        "是否应用更新: ${PConfig.isUpdateHost()}".debug()
-                        "是否未完成初始化: ${!PConfig.isInited()}".debug()
-                        "应用更新，阻塞直到反混淆加载完毕.".debug()
-                        it.args[0] = 666
-                        first = false
-                    }
                     it.args[1] = 1L
                 }
             }

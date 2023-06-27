@@ -30,6 +30,8 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import java.io.File
 import java.lang.StringBuilder
+import java.lang.reflect.Constructor
+import java.lang.reflect.Executable
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -253,11 +255,18 @@ fun Any.downloadVideo() {
                         }
                     }
                 }
-                val u = urls[0].replace("http://", "").replace("https://", "")
+                //val u = urls[0].replace("http://", "").replace("https://", "")
+                url = urls[0]
+                /*
                 url = "http://127.0.0.1:2017/$u"
                 if (!PJavaUtils.isConnected(url)) {
                     url = "http://127.0.0.1:2018/$u"
                 }
+                if (!PJavaUtils.isConnected(url)) {
+                    url = u
+                }
+
+                */
                 "下载url: $url".debug()
             } else {
                 url = XposedHelpers.getObjectField(videoBean, "urlsrc") as String
@@ -368,7 +377,7 @@ operator fun StringBuilder.plusAssign(str: String) {
 
 fun XC_MethodHook.MethodHookParam.dump() {
     val args = this.args
-    val m = this.method as Method
+    val m = this.method as Executable
     val sb = StringBuilder()
     sb += "============================================================"
     sb += "方法 ${m.name} 被调用"
@@ -406,18 +415,21 @@ fun XC_MethodHook.MethodHookParam.dump() {
     } else {
         sb += "   方法参数为null"
     }
-    sb += "~~~~~~~~~~~~~~~~~~~~"
-    sb += if (m.returnType != Void.TYPE) {
-        if (this.result == null) {
-            "   方法返回值(${m.returnType.name}): null"
+    if (m is Method) {
+        sb += "~~~~~~~~~~~~~~~~~~~~"
+        sb += if (m.returnType != Void.TYPE) {
+            if (this.result == null) {
+                "   方法返回值(${m.returnType.name}): null"
+            } else {
+                "   方法返回值(${m.returnType.name}): ${this.result}"
+            }
         } else {
-            "   方法返回值(${m.returnType.name}): ${this.result}"
+            "   方法没有返回值"
         }
-    } else {
-        "   方法没有返回值"
+        sb += "~~~~~~~~~~~~~~~~~~~~"
     }
-    sb += "~~~~~~~~~~~~~~~~~~~~"
-    sb += "   方法参数类型如下(${m.paramCount}):"
+
+    sb += "   方法参数类型如下(${m.parameterCount}):"
     for ((i, t) in m.parameterTypes.withIndex()) {
         sb += if (t == null) {
             "[$i]       null"
