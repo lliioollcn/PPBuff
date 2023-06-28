@@ -59,27 +59,9 @@ object ZuiyouLiteLoader : BaseLoader() {
 
     var inited = false
     override fun load() {
-        //if (inited) return
+        if (inited) return
         init()
 
-        /*
-        "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
-            .findClass()
-            .findMethod { name == "onCreate" }
-            .hookAfter {
-                val activity = it.thisObject as Activity
-                init(activity)
-                /*
-                if (PConfig.boolean("first_inited", true)) {
-                    ZuiYouLiteEulaHook.init()
-                } else {
-                    init(activity)
-                }
-
-                 */
-            }
-
-         */
 
     }
 
@@ -114,18 +96,44 @@ object ZuiyouLiteLoader : BaseLoader() {
             }
         }
 
-        hooks().forEach { h ->
-            try {
-                "开始加载hook: ${h.name}".debug()
-                if (
-                    h.isEnable() &&
-                    !h.init()
-                ) {
-                    "hook加载失败: ${h.name}".debug()
+
+        XiaoChuanAntiADHook.init()
+        ZuiYouLiteQuickStartHook.init()
+        XiaoChuanAntiZyBuffHook.init()
+        XiaoChuanEvilInstrumentationHook.init()
+        ZuiYouLiteSettingHook.init()
+        ZuiYouLiteTestHook.init()
+        if (PConfig.boolean("is_first_launch_pp", true)) {
+            "第一次启动".debug()
+            PConfig.set("is_first_launch_pp", false)
+        } else {
+            "cn.xiaochuankeji.zuiyouLite.ui.splash.SplashActivity"
+                .findClass()
+                .findMethod { name == "onCreate" }
+                .hookAfter {
+                    val activity = it.thisObject as Activity
+                    activity.javaClass
+                        .findField {
+                            this.type == Handler::class.java
+                        }
+                        .invokeMethod(activity, "sendEmptyMessage", 29)
+                    "跳过启动".debug()
                 }
-            } catch (e: Throwable) {
-                "Hook ${h.name} 加载失败!".error()
-                e.catch()
+        }
+        async {
+            hooks().forEach { h ->
+                try {
+                    "开始加载hook: ${h.name}".debug()
+                    if (
+                        h.isEnable() &&
+                        !h.init()
+                    ) {
+                        "hook加载失败: ${h.name}".debug()
+                    }
+                } catch (e: Throwable) {
+                    "Hook ${h.name} 加载失败!".error()
+                    e.catch()
+                }
             }
         }
 
@@ -251,16 +259,16 @@ object ZuiyouLiteLoader : BaseLoader() {
         return arrayListOf<BaseHook>().apply {
             add(ZuiYouLiteNoCrashHook)// 错误拦截
             add(ZuiYouLiteDebugHook)// 调试Hook
-            add(ZuiYouLiteTestHook)// 测试Hook
-            add(AppCenterHook)// AppCenter统计
-            add(ZuiYouLiteQuickStartHook)// 快速启动
-            add(XiaoChuanAntiADHook)// 去广告
+            //add(ZuiYouLiteTestHook)// 测试Hook
+            //add(ZuiYouLiteQuickStartHook)// 快速启动
             add(XiaoChuanAntiZyBuffHook)// 去ZyBuff
             add(XiaoChuanEvilInstrumentationHook)// 去EvilInstrumentatio
+            //add(ZuiYouLiteSettingHook)// 设置界面
+            add(ZuiYouLiteSimplePostHook)// 精简帖子列表
+            add(AppCenterHook)// AppCenter统计
             add(ZuiYouLiteAntiVoiceRoomHook)// 去语音房
             add(ZuiYouLiteSimpleMeHook)// 精简"我的"
-            add(ZuiYouLiteSimplePostHook)// 精简帖子列表
-            add(ZuiYouLiteSettingHook)// 设置界面
+            //add(XiaoChuanAntiADHook)// 去广告
             add(ZuiYouLiteDetailLocationHook)// IP精准到市
             add(ZuiYouLiteDetailCommentTimeHook)// 评论详细时间
             add(ZuiYouLiteNoWaterMarkHook)// 去水印

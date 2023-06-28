@@ -38,7 +38,7 @@ object ZyLiteTypes {
         put("普通图片/文字帖 [不推荐屏蔽]", 1);
         put("推荐关注帖子", 217);
         put("未知直播帖子类型", 200);
-        put("HolderPrivacyAlert", "layout_holder_privacy_alert".findId("layout"));
+        put("HolderPrivacyAlert", if (PPBuff.getApplication().packageName.contentEquals(PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME)) "layout_holder_privacy_alert".findId("layout") else 0);
         put("网页帖子", 102)
     }
 
@@ -53,7 +53,7 @@ object ZyLiteTypes {
         put("功能入口> 我的背包", "my_tab_prize_package");
         put(
             "功能入口> 皮皮短剧",
-            if (!requireMinVersion(PPBuff.HostInfo.ZuiyouLite.PP_2_60_11)) "my_tab_skit_layout" else "my_tab_drama_layout"
+            if (!requireMinVersion(PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME,PPBuff.HostInfo.ZuiyouLite.PP_2_60_11)) "my_tab_skit_layout" else "my_tab_drama_layout"
         );
         put("功能入口> 免广告", "avoid_ad");
         put("功能入口> 皮皮直播", "my_tab_live");
@@ -76,6 +76,12 @@ object ZyLiteTypes {
         put("个人数据> 浏览历史", "!my_data_history");
         put("个人数据> 插眼", "!my_data_mark_eye");
         put("个人数据> 下载", "!my_data_download");
+    }
+
+    val mineListTieBa = sortedMapOf<String, String>().apply {
+       // put("开通VIP提示", "!profile");
+
+
     }
     val extraMineList = sortedMapOf<String, String>().apply {
         put("my_tab_tree_new_bee", "treeNewBeeLayout")

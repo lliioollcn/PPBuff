@@ -12,7 +12,6 @@ import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.documentfile.provider.DocumentFile
 import cn.lliiooll.ppbuff.BuildConfig
 import cn.lliiooll.ppbuff.PConfig
@@ -21,7 +20,6 @@ import cn.lliiooll.ppbuff.data.types.PRecordType
 import cn.lliiooll.ppbuff.tracker.PLog
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findAllFields
-import com.github.kyuubiran.ezxhelper.utils.findField
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import com.kongzue.dialogx.dialogs.PopTip
@@ -30,12 +28,10 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import java.io.File
 import java.lang.StringBuilder
-import java.lang.reflect.Constructor
 import java.lang.reflect.Executable
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
-import java.nio.charset.StandardCharsets
 import java.util.Arrays
 import java.util.concurrent.Executors
 
@@ -146,8 +142,8 @@ fun String.toastLong() {
     toastLong(PPBuff.getApplication())
 }
 
-fun requireMinVersion(version: Int): Boolean {
-    return PPBuff.getHostVersionCode() >= version
+fun requireMinVersion(version1: String, version: Int): Boolean {
+    return PPBuff.getHostVersionCode() >= version && version1.contentEquals(PPBuff.getApplication().packageName)
 }
 
 fun String.toastLong(ctx: Context) {

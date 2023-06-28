@@ -1,4 +1,4 @@
-package cn.lliiooll.ppbuff.hook.zuiyouLite
+package cn.lliiooll.ppbuff.hook.zuiyou
 
 import android.os.Handler
 import cn.lliiooll.ppbuff.PConfig
@@ -9,7 +9,7 @@ import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 
-object ZuiYouLiteQuickStartHook : BaseHook(
+object ZuiYouQuickStartHook : BaseHook(
     "快速启动", "quickStart", PHookType.DEBUG
 ) {
     var first = true
@@ -25,10 +25,11 @@ object ZuiYouLiteQuickStartHook : BaseHook(
             this.name == "sendEmptyMessageDelayed" && this.paramCount == 2 && this.parameterTypes[0] == Int::class.java && this.parameterTypes[1] == Long::class.java
         }
             .hookBefore {
-                if (it.args[0] == 29) {
-                    "跳过启动页面".debug()
+                if (it.args[0] == 27) {
                     it.args[1] = 0L
+                    "跳过启动页面: ${it.args[0]} - ${it.args[1]}".debug()
                 }
+
             }
         inited = true
         return true
