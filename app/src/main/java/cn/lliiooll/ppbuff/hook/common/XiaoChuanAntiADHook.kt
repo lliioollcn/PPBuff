@@ -6,6 +6,7 @@ import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookReplace
+import java.lang.reflect.Method
 
 object XiaoChuanAntiADHook : BaseHook(
     "去广告", "anti_ad", PHookType.COMMON
@@ -19,6 +20,7 @@ object XiaoChuanAntiADHook : BaseHook(
             }
             .hookReplace {
                 "阻止广告加载，类型: ${it.method.name}".debug()
+                return@hookReplace null
             }
 
 

@@ -2,77 +2,62 @@ package cn.lliiooll.ppbuff.hook.zuiyouLite
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import cn.hutool.core.date.DateUtil
 import cn.lliiooll.ppbuff.PConfig
 import cn.lliiooll.ppbuff.PPBuff
-import cn.lliiooll.ppbuff.hook.BaseHook
+import cn.lliiooll.ppbuff.R
 import cn.lliiooll.ppbuff.data.types.PHookType
-import cn.lliiooll.ppbuff.utils.UpdateUtils
-import cn.lliiooll.ppbuff.utils.async
-import cn.lliiooll.ppbuff.utils.catch
+import cn.lliiooll.ppbuff.data.types.PViewType
+import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.utils.debug
-import cn.lliiooll.ppbuff.utils.dump
 import cn.lliiooll.ppbuff.utils.findClass
+import cn.lliiooll.ppbuff.utils.requireMinVersion
 import cn.lliiooll.ppbuff.utils.sync
-import cn.lliiooll.ppbuff.utils.toastLong
-import cn.lliiooll.ppbuff.utils.toastShort
-import com.github.kyuubiran.ezxhelper.utils.findAllConstructors
-import com.github.kyuubiran.ezxhelper.utils.findAllMethods
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import com.kongzue.dialogx.dialogs.MessageDialog
-import com.kongzue.dialogx.dialogs.PopNotification
+import com.kongzue.dialogx.interfaces.OnBindView
 import com.kongzue.dialogx.style.IOSStyle
-import de.robv.android.xposed.XposedHelpers
-import java.lang.RuntimeException
-import kotlin.concurrent.thread
-import kotlin.system.exitProcess
+import java.util.Date
 
 object ZuiYouLiteEulaHook : BaseHook(
-    "EULA", "eula", PHookType.HIDE
+    "打赏作者", "support", PHookType.COMMON
 ) {
     override fun init(): Boolean {
-        "cn.xiaochuankeji.zuiyouLite.ui.main.MainActivity"
+        if (requireMinVersion(
+                PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME,
+                PPBuff.HostInfo.ZuiyouLite.PP_2_67_10
+            )
+        ) {
+            "cn.xiaochuankeji.zuiyouLite.ui.main.MainTest"
+        } else {
+            "cn.xiaochuankeji.zuiyouLite.ui.main.MainActivity"
+        }
             .findClass()
             .findMethod {
                 this.name == "onCreate" && this.paramCount == 1 && this.parameterTypes[0] == Bundle::class.java
             }
             .hookAfter {
                 val activity = it.thisObject as Activity
-                sync {
-                    MessageDialog
-                        .build()
-                        .setStyle(IOSStyle.style())
-                        .setTitle("用户协议")
-                        .setMaxHeight(1000)
-                        .setMessage(PPBuff.loadEula())
-                        .setCancelable(false)
-                        .setOkButton("接受") { _, _ ->
-                            PConfig.set("first_inited", false)
-                            PopNotification.build()
-                                .setStyle(IOSStyle.style())
-                                .setTitle("提示")
-                                .setMessage("重启应用以继续加载模块")
-                                .noAutoDismiss()
-                                .showAlways()
-                                .show(activity)
+                if (DateUtil.betweenDay(
+                        Date(),
+                        Date(PConfig.numberEx("last_pop", 0L)),
+                        true
+                    ) >= 7 || PConfig.isUpdateHost()
+                ) {
+                    showPop(activity)
 
-                            false
-                        }
-                        .setCancelButton("拒绝") { _, _ ->
-                            MessageDialog.build()
-                                .setStyle(IOSStyle.style())
-                                .setTitle("继续")
-                                .setCancelable(false)
-                                .setMessage("您在接受协议后模块才会继续加载")
-                                .setOkButton("确定") { _, _ ->
-                                    false
-                                }
-                                .show(activity)
-                            false
-                        }
-                        .show(activity)
+                    PConfig.set("last_pop", System.currentTimeMillis())
+
                 }
+
             }
 
         /*
@@ -87,5 +72,80 @@ object ZuiYouLiteEulaHook : BaseHook(
 
          */
         return true
+    }
+
+    fun showPop(activity: Activity) {
+        sync {
+            EzXHelperInit.addModuleAssetPath(activity)
+            EzXHelperInit.addModuleAssetPath(activity)
+            EzXHelperInit.addModuleAssetPath(activity)
+            EzXHelperInit.addModuleAssetPath(activity)
+            val image = ImageView(activity)
+            image.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                800
+            )
+            image.foregroundGravity = Gravity.CENTER_HORIZONTAL
+            EzXHelperInit.addModuleAssetPath(activity)
+            EzXHelperInit.addModuleAssetPath(activity)
+            EzXHelperInit.addModuleAssetPath(activity)
+            EzXHelperInit.addModuleAssetPath(activity)
+            image.setImageResource(R.drawable.wechat)
+            MessageDialog
+                .build()
+                .setStyle(IOSStyle.style())
+                .setTitle("捐赠")
+                .setMaxHeight(1500)
+                .setMinHeight(700)
+                .setMessage("开发不易，可否打赏一二~")
+                .setButtonOrientation(LinearLayout.VERTICAL)
+                .setCancelable(true)
+                .setCustomView(object : OnBindView<MessageDialog>(image) {
+                    override fun onBind(dialog: MessageDialog?, v: View?) {
+
+                    }
+                })
+                .setOkButton("微信") { dialog, view ->
+                    EzXHelperInit.addModuleAssetPath(dialog.resources)
+                    EzXHelperInit.addModuleAssetPath(activity)
+                    EzXHelperInit.addModuleAssetPath(view.resources)
+                    image.setImageResource(R.drawable.wechat)
+                    dialog.setCustomView(object : OnBindView<MessageDialog>(image) {
+                        override fun onBind(dialog: MessageDialog?, v: View?) {
+
+                        }
+                    })
+                    true
+                }.setCancelButton("支付宝") { dialog, view ->
+                    EzXHelperInit.addModuleAssetPath(dialog.resources)
+                    EzXHelperInit.addModuleAssetPath(activity)
+                    EzXHelperInit.addModuleAssetPath(view.resources)
+                    image.setImageResource(R.drawable.alipay)
+                    dialog.setCustomView(object : OnBindView<MessageDialog>(image) {
+                        override fun onBind(dialog: MessageDialog?, v: View?) {
+
+                        }
+                    })
+                    true
+                }.show(activity)
+            "弹出提示".debug()
+
+        }
+    }
+
+    override fun isEnable(): Boolean {
+        return true
+    }
+
+    override fun needCustomClick(): Boolean {
+        return true
+    }
+
+    override fun view(): PViewType {
+        return PViewType.CUSTOM
+    }
+
+    override fun click() {
+        showPop(super.ctx as Activity)
     }
 }

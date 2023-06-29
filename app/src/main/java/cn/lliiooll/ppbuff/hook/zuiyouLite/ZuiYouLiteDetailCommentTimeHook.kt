@@ -42,50 +42,6 @@ object ZuiYouLiteDetailCommentTimeHook : BaseHook(
     "评论显示详细时间", "comment_time_detail", PHookType.PLAY
 ) {
     override fun init(): Boolean {
-        if (!ZuiYouLiteDetailLocationHook.isEnable()) {
-            "cn.xiaochuankeji.zuiyouLite.ui.slide.ab.holder.ReviewBasicViewControl"
-                .findClass()
-                .findMethod {
-                    this.paramCount == 2
-                            && this.parameterTypes[0].name.contains("CommentBean")
-                            && java.lang.reflect.Modifier.isFinal(modifiers)
-                            && !java.lang.reflect.Modifier.isStatic(modifiers)
-                            && returnType == Void.TYPE
-                }
-                .hookAfter {
-                    val commentData = it.args[0]
-                    val createTime = XposedHelpers.getLongField(commentData, "createTime")
-                    val nameMultiView = XposedHelpers.getObjectField(it.thisObject, "nameMultiView")
-                    val ipAtribution = XposedHelpers.getObjectField(commentData, "ipAtribution")
-                    var i = 0
-                    for (f in nameMultiView.javaClass.declaredFields) {
-                        if (f.type == TextView::class.java) {
-                            if (i != 0) {
-                                val textView = XposedHelpers.getObjectField(
-                                    nameMultiView,
-                                    f.name
-                                ) as TextView
-                                val time = PJavaUtils.commentDetailTime(
-                                    PConfig.string("config_time_format", "yyyy年MM月dd日HH:mm:ss"),
-                                    createTime
-                                )
-                                sync {
-                                    val lp = textView.layoutParams
-                                    lp.width = ViewGroup.LayoutParams.MATCH_PARENT
-                                    textView.layoutParams = lp
-                                    textView.maxLines = 10
-                                    textView.isSingleLine = false
-                                    textView.onWindowFocusChanged(true)
-                                    textView.text = "$time · $ipAtribution"
-                                }
-                                break
-                            } else {
-                                i++
-                            }
-                        }
-                    }
-                }
-        }
         return true
     }
 
@@ -144,7 +100,12 @@ object ZuiYouLiteDetailCommentTimeHook : BaseHook(
 
                 Row(modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)) {// 自定义格式
                     var timeFormat by remember {
-                        mutableStateOf(PConfig.string("config_time_format", "yyyy年MM月dd日HH:mm:ss"))
+                        mutableStateOf(
+                            PConfig.string(
+                                "config_time_format",
+                                "yyyy年MM月dd日HH:mm:ss"
+                            )
+                        )
                     }
                     TextField(modifier = Modifier
                         .weight(1f, true)
@@ -156,7 +117,7 @@ object ZuiYouLiteDetailCommentTimeHook : BaseHook(
                         })
 
                     Button(onClick = {
-                        if (timeFormat.isBlank()){
+                        if (timeFormat.isBlank()) {
                             timeFormat = "yyyy年MM月dd日HH:mm:ss"
                         }
                         PConfig.set("config_time_format", timeFormat)

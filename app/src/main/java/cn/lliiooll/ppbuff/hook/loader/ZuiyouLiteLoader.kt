@@ -22,6 +22,7 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAudioDownloadHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoFollowHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteCommentDetailHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
@@ -259,8 +260,8 @@ object ZuiyouLiteLoader : BaseLoader() {
         return arrayListOf<BaseHook>().apply {
             add(ZuiYouLiteNoCrashHook)// 错误拦截
             add(ZuiYouLiteDebugHook)// 调试Hook
-            //add(ZuiYouLiteTestHook)// 测试Hook
-            //add(ZuiYouLiteQuickStartHook)// 快速启动
+            add(ZuiYouLiteTestHook)// 测试Hook
+            add(ZuiYouLiteQuickStartHook)// 快速启动
             add(XiaoChuanAntiZyBuffHook)// 去ZyBuff
             add(XiaoChuanEvilInstrumentationHook)// 去EvilInstrumentatio
             //add(ZuiYouLiteSettingHook)// 设置界面
@@ -268,8 +269,9 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(AppCenterHook)// AppCenter统计
             add(ZuiYouLiteAntiVoiceRoomHook)// 去语音房
             add(ZuiYouLiteSimpleMeHook)// 精简"我的"
-            //add(XiaoChuanAntiADHook)// 去广告
+            add(XiaoChuanAntiADHook)// 去广告
             add(ZuiYouLiteDetailLocationHook)// IP精准到市
+            add(ZuiYouLiteCommentDetailHook)// 评论区详细
             add(ZuiYouLiteDetailCommentTimeHook)// 评论详细时间
             add(ZuiYouLiteNoWaterMarkHook)// 去水印
             add(ZuiYouLiteForcedVerticalHook)// 视频全屏强制竖屏
@@ -287,6 +289,7 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteUpdateHook)// 检查更新
             add(ZuiYouLiteAntiLongestTextHook)// 屏蔽评论超长刷屏文本
             add(ZuiYouLiteRemoveYouthModeDialogHook)// 去除青少年模式弹窗
+            add(ZuiYouLiteEulaHook)// 去除青少年模式弹窗
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }

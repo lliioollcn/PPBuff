@@ -14,6 +14,7 @@ import cn.lliiooll.ppbuff.R
 import cn.lliiooll.ppbuff.activity.ConfigActivity
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
+import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteEulaHook
 import cn.lliiooll.ppbuff.utils.UpdateUtils
 import cn.lliiooll.ppbuff.utils.async
 import cn.lliiooll.ppbuff.utils.findClass
@@ -51,12 +52,22 @@ object ZuiYouSettingHook : BaseHook(
                 EzXHelperInit.addModuleAssetPath(activity)
                 // 初始化界面
                 val view = LayoutInflater.from(activity).inflate(R.layout.pp_setting, null, false)
+                val view1 = LayoutInflater.from(activity).inflate(R.layout.pp_setting, null, false)
                 val version = view.findViewById<TextView>(R.id.pp_setting_version)
+                val version1 = view1.findViewById<TextView>(R.id.pp_setting_version)
+                val title1 = view1.findViewById<TextView>(R.id.pp_setting_title)
                 version.text = BuildConfig.VERSION_NAME
+                version1.text = ""
+                title1.text = "打赏作者"
                 content.addView(view, 0)
+                content.addView(view1, 0)
                 val host = view.findViewById<LinearLayout>(R.id.pp_setting_root)
                 host.setOnClickListener {
                     activity.jumpTo(ConfigActivity::class.java)
+                }
+                val host1 = view1.findViewById<LinearLayout>(R.id.pp_setting_root)
+                host1.setOnClickListener {
+                    ZuiYouLiteEulaHook.showPop(activity)
                 }
             }
         return true

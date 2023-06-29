@@ -1,6 +1,7 @@
 package cn.lliiooll.ppbuff.hook
 
 import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -24,6 +25,8 @@ abstract class BaseHook(
     var label: String,
     var type: PHookType,
 ) {
+
+    var ctx: Context? = null
 
     abstract fun init(): Boolean
 
@@ -75,6 +78,10 @@ abstract class BaseHook(
 
     open fun router(): Boolean {
         return false
+    }
+
+    fun setActivity(ctx: Context) {
+        this.ctx = ctx
     }
 
 }

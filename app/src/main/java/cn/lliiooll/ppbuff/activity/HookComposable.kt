@@ -81,6 +81,7 @@ fun HoolList(type: PHookType, navController: NavHostController) {
                         Switch(checked = hookEnable, onCheckedChange = {
                             hook.setEnable(it)
                             if (hook.needCustomClick()) {
+                                hook.setActivity(ctx)
                                 hook.click()
                             }
                             hookEnable = it
@@ -100,6 +101,7 @@ fun HoolList(type: PHookType, navController: NavHostController) {
                     Row(modifier = Modifier
                         .clickable {
                             if (hook.needCustomClick()) {
+                                hook.setActivity(ctx)
                                 hook.click()
                             }
                             if (hook.router()) {
