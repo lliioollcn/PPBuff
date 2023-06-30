@@ -29,7 +29,7 @@ object ZuiYouLiteTestHook : BaseHook(
     "测试Hook", "test", PHookType.DEBUG
 ) {
     override fun init(): Boolean {
-        if (requireMinVersion(ZuiyouLite.PACKAGE_NAME, ZuiyouLite.PP_2_67_10)) {
+        if (requireMinVersion(ZuiyouLite.PP_2_67_10)) {
             "cn.xiaochuankeji.zuiyouLite.ui.main.MainTest"
         } else {
             "cn.xiaochuankeji.zuiyouLite.ui.main.MainActivity"

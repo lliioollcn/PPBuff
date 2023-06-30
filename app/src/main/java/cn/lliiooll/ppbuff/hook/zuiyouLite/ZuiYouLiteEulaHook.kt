@@ -32,7 +32,6 @@ object ZuiYouLiteEulaHook : BaseHook(
 ) {
     override fun init(): Boolean {
         if (requireMinVersion(
-                PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME,
                 PPBuff.HostInfo.ZuiyouLite.PP_2_67_10
             )
         ) {

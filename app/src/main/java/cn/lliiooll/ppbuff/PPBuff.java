@@ -180,6 +180,7 @@ public class PPBuff {
             public static final int PP_2_52_11 = 2521100;
             public static final int PP_2_60_11 = 2601100;
             public static final int PP_2_67_10 = 2671000;
+            public static final int PP_2_68_0 = 2680000;
         }
 
         public static class TieBa {

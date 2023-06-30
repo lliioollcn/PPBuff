@@ -53,7 +53,7 @@ object ZyLiteTypes {
         put("功能入口> 我的背包", "my_tab_prize_package");
         put(
             "功能入口> 皮皮短剧",
-            if (!requireMinVersion(PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME,PPBuff.HostInfo.ZuiyouLite.PP_2_60_11)) "my_tab_skit_layout" else "my_tab_drama_layout"
+            if (!requireMinVersion(PPBuff.HostInfo.ZuiyouLite.PP_2_60_11)) "my_tab_skit_layout" else "my_tab_drama_layout"
         );
         put("功能入口> 免广告", "avoid_ad");
         put("功能入口> 皮皮直播", "my_tab_live");

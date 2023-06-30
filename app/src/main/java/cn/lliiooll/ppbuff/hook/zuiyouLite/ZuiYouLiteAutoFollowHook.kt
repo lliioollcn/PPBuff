@@ -32,13 +32,11 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
         }
         if (inited) return true
         PPBuff.isFollow = false
-        "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$${
-            if (requireMinVersion(
-                    PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME,
-                    PPBuff.HostInfo.ZuiyouLite.PP_2_67_10
-                )
-            ) "a" else "b"
-        }"
+        val subClass = if (requireMinVersion(
+                PPBuff.HostInfo.ZuiyouLite.PP_2_67_10
+            )
+        ) "a" else "b"
+        "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$$subClass"
             .findClass()
             .findMethod {
                 name == "call"

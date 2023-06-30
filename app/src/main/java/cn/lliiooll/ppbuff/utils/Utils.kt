@@ -142,8 +142,8 @@ fun String.toastLong() {
     toastLong(PPBuff.getApplication())
 }
 
-fun requireMinVersion(version1: String, version: Int): Boolean {
-    return PPBuff.getHostVersionCode() >= version && version1.contentEquals(PPBuff.getApplication().packageName)
+fun requireMinVersion( version: Int): Boolean {
+    return PPBuff.getHostVersionCode() >= version
 }
 
 fun String.toastLong(ctx: Context) {
