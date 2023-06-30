@@ -21,8 +21,9 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.kongzue.dialogx.**{*;}
--keep class cn.lliiooll.ppbuff.startup.**{*;}
 -keep class cn.lliiooll.ppbuff.ffmpeg.**{*;}
+-keep class cn.lliiooll.ppbuff.xposed.RobvXposed{*;}
+-keep class cn.lliiooll.ppbuff.xposed.LibXposed{*;}
 -keep class cn.lliiooll.ppbuff.utils.Natives{*;}
 -keep class com.tencent.**{*;}
 -keep class * implements java.io.Serializable { *; }
