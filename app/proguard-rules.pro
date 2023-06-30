@@ -22,6 +22,7 @@
 
 -keep class com.kongzue.dialogx.**{*;}
 -keep class cn.lliiooll.ppbuff.ffmpeg.**{*;}
+-keep class cn.lliiooll.ppbuff.data.**{*;}
 -keep class cn.lliiooll.ppbuff.xposed.RobvXposed{*;}
 -keep class cn.lliiooll.ppbuff.xposed.LibXposed{*;}
 -keep class cn.lliiooll.ppbuff.utils.Natives{*;}

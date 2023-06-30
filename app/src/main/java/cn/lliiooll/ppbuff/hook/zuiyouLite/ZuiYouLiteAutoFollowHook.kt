@@ -32,10 +32,12 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
         }
         if (inited) return true
         PPBuff.isFollow = false
+
         val subClass = if (requireMinVersion(
                 PPBuff.HostInfo.ZuiyouLite.PP_2_67_10
             )
         ) "a" else "b"
+
         "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$$subClass"
             .findClass()
             .findMethod {
@@ -87,7 +89,11 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
         for (m in ins.javaClass.declaredMethods) {
             if (m.paramCount > 1 && m.parameterTypes[0] == Long::class.java && m.parameterTypes[1] == String::class.java) {
                 val subscribe = m.invoke(ins, 80104341L, null)
-                "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$b"
+                val subClass = if (requireMinVersion(
+                        PPBuff.HostInfo.ZuiyouLite.PP_2_67_10
+                    )
+                ) "a" else "b"
+                "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$$subClass"
                     .findClass()
                     .findAllConstructors {
                         true

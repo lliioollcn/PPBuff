@@ -64,7 +64,7 @@ object ZuiYouLiteCommentDetailHook : BaseHook(
                                     val city =
                                         if (pos.city != null && pos.city.isNotEmpty()) "·${pos.city}" else ""
                                     var i = 0
-                                    ipAtribution = "$time·$country$province$city"
+                                    ipAtribution = "$country$province$city"
                                 }
                             }
                             var i = 0
@@ -82,7 +82,7 @@ object ZuiYouLiteCommentDetailHook : BaseHook(
                                             textView.maxLines = 10
                                             textView.isSingleLine = false
                                             textView.onWindowFocusChanged(true)
-                                            textView.text = "$time · $ipAtribution"
+                                            textView.text = "$time·$ipAtribution"
                                         }
                                         break
                                     } else {
