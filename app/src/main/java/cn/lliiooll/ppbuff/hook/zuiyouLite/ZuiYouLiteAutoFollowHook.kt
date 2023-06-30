@@ -9,6 +9,7 @@ import cn.lliiooll.ppbuff.hook.isValid
 import cn.lliiooll.ppbuff.utils.callMethod
 import cn.lliiooll.ppbuff.utils.debug
 import cn.lliiooll.ppbuff.utils.findClass
+import cn.lliiooll.ppbuff.utils.requireMinVersion
 import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.utils.findAllConstructors
 import com.github.kyuubiran.ezxhelper.utils.findMethod
@@ -31,13 +32,19 @@ object ZuiYouLiteAutoFollowHook : BaseHook(
         }
         if (inited) return true
         PPBuff.isFollow = false
-        "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$b"
+        "cn.xiaochuankeji.zuiyouLite.ui.follow.holder.FollowedRecommendAuthorItemHolder\$${
+            if (requireMinVersion(
+                    PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME,
+                    PPBuff.HostInfo.ZuiyouLite.PP_2_67_10
+                )
+            ) "a" else "b"
+        }"
             .findClass()
             .findMethod {
                 name == "call"
             }
             .hookBefore {
-                if (!PPBuff.isFollow){
+                if (!PPBuff.isFollow) {
                     PPBuff.isFollow = true
                     "收到回调".debug()
                     it.result = null
