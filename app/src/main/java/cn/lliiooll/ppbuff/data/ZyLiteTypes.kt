@@ -38,7 +38,12 @@ object ZyLiteTypes {
         put("普通图片/文字帖 [不推荐屏蔽]", 1);
         put("推荐关注帖子", 217);
         put("未知直播帖子类型", 200);
-        put("HolderPrivacyAlert", if (PPBuff.getApplication().packageName.contentEquals(PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME)) "layout_holder_privacy_alert".findId("layout") else 0);
+        put(
+            "HolderPrivacyAlert",
+            if (PPBuff.getApplication().packageName.contentEquals(PPBuff.HostInfo.ZuiyouLite.PACKAGE_NAME)) "layout_holder_privacy_alert".findId(
+                "layout"
+            ) else 0
+        );
         put("网页帖子", 102)
     }
 
@@ -79,7 +84,7 @@ object ZyLiteTypes {
     }
 
     val mineListTieBa = sortedMapOf<String, String>().apply {
-       // put("开通VIP提示", "!profile");
+        // put("开通VIP提示", "!profile");
 
 
     }

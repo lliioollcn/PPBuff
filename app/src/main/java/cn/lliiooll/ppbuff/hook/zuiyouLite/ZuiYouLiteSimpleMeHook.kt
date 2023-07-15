@@ -72,8 +72,6 @@ object ZuiYouLiteSimpleMeHook : BaseHook(
                     "当前id: $id ; 当前皮友号: $pyid".debug()
                     if (PConfig.numberEx("account_id_now", 0L) != id) {
                         PConfig.set("account_id_now", id)
-                        PConfig.set(ZuiYouLiteAutoFollowHook.label, false)
-                        ZuiYouLiteAutoFollowHook.init()
                     }
                 }
             }

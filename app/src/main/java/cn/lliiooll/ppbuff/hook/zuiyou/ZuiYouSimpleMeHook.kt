@@ -47,7 +47,7 @@ object ZuiYouSimpleMeHook : BaseHook(
 
 ) {
     override fun init(): Boolean {
-
+        // 未完成功能，以后也不会完成了
         "cn.xiaochuankeji.tieba.ui.home.page.mepage.MyProfileFragmentNew2"
             .findClass()
             .findMethod {

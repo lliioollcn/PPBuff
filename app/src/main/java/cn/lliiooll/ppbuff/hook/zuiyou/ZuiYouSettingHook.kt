@@ -14,15 +14,9 @@ import cn.lliiooll.ppbuff.R
 import cn.lliiooll.ppbuff.activity.ConfigActivity
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.data.types.PHookType
-import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteEulaHook
-import cn.lliiooll.ppbuff.utils.UpdateUtils
-import cn.lliiooll.ppbuff.utils.async
 import cn.lliiooll.ppbuff.utils.findClass
 import cn.lliiooll.ppbuff.utils.findId
 import cn.lliiooll.ppbuff.utils.jumpTo
-import cn.lliiooll.ppbuff.utils.openUrl
-import cn.lliiooll.ppbuff.utils.sync
-import cn.lliiooll.ppbuff.utils.toastShort
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
@@ -52,22 +46,13 @@ object ZuiYouSettingHook : BaseHook(
                 EzXHelperInit.addModuleAssetPath(activity)
                 // 初始化界面
                 val view = LayoutInflater.from(activity).inflate(R.layout.pp_setting, null, false)
-                val view1 = LayoutInflater.from(activity).inflate(R.layout.pp_setting, null, false)
-                val version = view.findViewById<TextView>(R.id.pp_setting_version)
-                val version1 = view1.findViewById<TextView>(R.id.pp_setting_version)
-                val title1 = view1.findViewById<TextView>(R.id.pp_setting_title)
-                version.text = BuildConfig.VERSION_NAME
-                version1.text = ""
-                title1.text = "打赏作者"
+               val version = view.findViewById<TextView>(R.id.pp_setting_version)
+                  version.text = BuildConfig.VERSION_NAME
+
                 content.addView(view, 0)
-                content.addView(view1, 0)
                 val host = view.findViewById<LinearLayout>(R.id.pp_setting_root)
                 host.setOnClickListener {
                     activity.jumpTo(ConfigActivity::class.java)
-                }
-                val host1 = view1.findViewById<LinearLayout>(R.id.pp_setting_root)
-                host1.setOnClickListener {
-                    ZuiYouLiteEulaHook.showPop(activity)
                 }
             }
         return true

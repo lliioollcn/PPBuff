@@ -23,6 +23,7 @@ import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import com.github.kyuubiran.ezxhelper.utils.paramCount
 import de.robv.android.xposed.XposedHelpers
 import java.lang.RuntimeException
+import java.util.Arrays
 import kotlin.concurrent.thread
 
 object ZuiYouLiteTestHook : BaseHook(
@@ -42,7 +43,19 @@ object ZuiYouLiteTestHook : BaseHook(
                 val activity = it.thisObject as Activity
                 "Buff加载成功~".toastShort(activity)
             }
+/*
+        "com.izuiyou.network.NetCrypto"
+            .findClass()
+            .findAllMethods { name == "sign" || name == "encodeAES" }
+            .hookAfter {
+                //val data = it.args[0] as ByteArray
+                //"DID: ${Arrays.toString(data)}".debug()
+                //RuntimeException().catch()
+                it.dump()
+            }
 
+
+ */
         /*
                 "com.google.android.exoplayer2.MediaItem"
                     .findClass()

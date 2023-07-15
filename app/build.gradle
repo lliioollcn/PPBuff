@@ -88,8 +88,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -115,20 +115,6 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
-    }
-
-    applicationVariants.all { variant ->
-        variant.javaCompileProvider.get().doLast {
-            println("start classes obfuscation " + "${variant.javaCompile.destinationDir}")
-            javaexec {
-                main = "-jar";
-                args = [
-                        "../obfuseStringGradle.jar",
-                        project.name,
-                        variant.javaCompile.destinationDir,
-                ]
-            }
         }
     }
 

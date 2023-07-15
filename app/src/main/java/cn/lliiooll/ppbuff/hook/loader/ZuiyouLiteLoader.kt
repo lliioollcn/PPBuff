@@ -9,7 +9,6 @@ import cn.lliiooll.ppbuff.PPBuff
 import cn.lliiooll.ppbuff.R
 import cn.lliiooll.ppbuff.hook.BaseHook
 import cn.lliiooll.ppbuff.hook.common.AppCenterHook
-import cn.lliiooll.ppbuff.hook.common.EasterEggHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiADHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanAntiZyBuffHook
 import cn.lliiooll.ppbuff.hook.common.XiaoChuanEvilInstrumentationHook
@@ -20,7 +19,6 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiLongestTextHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiUpdateHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAntiVoiceRoomHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAudioDownloadHook
-import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoFollowHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteAutoTaskHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteCommentDetailHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteCrashHook
@@ -28,7 +26,6 @@ import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDebugHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailCommentTimeHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDetailLocationHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteDragReadHook
-import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteEulaHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteForcedVerticalHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoCrashHook
 import cn.lliiooll.ppbuff.hook.zuiyouLite.ZuiYouLiteNoTrackerHook
@@ -47,11 +44,8 @@ import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.findField
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
-import com.kongzue.dialogx.dialogs.MessageDialog
-import com.kongzue.dialogx.style.IOSStyle
 import io.luckypray.dexkit.DexKitBridge
 import io.luckypray.dexkit.builder.BatchFindArgs
-import kotlin.system.exitProcess
 
 /**
  * 皮皮搞笑Hook加载器，提供启动界面加载动画
@@ -98,11 +92,11 @@ object ZuiyouLiteLoader : BaseLoader() {
         }
 
 
+        ZuiYouLiteSettingHook.init()
         XiaoChuanAntiADHook.init()
         ZuiYouLiteQuickStartHook.init()
         XiaoChuanAntiZyBuffHook.init()
         XiaoChuanEvilInstrumentationHook.init()
-        ZuiYouLiteSettingHook.init()
         ZuiYouLiteTestHook.init()
         if (PConfig.boolean("is_first_launch_pp", true)) {
             "第一次启动".debug()
@@ -279,17 +273,15 @@ object ZuiyouLiteLoader : BaseLoader() {
             add(ZuiYouLiteWebTokenHook)// 获取Token
             add(ZuiYouLiteAntiAntiDebugHook)// 反反调试
             add(ZuiYouLiteCrashHook)// 手动抛错
-            add(ZuiYouLiteAutoFollowHook)// 自动关注
             add(ZuiYouLiteAntiUpdateHook)// 屏蔽更新
             add(ZuiYouLiteVoiceSendHook)// 语音发送
             add(ZuiYouLiteNoTrackerHook)// 链接防止追踪
             add(ZuiYouLiteAudioDownloadHook)// 语音发送
             add(ZuiYouLiteDragReadHook)// 拖动已读消息
-            add(EasterEggHook)// 彩蛋
             add(ZuiYouLiteUpdateHook)// 检查更新
             add(ZuiYouLiteAntiLongestTextHook)// 屏蔽评论超长刷屏文本
             add(ZuiYouLiteRemoveYouthModeDialogHook)// 去除青少年模式弹窗
-            add(ZuiYouLiteEulaHook)// 去除青少年模式弹窗
+           // add(ZuiYouLiteEulaHook)// 去除青少年模式弹窗
 
             //add(ZuiYouLiteWebTaskHook)// 云端自动任务
         }

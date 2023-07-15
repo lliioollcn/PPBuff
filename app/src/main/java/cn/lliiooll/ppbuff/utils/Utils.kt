@@ -142,7 +142,7 @@ fun String.toastLong() {
     toastLong(PPBuff.getApplication())
 }
 
-fun requireMinVersion( version: Int): Boolean {
+fun requireMinVersion(version: Int): Boolean {
     return PPBuff.getHostVersionCode() >= version
 }
 
@@ -375,6 +375,7 @@ fun XC_MethodHook.MethodHookParam.dump() {
     val args = this.args
     val m = this.method as Executable
     val sb = StringBuilder()
+    sb += "ZuiyouLiteNetDump=>"
     sb += "============================================================"
     sb += "方法 ${m.name} 被调用"
     if (!Modifier.isStatic(m.modifiers)) {
@@ -401,7 +402,13 @@ fun XC_MethodHook.MethodHookParam.dump() {
                 "[$i](null)       null"
             } else {
                 if (a is ByteArray) {
-                    "[$i](${a.javaClass.name})       $a(${Arrays.toString(a)})"
+                    "[$i](${a.javaClass.name})       $a(${Arrays.toString(a)})\n[$i](${a.javaClass.name})       $a(${
+                        String(
+                            a
+                        )
+                    })"
+
+
                 } else {
                     "[$i](${a.javaClass.name})       $a"
                 }
@@ -434,7 +441,7 @@ fun XC_MethodHook.MethodHookParam.dump() {
         }
     }
     sb += "============================================================"
-    sb.toString().debug()
+    sb.toString().error()
 }
 
 
